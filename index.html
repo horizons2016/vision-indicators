@@ -375,16 +375,15 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
   /* focus: mobile layout */
   #v-focus .fbar, #v-focus .fsum, #v-focus .flist{display:none}
   #v-focus .crumb{display:none}
-  .fdd{grid-template-columns:1fr 1fr;position:sticky;top:0;z-index:4;padding:10px}
-  .fdd label:first-child{grid-column:1/-1}
-  .fdd label:last-child{grid-column:1/-1}
-  .fgrid{grid-template-columns:1fr!important}
+  /* الجوال: المحور والأولوية فقط، ثم بطاقات المؤشرات تُسحب يميناً ويساراً */
+  #v-focus .fdd, #v-focus .fgrid{display:none!important}
   .fc{padding:14px}
   .fc h2{font-size:17px}
   .fc .q4{grid-template-columns:repeat(3,minmax(0,1fr))}
   .fc .q4 div:nth-child(4){display:none}
   .fc .q4 b{font-size:17px}
-  .fm{display:none!important}
+  .fm{display:flex!important;flex-direction:column;gap:10px}
+  html,body{overflow-x:hidden}
   .fm-crumb{position:sticky;top:0;z-index:3;display:flex;gap:6px;align-items:center;background:var(--bg);padding:6px 0}
   .fm-crumb select{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink);text-overflow:ellipsis}
   .fm-crumb .sep{color:var(--muted)}
@@ -853,7 +852,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <div class="fm-sum" id="fm-sum"></div>
       <div class="fm-cards" id="fm-cards" aria-label="مؤشرات الأولوية"></div>
       <div class="fm-dots" id="fm-dots"></div>
-      <p class="fm-hint">اسحب يميناً ويساراً للتنقل بين المؤشرات</p>
+      <p class="fm-hint"><b id="fm-count"></b> · اسحب يميناً ويساراً للتنقل بين المؤشرات</p>
     </div>
   </main>
 
@@ -955,7 +954,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-e57626147d";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-6f0883268d";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1761,6 +1760,7 @@ function renderFocus(){
   $("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]);
   $("#fd-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
   $("#fd-pri").innerHTML = `<option value="all" ${ST.fPri === "all" ? "selected" : ""}>كل أولويات المحور</option>` + pris.map(([, p, n]) => `<option value="${esc(p)}" ${ST.fPri === p ? "selected" : ""}>${esc(p)} (${n})</option>`).join("");
+  if (isMobile()){ renderFocusMobile(ax, pris, items, s); return; }
   $("#fd-ind").innerHTML = items.map((x, i) => `<option value="${x.id}" ${x.id === ST.fInd ? "selected" : ""}>${(i + 1)}. ${x.p.status === "review" ? "؟" : CAT_SYM[x.cat]} ${esc(x.name)}</option>`).join("");
   if (ST.fInd && BY[ST.fInd]) BY[ST.fInd]._pos = (items.findIndex(x => x.id === ST.fInd) + 1) + " من " + items.length;
   $("#f-panel").innerHTML = ST.fInd && BY[ST.fInd] ? focusCardHTML(BY[ST.fInd]) : `<div class="empty">اختر مؤشراً.</div>`;
@@ -1836,13 +1836,15 @@ function renderFocusMobile(ax, pris, items, s){
       <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
       <p class="why">${esc(whyTxt(x))}</p>
       <a class="more" href="#i-${x.id}" style="text-align:center;text-decoration:none">كل التفاصيل والمنهجية ←</a></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
+  const cnt = id => { const k = items.findIndex(x => x.id === id); $("#fm-count").textContent = k >= 0 ? `المؤشر ${k + 1} من ${items.length}` : ""; };
+  cnt(ST.fInd);
   $("#fm-dots").innerHTML = items.map((x, i) => `<button data-fdot="${x.id}" style="--c:${col(x)}" aria-label="${esc(x.name)}" aria-current="${x.id === ST.fInd}"></button>`).join("");
   const box = $("#fm-cards"), el = ST.fInd && box.querySelector(`[data-fcard="${ST.fInd}"]`);
   if (el && el.scrollIntoView && items[0] && items[0].id !== ST.fInd) requestAnimationFrame(() => el.scrollIntoView({block:"nearest", inline:"center"}));
   if (window.IntersectionObserver){
     if (box._io) box._io.disconnect();
     box._io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && e.intersectionRatio > .6){ const id = e.target.dataset.fcard; if (ST.fInd === id) return; ST.fInd = id;
-      document.querySelectorAll("#fm-dots button").forEach(b => b.setAttribute("aria-current", b.dataset.fdot === id)); go(); } }), {root:box, threshold:[.6]});
+      document.querySelectorAll("#fm-dots button").forEach(b => b.setAttribute("aria-current", b.dataset.fdot === id)); cnt(id); go(); } }), {root:box, threshold:[.6]});
     box.querySelectorAll(".fcard").forEach(c => box._io.observe(c));
   }
 }
