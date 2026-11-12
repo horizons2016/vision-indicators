@@ -241,6 +241,24 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .ov{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,1fr);gap:16px;align-items:start}
 .diamond{width:100%;height:auto;display:block;max-width:min(980px, calc(100vh - 150px));margin:0 auto}
 .dmwrap{position:relative}
+.ovtot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.ovtot .k{display:flex;flex-direction:column}
+.ovtot .k+.k{border-inline-start:1px solid var(--line);padding-inline-start:14px}
+.ovtot .k b{font-family:var(--f-display);font-size:32px;line-height:1.1}
+.ovtot .k span{font-size:12.5px;color:var(--muted)}
+.ovtot .full{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
+.ovtot .full .rest{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted)}
+.ovgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--axc);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:9px}
+.pcard .ax{font-size:11px;font-weight:600;color:var(--axc)}
+.pcard h3{margin:0;font-size:14.5px;line-height:1.45;min-height:42px}
+.pcard .m3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;text-align:center}
+.pcard .m3 div{background:var(--bg);border-radius:9px;padding:5px 2px}
+.pcard .m3 b{display:block;font-family:var(--f-display);font-size:18px}
+.pcard .m3 small{font-size:10.5px;color:var(--muted)}
+.pcard .go{display:block;text-align:center;background:var(--axc);color:#fff;border-radius:10px;padding:9px 4px;font-size:13px;font-weight:600;text-decoration:none;margin-top:auto}
+.pcard.ghost{background:transparent;border:1.5px dashed var(--line);border-top:4px dashed var(--axc);color:var(--muted)}
+@media (max-width:860px){ .ovgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} .pcard{padding:10px} .pcard h3{font-size:13px;min-height:38px} .pcard .m3 b{font-size:16px} .pcard .m3 small{font-size:9.5px} .pcard .go{font-size:12px} .ovtot .k b{font-size:26px} }
 .diamond .dmg{transition:opacity .15s}
 .diamond.sel .dmg{opacity:.12} .diamond.sel .dmg.sib{opacity:.5} .diamond.sel .dmg.hl{opacity:1}
 .diamond.sel line.hl,.diamond.sel path.hl{stroke:var(--accent);stroke-width:2.6}
@@ -301,6 +319,11 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .fpanel .dh{position:static} .fpanel [data-close]{display:none}
 /* v8: focus card (summary level) and indicator page (deep level) */
 .fhead{align-items:center;gap:12px;flex-wrap:wrap}
+.fdd{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.4fr);gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.fdd label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+.fdd select{height:46px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:0 12px;font-size:14px;font-weight:600;color:var(--ink);min-width:0}
+#fd-axis{border-inline-start:5px solid var(--axc,var(--line));color:var(--axc,var(--ink))}
+.fpos{font-size:12px;color:var(--muted)}
 .fc{display:flex;flex-direction:column;gap:12px;padding:16px 18px}
 .fc .path{font-size:12px;font-weight:600}
 .fc h2{font-size:19px;line-height:1.5;margin:0}
@@ -315,6 +338,11 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .fc .why{margin:0;font-size:13.5px;line-height:1.7}
 .fc .acts{display:flex;gap:8px;flex-wrap:wrap}
 .fc .acts .primary{flex:1;text-align:center;text-decoration:none;padding:10px}
+.itabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--line);border-radius:12px;padding:4px;position:sticky;top:0;z-index:2}
+.itabs button{height:38px;border:0;border-radius:9px;background:transparent;font-size:13.5px;font-weight:600;color:var(--muted)}
+.itabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.db [data-tabp]{display:flex;flex-direction:column;gap:14px}
+.db [data-tabp][hidden]{display:none}
 .indtop{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
 .indpage{max-width:920px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .indpage .dh{position:static} .indpage [data-close]{display:none}
@@ -340,13 +368,23 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
   .controls{display:none!important} .controls.open{display:flex!important}
   .installbar:not([hidden]){display:flex;gap:8px;align-items:center;margin:8px 12px 0;padding:10px 12px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;font-size:13px}
   .installbar p{margin:0;flex:1;line-height:1.6}
-  main{padding:12px!important}
+  main{padding:12px 12px calc(90px + env(safe-area-inset-bottom))!important}
   #ov-kpis{display:flex;overflow-x:auto;gap:8px;scroll-snap-type:x mandatory;padding-bottom:4px}
   #ov-kpis .kpi{flex:0 0 42%;scroll-snap-align:start}
   #ov-kpis .kpi span{font-size:11.5px}
   /* focus: mobile layout */
-  #v-focus .fbar, #v-focus .crumb, #v-focus .fsum, #v-focus .fgrid{display:none}
-  .fm{display:flex;flex-direction:column;gap:10px}
+  #v-focus .fbar, #v-focus .fsum, #v-focus .flist{display:none}
+  #v-focus .crumb{display:none}
+  .fdd{grid-template-columns:1fr 1fr;position:sticky;top:0;z-index:4;padding:10px}
+  .fdd label:first-child{grid-column:1/-1}
+  .fdd label:last-child{grid-column:1/-1}
+  .fgrid{grid-template-columns:1fr!important}
+  .fc{padding:14px}
+  .fc h2{font-size:17px}
+  .fc .q4{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .fc .q4 div:nth-child(4){display:none}
+  .fc .q4 b{font-size:17px}
+  .fm{display:none!important}
   .fm-crumb{position:sticky;top:0;z-index:3;display:flex;gap:6px;align-items:center;background:var(--bg);padding:6px 0}
   .fm-crumb select{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink);text-overflow:ellipsis}
   .fm-crumb .sep{color:var(--muted)}
@@ -768,7 +806,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <span class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="4" y="13" width="3.5" height="7" rx="1" fill="#fff"/><rect x="10.25" y="9" width="3.5" height="11" rx="1" fill="#fff"/><rect x="16.5" y="6" width="3.5" height="14" rx="1" fill="#fff"/><circle cx="18.25" cy="3" r="1.6" fill="#e0b25e"/></svg></span>
       <div><h1>مؤشرات الرؤية</h1><p id="sub">رؤية عُمان 2040</p></div>
     </div>
-    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">النظرة العامة</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
+    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">الرئيسية</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
     <label class="search" for="q">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="ابحث باسم المؤشر أو رمزه" aria-label="ابحث عن مؤشر" autocomplete="off">
@@ -793,19 +831,18 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
   <aside class="side" aria-label="المحاور والأولويات"><nav class="tree" id="tree"></nav></aside>
 
   <main id="v-overview" hidden>
-    <div class="crumb"><h2>النظرة العامة</h2><span class="small muted" id="ov-meta"></span></div>
-    <div class="kpis k6" id="ov-kpis"></div>
-    <section class="panel dmwrap">
-      <div class="row spread" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><h2>ماسة الرؤية: المحاور ← الأولويات ← المؤشرات</h2><span class="small muted">اضغط أي مؤشر أو أولوية أو محور لترى ملخصه وترابطه</span></div>
-      <div id="diamond"></div>
-      <div class="dmpop" id="dm-pop" hidden role="dialog" aria-label="ملخص"></div>
-      <div class="legend" id="dm-legend"></div>
-      <div class="scoreexp">كل نقطة مؤشر بلون تصنيف Progress Ratio نحو مستهدف <span class="tyl">2030</span>. ألوان المحاور والأولويات هي ألوانها الرسمية في وثيقة الرؤية، وألوان النقاط هي حالة المؤشر. الشكل الملوّن داخل الماسة يمثل <b>نضج كل محور</b>: نسبة مؤشراته «على المسار» من مؤشراته القابلة للتصنيف؛ الخط الأخضر المتقطع = 100%، والرمادي = 50%، والمركز = 0%. الرقم داخل كل محور هو هذه النسبة، والرقم داخل كل أولوية عدد مؤشراتها، والحلقة الرفيعة حولهما توزيع حالات مؤشراتها.</div>
-    </section>
+    <div class="crumb"><h2>الوضع العام</h2><span class="small muted" id="ov-meta"></span></div>
+    <div class="ovtot" id="ov-tot"></div>
+    <div class="ovgrid" id="ov-cards"></div>
   </main>
 
   <main id="v-focus" hidden>
-    <div class="fbar">
+    <div class="fdd">
+      <label>المحور<select id="fd-axis"></select></label>
+      <label>الأولوية<select id="fd-pri"></select></label>
+      <label>المؤشر<select id="fd-ind"></select></label>
+    </div>
+    <div class="fbar" hidden>
       <div class="lab" style="display:flex;justify-content:space-between;align-items:center">المحور <label class="small">الترتيب <select class="fsort" id="f-sort"><option value="cat">حسب التصنيف</option><option value="near">الأقرب للمستهدف أولاً</option><option value="far">الأبعد عن المستهدف أولاً</option></select></label></div><div class="fchips" id="f-axes"></div>
       <div class="lab">الأولوية</div><div class="fchips" id="f-pris"></div>
     </div>
@@ -899,7 +936,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 </div>
 
 <nav class="bnav" aria-label="التنقل">
-  <button data-bnav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 21 12 12 21 3 12Z"/><circle cx="12" cy="12" r="2.2"/></svg>النظرة العامة</button>
+  <button data-bnav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 21 12 12 21 3 12Z"/><circle cx="12" cy="12" r="2.2"/></svg>الرئيسية</button>
   <button data-bnav="focus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg>التركيز</button>
   <button data-bnav="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>كل المؤشرات</button>
   <button data-bnav="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>بحث</button>
@@ -929,6 +966,8 @@ const CATS = ["on_track","needs","breakthrough","backwards","stalled","na"];
 const AXC = ["var(--ax0)","var(--ax1)","var(--ax2)","var(--ax3)"], AXB = ["var(--ax0-bg)","var(--ax1-bg)","var(--ax2-bg)","var(--ax3-bg)"];
 const axC = a => AXC[AXES.indexOf(a)] || "var(--accent)";
 // رمز مع كل حالة حتى لا يعتمد الفهم على اللون وحده
+// اسم الأولوية الرسمي كما في وثيقة الرؤية؛ ملف المؤشرات المحدثة يكتبها باسم مختلف (للعرض والتجميع فقط، والبيانات كما هي)
+const PRI_ALIAS = {"المواطنة والهوية والثقافة والقيم": "المواطنة والهوية والتراث والثقافة الوطنية"};
 const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"!", backwards:"↓", stalled:"=", na:"–"};
 const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)"};
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
@@ -955,7 +994,7 @@ function buildModel(ds){
     (rd[i.code] || []).forEach(r => { S[r.y] = {...(S[r.y]||{y:r.y}), ...r, v: sc(r.v)}; });
     (pt[i.code] || []).forEach(p => { S[p.y] = {...(S[p.y]||{y:p.y}), p: sc(p.p)}; });
     return {
-      id:i.code, set: i.set === "محدث" ? "updated" : "original", axis:i.axis, priority:i.priority, name:i.name, unit:i.unit,
+      id:i.code, set: i.set === "محدث" ? "updated" : "original", axis:i.axis, priority:PRI_ALIAS[i.priority] || i.priority, priorityRaw:i.priority, name:i.name, unit:i.unit,
       pct, intl: i.type === "دولي", dir: String(i.dir||"").includes("الانخفاض") ? "down" : "up",
       base: sc(i.base), t30n: i.t30hi != null ? null : sc(i.t30), range: i.t30hi != null && i.t30 != null ? [sc(i.t30), sc(i.t30hi)] : null,
       t30r: i.t30rank, t40: sc(i.t40), t30text: i.t30text, owner:i.owner, issuer:i.issuer, src:i.src, freq:i.freq, methodText:i.method,
@@ -1227,6 +1266,8 @@ function openDrawer(id, target){
     <div class="dh"><div><div class="small muted">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h2 style="font-size:18px">${esc(x.name)}</h2><div class="small muted"><span class="code">${x.id}</span> · ${x.set==="updated"?"المؤشرات المحدثة":"المؤشرات الأصلية"}${x.intl?" · دولي":""} · <span class="age ${ageCls(x.age)}">آخر بيانات ${ageTxt(x.age)}</span></div></div>
       <div style="display:flex;gap:6px"><button class="btn" data-copylink="${x.id}">نسخ الرابط</button><button class="btn" data-close aria-label="إغلاق">✕</button></div></div>
     <div class="db">
+      <div class="itabs" role="tablist">${["الملخص","القراءات","المنهجية","المصدر"].map((n, i) => `<button role="tab" data-itab="${i}" aria-selected="${(ST.indTab||0) === i}">${n}</button>`).join("")}</div>
+      <div data-tabp="0" ${(ST.indTab||0) !== 0 ? "hidden" : ""}>
       <div class="small muted">فترة العرض ${ST.from}–${ST.to} · فترة الحساب ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات"} · المستهدف ${ST.ty}</div>
       <div class="tiles">
         <div class="tile"><small>خط الأساس</small><b class="num">${x.base!=null?N(fv(x,x.base)):"—"}</b></div>
@@ -1239,11 +1280,19 @@ function openDrawer(id, target){
       <div class="sec"><div class="hd"><h3>التقدم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
         <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
           <div class="tile"><small>المعدل الفعلي</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.actual))}</b></div><div class="tile"><small>المعدل المطلوب</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.required))}</b></div><div class="tile"><small>الأهلية</small><b style="font-size:14px"><span class="lv lv${x.el.level}">${x.el.level}</span> ${LV_LABEL[x.el.level]}</b></div></div>
-        <details ${p.status!=="ok"?"open":""}><summary>المعادلة والأرقام التي دخلت الحساب</summary><div class="calc">${calcDetails(x)}</div></details>
       </div>
-      ${forecastHTML(x)}
-      ${periodHTML(x)}
       <div class="evalbox"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3 style="font-size:14px">التقييم اليدوي · فريق المديرية</h3><span class="small muted">${a&&a.at?`آخر تقييم ${new Date(a.at).toLocaleDateString("ar-OM")}${a.by&&ST.names[a.by]?" · "+esc(ST.names[a.by]):""}`:""}</span></div>${evalCtl}<div class="small muted">حقل مستقل عن التصنيف الإحصائي.</div></div>
+      </div>
+      <div data-tabp="1" ${(ST.indTab||0) !== 1 ? "hidden" : ""}>
+      ${periodHTML(x)}
+      <div class="tablewrap"><table><thead><tr><th>السنة</th><th>القيمة</th><th>الترتيب</th><th>المسار</th><th>النوع</th><th>المصدر</th><th>الموثوقية</th><th>في الحساب</th></tr></thead><tbody>${rows||`<tr><td colspan="8" class="muted">لا توجد قراءات في الفترة.</td></tr>`}</tbody></table></div>
+      </div>
+      <div data-tabp="2" ${(ST.indTab||0) !== 2 ? "hidden" : ""}>
+      <div class="sec"><h3>المعادلة والأرقام التي دخلت الحساب</h3><div class="calc">${calcDetails(x)}</div></div>
+      ${forecastHTML(x)}
+      ${vIss.length?`<div class="sec"><h3>صلاحية البيانات</h3><ul class="list">${vIss.map(i=>`<li>${esc(i.t)}</li>`).join("")}</ul></div>`:""}
+      </div>
+      <div data-tabp="3" ${(ST.indTab||0) !== 3 ? "hidden" : ""}>
       <dl class="facts">
         <dt>الجهة المالكة</dt><dd>${esc(x.owner||"—")}</dd><dt>جهة الإصدار</dt><dd>${esc(x.issuer||"—")}</dd>
         <dt>مصدر البيانات</dt><dd>${esc(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
@@ -1251,8 +1300,7 @@ function openDrawer(id, target){
         <dt>طريقة حساب التقدم</dt><dd>${x.method}</dd><dt>نوع التجميع</dt><dd>${esc(x.aggLabel||"غير محدد")}</dd>
       </dl>
       ${textBlocks(x)}
-      ${vIss.length?`<div class="sec"><h3>صلاحية البيانات</h3><ul class="list">${vIss.map(i=>`<li>${esc(i.t)}</li>`).join("")}</ul></div>`:""}
-      <div class="tablewrap"><table><thead><tr><th>السنة</th><th>القيمة</th><th>الترتيب</th><th>المسار</th><th>النوع</th><th>المصدر</th><th>الموثوقية</th><th>في الحساب</th></tr></thead><tbody>${rows||`<tr><td colspan="8" class="muted">لا توجد قراءات في الفترة.</td></tr>`}</tbody></table></div>
+      </div>
       ${ST.admin?`<div class="evalbox"><h3 style="font-size:14px">إضافة قراءة سريعة</h3>
         <form class="upd" data-updfor="${x.id}">
           <label>السنة<input name="y" type="number" min="2000" max="${NOW}" value="${x.curAll?Math.min(NOW,x.curAll.y+1):NOW}" required></label>
@@ -1625,16 +1673,23 @@ function renderInd(){
 // الرجوع: إلى الصفحة السابقة داخل اللوحة إن وُجدت، وإلا إلى المؤشر في «التركيز»
 let NAVN = 0; window.addEventListener("hashchange", () => { NAVN++; });
 document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#ind-back")){ if (NAVN > 0 && history.length > 1) history.back(); else location.hash = "#focus-i-" + ST.ind; } });
+// كل الأولويات المعروفة (من كل المجموعات) حتى تظهر الأولوية التي لا مؤشرات لها في المجموعة المختارة
+function knownPriorities(){ const m = new Map(); RAW.forEach(x => { if (!m.has(x.priority)) m.set(x.priority, x.axis); }); return AXES.flatMap(a => [...m].filter(([, ax]) => ax === a).map(([p]) => [a, p])); }
 function renderOverview(){
-  const list = RAW.filter(inSet), tot = stats(list);
-  $("#ov-meta").textContent = `${ST.set === "updated" ? "المؤشرات المحدثة" : ST.set === "original" ? "المؤشرات الأصلية" : "كل المؤشرات"} · مستهدف ${ST.ty} · الحساب ${ST.calcLinked ? ST.from + "–" + ST.to : "كل السنوات"}`;
-  document.querySelectorAll(".tyl").forEach(e => e.textContent = ST.ty);
-  const kp = [["all", "كل المؤشرات", list.length, "var(--ink)"]].concat(["on_track","needs","breakthrough","backwards"].map(k => [k, E.CAT[k].ar + " · " + E.CAT[k].en, tot.counts[k], CAT_C[k]]))
-    .concat([["rest", "ثابت · لا يُصنَّف · يحتاج مراجعة", tot.counts.stalled + tot.counts.na + tot.counts.review, "var(--k-na)"]]);
-  $("#ov-kpis").innerHTML = kp.map(([k, l, n, c]) => `<button class="kpi" data-ovcat="${k}" style="--c:${c}"><b class="num">${n}</b><span>${l}</span></button>`).join("");
-  $("#diamond").innerHTML = diamondSVG(list);
-  $("#dm-legend").innerHTML = `<span style="flex-basis:100%;height:0"></span>` + AXES.map((a, i) => `<span><i style="background:${AXC[i]};height:10px;width:16px;border-radius:3px"></i>${esc(a)}</span>`).join("") + `<span style="flex-basis:100%;height:0"></span>` + CATS.map(k => `<span><i style="background:${CAT_C[k]};height:9px;width:9px;border-radius:50%"></i>${CAT_SYM[k]} ${E.CAT[k].ar}</span>`).join("") + `<span><i style="border:1.5px dashed var(--k-back);height:9px;width:9px;border-radius:50%;background:transparent"></i>يحتاج مراجعة البيانات</span>`;
-  dmClear();
+  const list = RAW.filter(inSet), tot = stats(list), c = tot.counts;
+  $("#ov-meta").textContent = `${ST.set === "updated" ? "المؤشرات المحدثة" : ST.set === "original" ? "المؤشرات الأصلية" : "كل المؤشرات"} · مستهدف ${ST.ty}`;
+  $("#ov-tot").innerHTML = `<div class="k"><b class="num">${list.length}</b><span>مؤشراً</span></div>
+    <div class="k"><b class="num" style="color:var(--k-on)">↑ ${c.on_track}</b><span>على المسار</span></div>
+    <div class="k"><b class="num" style="color:var(--k-back)">↓ ${c.backwards}</b><span>يتراجع</span></div>
+    <div class="full">${stackBar(list)}<div class="rest"><span>↗ يحتاج تحسيناً <b>${c.needs}</b></span><span>! يحتاج اختراقاً <b>${c.breakthrough}</b></span><span>ثابت أو لا يُصنَّف أو يحتاج مراجعة <b>${c.stalled + c.na + c.review}</b></span></div></div>`;
+  const allP = allPriorities();
+  $("#ov-cards").innerHTML = knownPriorities().map(([a, p]) => {
+    const ai = AXES.indexOf(a), items = list.filter(x => x.priority === p), s = stats(items), k = allP.findIndex(q => q[1] === p);
+    if (!items.length) return `<article class="pcard ghost" style="--axc:${AXC[ai]}"><span class="ax">${esc(a)}</span><h3>${esc(p)}</h3><span class="small">لا توجد مؤشرات في هذه المجموعة</span></article>`;
+    return `<article class="pcard" style="--axc:${AXC[ai]}"><span class="ax">${esc(a)}</span><h3>${esc(p)}</h3>
+      <div class="m3"><div><b class="num">${items.length}</b><small>مؤشر</small></div><div><b class="num" style="color:var(--k-on)">${N(shareTxt(s))}</b><small>على المسار</small></div><div><b class="num" style="color:var(--k-back)">${s.counts.backwards}</b><small>يتراجع</small></div></div>
+      ${stackBar(items)}<a class="go" href="#focus-p-${k}">افتح في التركيز ←</a></article>`;
+  }).join("");
 }
 
 /* ================= diamond: select → highlight path + compact card ================= */
@@ -1702,7 +1757,11 @@ function renderFocus(){
       <span class="t">${esc(x.name)}</span>
       <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>R% <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
       <span class="r">${catChip(x)}<span class="code">${x.id}</span></span></button>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
-  if (isMobile()){ renderFocusMobile(ax, pris, items, s); return; }
+  $("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]);
+  $("#fd-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
+  $("#fd-pri").innerHTML = `<option value="all" ${ST.fPri === "all" ? "selected" : ""}>كل أولويات المحور</option>` + pris.map(([, p, n]) => `<option value="${esc(p)}" ${ST.fPri === p ? "selected" : ""}>${esc(p)} (${n})</option>`).join("");
+  $("#fd-ind").innerHTML = items.map((x, i) => `<option value="${x.id}" ${x.id === ST.fInd ? "selected" : ""}>${(i + 1)}. ${x.p.status === "review" ? "؟" : CAT_SYM[x.cat]} ${esc(x.name)}</option>`).join("");
+  if (ST.fInd && BY[ST.fInd]) BY[ST.fInd]._pos = (items.findIndex(x => x.id === ST.fInd) + 1) + " من " + items.length;
   $("#f-panel").innerHTML = ST.fInd && BY[ST.fInd] ? focusCardHTML(BY[ST.fInd]) : `<div class="empty">اختر مؤشراً.</div>`;
 }
 function focusCardHTML(x){
@@ -1711,8 +1770,8 @@ function focusCardHTML(x){
   return `<div class="fc" style="--c:${col}">
     <div class="path" style="color:${axC(x.axis)}">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
     <h2>${esc(x.name)}</h2>
-    <div class="meta">${catChip(x)}<span class="code">${x.id}</span><span class="age ${ageCls(x.age)}">آخر بيانات ${ageTxt(x.age)}</span></div>
-    <div class="chart">${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}</div>
+    <div class="meta">${catChip(x)}<span class="code">${x.id}</span><span class="age ${ageCls(x.age)}">آخر بيانات ${ageTxt(x.age)}</span>${x._pos ? `<span class="fpos" style="margin-inline-start:auto">${x._pos}</span>` : ""}</div>
+    <div class="chart">${isMobile() ? (sparkSVG(x) || `<p class="small muted" style="margin:0;padding:18px;text-align:center">لا توجد قراءات كافية للرسم</p>`) : chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}</div>
     <div class="q4">
       <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + esc(x.cur.src) : "") : ""}</div></div>
       <div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div>
@@ -1720,7 +1779,7 @@ function focusCardHTML(x){
       <div><small>${pace ? "المتحقق سنوياً" : "الفجوة المتبقية"}</small><b class="num">${pace ? N(rateTxt(x, p.actual).split(" ")[0]) : N(gapTxt(x))}</b>${pace ? `<div class="sub">المطلوب ${N(rateTxt(x, p.required).split(" ")[0])}</div>` : ""}</div>
     </div>
     <p class="why">${esc(whyTxt(x))}</p>
-    <div class="acts"><a class="btn primary" href="#i-${x.id}">كل التفاصيل والمنهجية ←</a><button class="btn" data-copylink="${x.id}">نسخ الرابط</button></div>
+    <div class="acts"><a class="btn primary" href="#i-${x.id}">التفاصيل والمنهجية ←</a><button class="btn" data-copylink="${x.id}">نسخ الرابط</button></div>
   </div>`;
 }
 // R للترتيب: المحقق = الأعلى، وغير القابل للتصنيف في الآخر دائماً
@@ -1810,7 +1869,7 @@ function readHash(){
     render(); return;
   }
   ST.page = h === "admin" ? "admin" : "dash";
-  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = "all"; closeDrawer(); ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
+  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = "all"; closeDrawer(); if (ST.ind !== id) ST.indTab = 0; ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
   closeDrawer(); $("#drawer").dataset.id = "";
   if (h.startsWith("a-")){ ST.axis = AXES[+h.slice(2)] || null; ST.pri = null; }
   else if (h.startsWith("p-")){ const all = AXES.flatMap(a => prioritiesOf(a).map(p => [a, p[0]])); const e = all[+h.slice(2)]; if (e){ ST.axis = e[0]; ST.pri = e[1]; } }
@@ -1954,11 +2013,18 @@ document.addEventListener("click", async e => {
   }
 });
 window.addEventListener("hashchange", readHash);
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-itab]"); if (!b) return;
+  ST.indTab = +b.dataset.itab; const root = b.closest(".db");
+  root.querySelectorAll("[data-itab]").forEach(x => x.setAttribute("aria-selected", x === b));
+  root.querySelectorAll("[data-tabp]").forEach(pn => { pn.hidden = +pn.dataset.tabp !== ST.indTab; }); });
 document.addEventListener("change", e => {
   const id = e.target.id;
   if (id === "f-sort" || id === "fm-sort"){ ST.fSort = e.target.value; ST.fInd = null; renderFocus(); go(); }
   if (id === "fm-axis"){ ST.fAxis = +e.target.value; ST.fPri = null; ST.fInd = null; renderFocus(); go(); }
   if (id === "fm-pri"){ ST.fPri = e.target.value; ST.fInd = null; renderFocus(); go(); }
+  if (id === "fd-axis"){ ST.fAxis = +e.target.value; ST.fPri = null; ST.fInd = null; renderFocus(); go(); }
+  if (id === "fd-pri"){ ST.fPri = e.target.value; ST.fInd = null; renderFocus(); go(); }
+  if (id === "fd-ind"){ ST.fInd = e.target.value; renderFocus(); go(); window.scrollTo && window.scrollTo(0, 0); }
 });
 document.addEventListener("click", e => {
   const dot = e.target.closest("[data-fdot]");
