@@ -954,7 +954,8 @@ const NOW = new Date().getFullYear();
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
-const SITE = true;   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const SITE = true;
+const BUILD = "ov-e57626147d";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -2060,8 +2061,20 @@ if (!IN_CLAUDE && /^https?:$/.test(location.protocol) && typeof fetch === "funct
 /* ================= PWA: تثبيت، عمل بلا اتصال، تحديث تلقائي ================= */
 if (SITE && "serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
   const had = !!navigator.serviceWorker.controller;
-  navigator.serviceWorker.register("sw.js").then(reg => { setInterval(() => reg.update().catch(()=>{}), 30 * 60 * 1000); }).catch(() => {});
-  navigator.serviceWorker.addEventListener("controllerchange", () => { if (had) toast("تم تحديث اللوحة إلى أحدث نسخة"); });
+  let REG = null, reloading = false;
+  const reloadOnce = () => { if (reloading) return; reloading = true; try { sessionStorage.setItem("ovd-updated", "1"); } catch(_){} location.reload(); };
+  navigator.serviceWorker.register("sw.js").then(reg => { REG = reg; }).catch(() => {});
+  // نسخة جديدة من عامل الخدمة أخذت التحكم ← إعادة تحميل مرة واحدة لعرض الصفحة الجديدة
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (had) reloadOnce(); });
+  // آيفون يستأنف التطبيق المثبّت من الذاكرة دون إعادة تحميل؛ لذلك نفحص رقم النسخة عند الفتح وعند كل عودة للتطبيق
+  const checkVersion = () => {
+    if (REG) REG.update().catch(() => {});
+    fetch("version.json?t=" + Date.now(), {cache: "no-store"}).then(r => r.ok ? r.json() : null).then(v => { if (v && v.build && v.build !== BUILD) reloadOnce(); }).catch(() => {});
+  };
+  checkVersion();
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") checkVersion(); });
+  setInterval(checkVersion, 15 * 60 * 1000);
+  try { if (sessionStorage.getItem("ovd-updated")){ sessionStorage.removeItem("ovd-updated"); setTimeout(() => toast("تم تحديث اللوحة إلى أحدث نسخة"), 600); } } catch(_){}
 }
 if (SITE){
   const standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
