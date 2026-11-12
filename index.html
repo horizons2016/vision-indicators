@@ -299,10 +299,30 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .frow .r{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
 .fpanel{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-height:300px}
 .fpanel .dh{position:static} .fpanel [data-close]{display:none}
+/* v8: focus card (summary level) and indicator page (deep level) */
+.fhead{align-items:center;gap:12px;flex-wrap:wrap}
+.fc{display:flex;flex-direction:column;gap:12px;padding:16px 18px}
+.fc .path{font-size:12px;font-weight:600}
+.fc h2{font-size:19px;line-height:1.5;margin:0}
+.fc .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fc .chart{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--bg)}
+.fc .chart svg{width:100%;height:auto;max-height:290px}
+.fc .q4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.fc .q4 div{background:var(--bg);border-radius:10px;padding:8px 10px}
+.fc .q4 small{display:block;font-size:11.5px;color:var(--muted)}
+.fc .q4 b{font-family:var(--f-display);font-size:19px}
+.fc .q4 .sub{font-size:11px;color:var(--muted)}
+.fc .why{margin:0;font-size:13.5px;line-height:1.7}
+.fc .acts{display:flex;gap:8px;flex-wrap:wrap}
+.fc .acts .primary{flex:1;text-align:center;text-decoration:none;padding:10px}
+.indtop{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.indpage{max-width:920px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.indpage .dh{position:static} .indpage [data-close]{display:none}
+@media (max-width:860px){ .fc .q4{grid-template-columns:1fr 1fr} .indpage{border-radius:12px} }
 /* v6: mobile */
 .bnav,.ctl-toggle,.fm,.installbar{display:none}
 .fsort{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 8px;font-size:12.5px;color:var(--ink)}
-.spark{display:block;width:100%;height:56px}
+.spark{display:block;width:100%;height:auto}
 @media (max-width:860px){
   body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   header.bar{padding:8px 12px;gap:8px}
@@ -748,7 +768,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <span class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="4" y="13" width="3.5" height="7" rx="1" fill="#fff"/><rect x="10.25" y="9" width="3.5" height="11" rx="1" fill="#fff"/><rect x="16.5" y="6" width="3.5" height="14" rx="1" fill="#fff"/><circle cx="18.25" cy="3" r="1.6" fill="#e0b25e"/></svg></span>
       <div><h1>مؤشرات الرؤية</h1><p id="sub">رؤية عُمان 2040</p></div>
     </div>
-    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">النظرة العامة</a><a href="#all" data-nav="dash">اللوحة التفصيلية</a><a href="#focus" data-nav="focus">التركيز</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
+    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">النظرة العامة</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
     <label class="search" for="q">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="ابحث باسم المؤشر أو رمزه" aria-label="ابحث عن مؤشر" autocomplete="off">
@@ -789,8 +809,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <div class="lab" style="display:flex;justify-content:space-between;align-items:center">المحور <label class="small">الترتيب <select class="fsort" id="f-sort"><option value="cat">حسب التصنيف</option><option value="near">الأقرب للمستهدف أولاً</option><option value="far">الأبعد عن المستهدف أولاً</option></select></label></div><div class="fchips" id="f-axes"></div>
       <div class="lab">الأولوية</div><div class="fchips" id="f-pris"></div>
     </div>
-    <div class="crumb"><h2 id="f-title"></h2><span class="small muted" id="f-meta"></span></div>
-    <div class="fsum" id="f-sum"></div>
+    <div class="crumb fhead"><h2 id="f-title"></h2><span class="small muted" id="f-meta"></span><span id="f-bar" style="flex:1;min-width:120px;max-width:260px"></span></div>
     <div class="fgrid"><div class="flist" id="f-list"></div><div class="fpanel" id="f-panel"></div></div>
     <div class="fm">
       <div class="fm-crumb"><select id="fm-axis" aria-label="المحور"></select><span class="sep" aria-hidden="true">‹</span><select id="fm-pri" aria-label="الأولوية"></select></div>
@@ -799,6 +818,11 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <div class="fm-dots" id="fm-dots"></div>
       <p class="fm-hint">اسحب يميناً ويساراً للتنقل بين المؤشرات</p>
     </div>
+  </main>
+
+  <main id="v-ind" hidden>
+    <div class="indtop"><button class="btn" id="ind-back">→ رجوع</button><span class="small muted" id="ind-crumb"></span></div>
+    <div class="indpage" id="ind-body"></div>
   </main>
 
   <main id="v-dash">
@@ -1210,6 +1234,7 @@ function openDrawer(id, target){
         <div class="tile"><small>مستهدف 2030</small><b class="num">${N(targetTxt(x, 2030))}</b></div>
         <div class="tile"><small>مستهدف 2040</small><b class="num">${N(targetTxt(x, 2040))}</b></div>
       </div>
+      ${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}
       ${lastOut}
       <div class="sec"><div class="hd"><h3>التقدم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
         <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
@@ -1219,7 +1244,6 @@ function openDrawer(id, target){
       ${forecastHTML(x)}
       ${periodHTML(x)}
       <div class="evalbox"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3 style="font-size:14px">التقييم اليدوي · فريق المديرية</h3><span class="small muted">${a&&a.at?`آخر تقييم ${new Date(a.at).toLocaleDateString("ar-OM")}${a.by&&ST.names[a.by]?" · "+esc(ST.names[a.by]):""}`:""}</span></div>${evalCtl}<div class="small muted">حقل مستقل عن التصنيف الإحصائي.</div></div>
-      ${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}
       <dl class="facts">
         <dt>الجهة المالكة</dt><dd>${esc(x.owner||"—")}</dd><dt>جهة الإصدار</dt><dd>${esc(x.issuer||"—")}</dd>
         <dt>مصدر البيانات</dt><dd>${esc(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
@@ -1593,6 +1617,14 @@ function diamondSVG(list){
     <text x="${c}" y="${c + 2}" text-anchor="middle" style="font-size:24px;font-weight:700;font-family:var(--f-display)">${list.length}</text><text x="${c}" y="${c + 18}" text-anchor="middle" style="font-size:10px;fill:var(--muted)">مؤشراً</text></g>`;
   return g + `</svg>`;
 }
+function renderInd(){
+  const x = BY[ST.ind]; if (!x){ $("#ind-body").innerHTML = `<div class="empty">المؤشر غير موجود.</div>`; return; }
+  $("#ind-crumb").innerHTML = `<span style="color:${axC(x.axis)};font-weight:600">${esc(x.axis)}</span> ‹ ${esc(x.priority)}`;
+  openDrawer(x.id, $("#ind-body"));
+}
+// الرجوع: إلى الصفحة السابقة داخل اللوحة إن وُجدت، وإلا إلى المؤشر في «التركيز»
+let NAVN = 0; window.addEventListener("hashchange", () => { NAVN++; });
+document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#ind-back")){ if (NAVN > 0 && history.length > 1) history.back(); else location.hash = "#focus-i-" + ST.ind; } });
 function renderOverview(){
   const list = RAW.filter(inSet), tot = stats(list);
   $("#ov-meta").textContent = `${ST.set === "updated" ? "المؤشرات المحدثة" : ST.set === "original" ? "المؤشرات الأصلية" : "كل المؤشرات"} · مستهدف ${ST.ty} · الحساب ${ST.calcLinked ? ST.from + "–" + ST.to : "كل السنوات"}`;
@@ -1622,7 +1654,7 @@ function dmSelect(kind, key, ev){
       <div class="two"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
       <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
       <p class="why">${esc(whyTxt(x))}</p>
-      <div class="acts"><button class="btn primary" data-open="${x.id}">التفاصيل الكاملة</button><a class="btn" href="#focus-i-${x.id}">في التركيز</a></div>`;
+      <div class="acts"><a class="btn primary" href="#focus-i-${x.id}">افتح في التركيز</a><a class="btn" href="#i-${x.id}">كل التفاصيل</a></div>`;
   } else {
     const isA = kind === "a", ai = isA ? +key : AXES.indexOf(allP[+key][0]), p = isA ? null : allP[+key][1];
     if (isA) mark(`.k-x${ai}`, "hl"); else { mark(`.k-a${ai}, .k-p${key}`, "hl"); mark(`.k-s${key}`, "hl"); }
@@ -1664,18 +1696,32 @@ function renderFocus(){
   const s = stats(items);
   $("#f-title").textContent = ST.fPri === "all" ? ax : ST.fPri; $("#f-title").style.color = AXC[ST.fAxis];
   document.querySelector("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]); document.querySelector("#v-focus").style.setProperty("--axb", AXB[ST.fAxis]);
-  $("#f-meta").textContent = `${items.length} مؤشر · مستهدف ${ST.ty}`;
-  $("#f-sum").innerHTML = `<div class="kpi" style="--c:var(--ink)"><b class="num">${items.length}</b><span>مؤشراً</span></div>
-    <div class="kpi" style="--c:var(--k-on)"><b class="num">${shareTxt(s)}</b><span>على المسار من القابل للتصنيف (${s.cls})</span></div>
-    <div class="kpi" style="--c:var(--accent)"><b class="num">${N(medTxt(s))}</b><span>الوسيط R%</span></div>
-    <div class="kpi" style="--c:var(--line)"><span style="margin-bottom:6px">التوزيع</span>${stackBar(items)}</div>`;
+  $("#f-meta").textContent = `${items.length} مؤشر · على المسار ${shareTxt(s)} · الوسيط R% ${medTxt(s)} · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
   if (!items.some(x => x.id === ST.fInd)) ST.fInd = items.length ? items[0].id : null;
   $("#f-list").innerHTML = items.map(x => `<button class="frow" data-fsel="${x.id}" aria-pressed="${x.id === ST.fInd}" style="--c:${x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat]}">
       <span class="t">${esc(x.name)}</span>
       <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>R% <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
       <span class="r">${catChip(x)}<span class="code">${x.id}</span></span></button>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   if (isMobile()){ renderFocusMobile(ax, pris, items, s); return; }
-  if (ST.fInd) openDrawer(ST.fInd, $("#f-panel")); else $("#f-panel").innerHTML = `<div class="empty">اختر مؤشراً.</div>`;
+  $("#f-panel").innerHTML = ST.fInd && BY[ST.fInd] ? focusCardHTML(BY[ST.fInd]) : `<div class="empty">اختر مؤشراً.</div>`;
+}
+function focusCardHTML(x){
+  const col = x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat], p = x.p || {};
+  const pace = p.actual != null && isFinite(p.actual) && p.required != null && isFinite(p.required);
+  return `<div class="fc" style="--c:${col}">
+    <div class="path" style="color:${axC(x.axis)}">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
+    <h2>${esc(x.name)}</h2>
+    <div class="meta">${catChip(x)}<span class="code">${x.id}</span><span class="age ${ageCls(x.age)}">آخر بيانات ${ageTxt(x.age)}</span></div>
+    <div class="chart">${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}</div>
+    <div class="q4">
+      <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + esc(x.cur.src) : "") : ""}</div></div>
+      <div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div>
+      <div><small>Progress Ratio</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>
+      <div><small>${pace ? "المتحقق سنوياً" : "الفجوة المتبقية"}</small><b class="num">${pace ? N(rateTxt(x, p.actual).split(" ")[0]) : N(gapTxt(x))}</b>${pace ? `<div class="sub">المطلوب ${N(rateTxt(x, p.required).split(" ")[0])}</div>` : ""}</div>
+    </div>
+    <p class="why">${esc(whyTxt(x))}</p>
+    <div class="acts"><a class="btn primary" href="#i-${x.id}">كل التفاصيل والمنهجية ←</a><button class="btn" data-copylink="${x.id}">نسخ الرابط</button></div>
+  </div>`;
 }
 // R للترتيب: المحقق = الأعلى، وغير القابل للتصنيف في الآخر دائماً
 const rKey = x => x.p.status === "review" || !CLASSIFIED.has(x.cat) ? null : x.p.achieved ? Infinity : (x.p.R != null && isFinite(x.p.R) ? x.p.R : null);
@@ -1686,20 +1732,26 @@ function sortFocus(list){
   return list.sort((u, v) => { const a = rKey(u), b = rKey(v); if (a == null && b == null) return byId(u, v); if (a == null) return 1; if (b == null) return -1; return a === b ? byId(u, v) : sgn * (a < b ? -1 : 1); });
 }
 function sparkSVG(x){
-  const f = x.p && x.p.field === "r" ? "r" : "v";
   const pts = (x.p && x.p.used && x.p.used.length ? x.p.used : []).map(s => [s.y, s.val]);   // نفس القراءات ونفس الوحدة التي دخلت الحساب
+  const inv = x.p && x.p.field === "r";
   const T = x.p && x.p.T != null && isFinite(x.p.T) ? x.p.T : null, TY = ST.ty;
   if (pts.length < 2 && T == null) return "";
   const xs = pts.map(p => p[0]).concat(T != null ? [TY] : []), ys = pts.map(p => p[1]).concat(T != null ? [T] : []);
   const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-  const W = 300, H = 56, px = v => 8 + (W - 16) * (x1 === x0 ? .5 : (v - x0) / (x1 - x0)), inv = f === "r";
-  const py = v => { let k = y1 === y0 ? .5 : (v - y0) / (y1 - y0); if (inv) k = 1 - k; return H - 8 - (H - 16) * k; };
+  const W = 320, H = 96, L = 14, Rr = 14, Tp = 18, B = 20;
+  const px = v => L + (W - L - Rr) * (x1 === x0 ? .5 : (v - x0) / (x1 - x0));
+  const py = v => { let k = y1 === y0 ? .5 : (v - y0) / (y1 - y0); if (inv) k = 1 - k; return H - B - (H - Tp - B) * k; };
+  const fmt = v => inv ? "#" + fmtN(v, 0) : fv(x, v);
   const line = pts.map(p => px(p[0]).toFixed(1) + "," + py(p[1]).toFixed(1)).join(" ");
-  const last = pts[pts.length - 1];
-  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true" style="direction:ltr">
-    ${T != null && last ? `<line x1="${px(last[0])}" y1="${py(last[1])}" x2="${px(TY)}" y2="${py(T)}" stroke="var(--muted)" stroke-dasharray="3 4" vector-effect="non-scaling-stroke"/><circle cx="${px(TY)}" cy="${py(T)}" r="4" fill="none" stroke="var(--ink)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>` : ""}
-    ${pts.length > 1 ? `<polyline points="${line}" fill="none" stroke="var(--c)" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>` : ""}
-    ${last ? `<circle cx="${px(last[0])}" cy="${py(last[1])}" r="4" fill="var(--c)"/>` : ""}</svg>`;
+  const first = pts[0], last = pts[pts.length - 1];
+  const lab = (xx, yy, txt, anc, col, w) => `<text x="${xx.toFixed(1)}" y="${yy.toFixed(1)}" text-anchor="${anc}" style="font-size:11px;${w ? "font-weight:700;" : ""}fill:${col}">${esc(txt)}</text>`;
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true" style="direction:ltr">
+    <line x1="${L}" y1="${H - B + 4}" x2="${W - Rr}" y2="${H - B + 4}" stroke="var(--line)"/>
+    ${T != null && last ? `<line x1="${px(last[0])}" y1="${py(last[1])}" x2="${px(TY)}" y2="${py(T)}" stroke="var(--muted)" stroke-dasharray="3 4"/><circle cx="${px(TY)}" cy="${py(T)}" r="4.5" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+      ${lab(px(TY), py(T) - 8, fmt(T), "end", "var(--ink)", 1)}${lab(px(TY), H - 4, String(TY), "end", "var(--muted)")}` : ""}
+    ${pts.length > 1 ? `<polyline points="${line}" fill="none" stroke="var(--c)" stroke-width="2.6" stroke-linejoin="round"/>` : ""}
+    ${first && pts.length > 1 ? lab(px(first[0]), H - 4, String(first[0]), "start", "var(--muted)") : ""}
+    ${last ? `<circle cx="${px(last[0])}" cy="${py(last[1])}" r="4.5" fill="var(--c)"/>${lab(px(last[0]), py(last[1]) - 8, fmt(last[1]), "middle", "var(--c)", 1)}${lab(px(last[0]), H - 4, String(last[0]), "middle", "var(--muted)")}` : ""}</svg>`;
 }
 function whyTxt(x){
   const p = x.p || {};
@@ -1719,11 +1771,11 @@ function renderFocusMobile(ax, pris, items, s){
   $("#fm-cards").innerHTML = items.map(x => `<article class="fcard" data-fcard="${x.id}" style="--c:${col(x)}">
       <div class="top">${catChip(x)}<span class="code">${x.id}</span></div>
       <h3>${esc(x.name)}</h3>
+      ${sparkSVG(x)}
       <div class="big"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
       <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
-      ${sparkSVG(x)}
       <p class="why">${esc(whyTxt(x))}</p>
-      <button class="more" data-open="${x.id}">التفاصيل الكاملة</button></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
+      <a class="more" href="#i-${x.id}" style="text-align:center;text-decoration:none">كل التفاصيل والمنهجية ←</a></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   $("#fm-dots").innerHTML = items.map((x, i) => `<button data-fdot="${x.id}" style="--c:${col(x)}" aria-label="${esc(x.name)}" aria-current="${x.id === ST.fInd}"></button>`).join("");
   const box = $("#fm-cards"), el = ST.fInd && box.querySelector(`[data-fcard="${ST.fInd}"]`);
   if (el && el.scrollIntoView && items[0] && items[0].id !== ST.fInd) requestAnimationFrame(() => el.scrollIntoView({block:"nearest", inline:"center"}));
@@ -1739,6 +1791,7 @@ function renderFocusMobile(ax, pris, items, s){
 function stateHash(){
   if (ST.page === "admin") return "#admin";
   if (ST.page === "overview") return "#overview";
+  if (ST.page === "ind" && ST.ind) return "#i-" + ST.ind;
   if (ST.page === "focus"){ if (ST.fInd) return "#focus-i-" + ST.fInd; const allP = allPriorities(); if (ST.fPri && ST.fPri !== "all") return "#focus-p-" + allP.findIndex(q => q[1] === ST.fPri); return "#focus-a-" + (ST.fAxis ?? 0); }
   if (!$("#drawer").hidden && $("#drawer").dataset.mode === "ind" && $("#drawer").dataset.id) return "#i-" + $("#drawer").dataset.id;
   if (ST.pri){ const all = AXES.flatMap(prioritiesOf).map(p=>p[0]); return "#p-" + all.indexOf(ST.pri); }
@@ -1757,7 +1810,7 @@ function readHash(){
     render(); return;
   }
   ST.page = h === "admin" ? "admin" : "dash";
-  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = "all"; $("#drawer").dataset.id = id; render(); openDrawer(id); return; } }
+  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = "all"; closeDrawer(); ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
   closeDrawer(); $("#drawer").dataset.id = "";
   if (h.startsWith("a-")){ ST.axis = AXES[+h.slice(2)] || null; ST.pri = null; }
   else if (h.startsWith("p-")){ const all = AXES.flatMap(a => prioritiesOf(a).map(p => [a, p[0]])); const e = all[+h.slice(2)]; if (e){ ST.axis = e[0]; ST.pri = e[1]; } }
@@ -1773,14 +1826,15 @@ function setSeg(){
 function render(){
   compute(); setSeg(); renderTree(); renderControls();
   const pg = ST.page;
-  ["overview","dash","focus","admin"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
-  document.body.classList.toggle("noside", pg === "overview" || pg === "focus");
+  ["overview","dash","focus","admin","ind"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
+  document.body.classList.toggle("noside", pg !== "dash");
   document.body.dataset.pg = pg;
   document.querySelectorAll(".navtabs a").forEach(a => a.setAttribute("aria-current", a.dataset.nav === pg ? "page" : "false"));
-  document.querySelectorAll(".bnav button").forEach(b => b.setAttribute("aria-current", b.dataset.bnav === pg ? "page" : "false"));
+  document.querySelectorAll(".bnav button").forEach(b => b.setAttribute("aria-current", b.dataset.bnav === (pg === "ind" ? "focus" : pg) ? "page" : "false"));
+  document.querySelectorAll(".navtabs a").forEach(a => { if (pg === "ind" && a.dataset.nav === "focus") a.setAttribute("aria-current", "page"); });
   $("#ctl-sum").textContent = `مستهدف ${ST.ty} · ${ST.from}–${ST.to}${ST.calcLinked ? "" : " · الحساب: كل السنوات"}`;
   if (pg === "admin" && SITE) try { localStorage.setItem("ovd-admin", "1"); } catch(_){}
-  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else renderDash();
+  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else renderDash();
   const d = $("#drawer");
   if (!d.hidden){ if (d.dataset.mode === "cmp") openCompare(); else if (d.dataset.id) openDrawer(d.dataset.id); }
 }
@@ -1861,13 +1915,13 @@ document.addEventListener("click", async e => {
     if (d.fpri !== undefined){ location.hash = "#focus-p-" + d.fpri; return; }
     if (d.fsetaxis !== undefined){ ST.fAxis = +d.fsetaxis; ST.fPri = null; ST.fInd = null; renderFocus(); go(); return; }
     if (d.fsetpri !== undefined){ ST.fPri = d.fsetpri; ST.fInd = null; renderFocus(); go(); return; }
-    if (d.fsel){ ST.fInd = d.fsel; document.querySelectorAll(".frow").forEach(b => b.setAttribute("aria-pressed", b.dataset.fsel === d.fsel)); openDrawer(d.fsel, $("#f-panel")); go(); return; }
+    if (d.fsel){ ST.fInd = d.fsel; document.querySelectorAll(".frow").forEach(b => b.setAttribute("aria-pressed", b.dataset.fsel === d.fsel)); $("#f-panel").innerHTML = focusCardHTML(BY[d.fsel]); go(); return; }
     if (d.gocenter){ location.hash = "#all"; return; }
     if (d.ovcat){ ST.cat = ["all","rest"].includes(d.ovcat) ? null : d.ovcat; ST.axis = ST.pri = null; location.hash = "#all"; setTimeout(() => renderDash(), 0); return; }
   }
   const el = e.target.closest("[data-open],[data-set],[data-axis],[data-pri],[data-ev],[data-cat],[data-close],[data-copylink],[data-setev],[data-view],[data-ty],[data-asub],[data-cmpmode],#reset,#publish,#cancel,#preview-apply,#export-pending");
   if (!el) return; const d = el.dataset;
-  if (d.open){ $("#drawer").dataset.id = d.open; openDrawer(d.open); go(); return; }
+  if (d.open){ closeDrawer(); location.hash = "#i-" + d.open; return; }
   if (d.view){ ST.view = d.view; try { localStorage.setItem("ovd-view", ST.view); } catch(_){} renderDash(); return; }
   if (d.ty){ ST.ty = +d.ty; render(); return; }
   if (d.asub){ ST.asub = d.asub; renderAdmin(); return; }
@@ -1933,7 +1987,7 @@ if (SITE){ let a = false; try { a = localStorage.getItem("ovd-admin") === "1"; }
 if (!IN_CLAUDE && /^https?:$/.test(location.protocol) && typeof fetch === "function"){
   if (SITE) $("#sub").textContent = "جارٍ تحميل البيانات…";
   fetch("data/dataset.json", {cache:"no-cache"}).then(r => r.ok ? r.json() : null).then(ds => {
-    if (ds && Array.isArray(ds.indicators)){ ST.ds = ds; ST.dsSource = "file"; buildModel(ds); stamp(); render(); }
+    if (ds && Array.isArray(ds.indicators)){ ST.ds = ds; ST.dsSource = "file"; buildModel(ds); stamp(); readHash(); }
     else if (SITE){ $("#sub").textContent = "تعذر تحميل البيانات"; toast("تعذر تحميل البيانات. تحقق من الاتصال ثم أعد فتح التطبيق."); }
   }).catch(() => { if (SITE){ $("#sub").textContent = "تعذر تحميل البيانات"; toast("تعذر تحميل البيانات. تحقق من الاتصال ثم أعد فتح التطبيق."); } });
 }
