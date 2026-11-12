@@ -1,0 +1,31 @@
+{
+  "name": "مؤشرات الرؤية",
+  "short_name": "مؤشرات الرؤية",
+  "description": "لوحة مؤشرات رؤية عُمان 2040: نظرة عامة، تركيز على الأولويات، وتفاصيل كل مؤشر",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./#overview",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f4",
+  "theme_color": "#0d6b5a",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "./"
+}
