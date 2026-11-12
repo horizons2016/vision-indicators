@@ -1,6 +1,6 @@
 // مؤشرات الرؤية: يعمل بدون إنترنت ويتحدث تلقائياً.
 // الصفحة والبيانات: من الشبكة أولاً (أحدث نسخة دائماً)، ومن النسخة المحفوظة عند انقطاع الاتصال.
-const VERSION = "ov-e227806778";
+const VERSION = "ov-f4121912f6";
 const SHELL = ["./", "index.html", "data/dataset.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 
 self.addEventListener("install", e => {

@@ -236,7 +236,28 @@ details summary{cursor:pointer;font-size:13px;color:var(--accent)}
 /* v5: overview & focus */
 body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .ov{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,1fr);gap:16px;align-items:start}
-.diamond{width:100%;height:auto;display:block;max-width:820px;margin:0 auto}
+.diamond{width:100%;height:auto;display:block;max-width:min(980px, calc(100vh - 150px));margin:0 auto}
+.dmwrap{position:relative}
+.diamond .dmg{transition:opacity .15s}
+.diamond.sel .dmg{opacity:.12} .diamond.sel .dmg.sib{opacity:.5} .diamond.sel .dmg.hl{opacity:1}
+.diamond.sel line.hl,.diamond.sel path.hl{stroke:var(--accent);stroke-width:2.6}
+.diamond .hit{fill:transparent;cursor:pointer}
+.diamond .dm-ind.cur{stroke:var(--ink);stroke-width:3}
+.dmpop{position:absolute;z-index:4;width:min(330px, calc(100% - 24px));background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c, var(--accent));border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+.dmpop .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dmpop h3{margin:0;font-size:15px;line-height:1.5}
+.dmpop .path{font-size:11.5px;color:var(--muted)}
+.dmpop .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.dmpop .two div{background:var(--bg);border-radius:9px;padding:6px 9px}
+.dmpop .two small{display:block;font-size:11px;color:var(--muted)}
+.dmpop .two b{font-family:var(--f-display);font-size:17px}
+.dmpop .rr{display:flex;justify-content:space-between;align-items:baseline}
+.dmpop .rr b{font-family:var(--f-display);font-size:22px;color:var(--c)}
+.dmpop .why{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.dmpop .acts{display:flex;gap:6px}
+.dmpop .acts>*{flex:1;text-align:center;text-decoration:none}
+.dmpop .x{border:0;background:none;font-size:16px;color:var(--muted);padding:2px 6px}
+@media (max-width:860px){ .dmpop{position:fixed;inset-inline:10px;width:auto;bottom:calc(72px + env(safe-area-inset-bottom));top:auto!important;left:10px!important;right:10px!important;z-index:8} }
 .diamond text{font-family:var(--f-body);fill:var(--ink)}
 .diamond .dm-ind{cursor:pointer;transition:r .12s}
 .diamond .dm-ind:hover{stroke:var(--ink);stroke-width:2.5}
@@ -745,19 +766,13 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
   <main id="v-overview" hidden>
     <div class="crumb"><h2>النظرة العامة</h2><span class="small muted" id="ov-meta"></span></div>
     <div class="kpis k6" id="ov-kpis"></div>
-    <div class="ov">
-      <section class="panel">
-        <div class="row spread" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><h2>ماسة الرؤية: المحاور ← الأولويات ← المؤشرات</h2><span class="small muted">مرّر المؤشر على أي نقطة، واضغط للتفاصيل</span></div>
-        <div id="diamond"></div>
-        <div class="legend" id="dm-legend"></div>
-        <div class="scoreexp">كل نقطة مؤشر بلون تصنيف Progress Ratio نحو مستهدف <span class="tyl">2030</span>. الشكل الأخضر داخل الماسة يمثل <b>نضج كل محور</b>: نسبة مؤشراته «على المسار» من مؤشراته القابلة للتصنيف، ورأسه يتجه نحو المحور؛ الخط الأخضر المتقطع = 100%، والرمادي = 50%، والمركز = 0%. اضغط محوراً أو أولوية لفتحها في «التركيز».</div>
-      </section>
-      <section style="display:flex;flex-direction:column;gap:12px">
-        <div class="panel"><h2>المحاور</h2><div id="ov-axes" style="display:flex;flex-direction:column;gap:8px"></div></div>
-        <div class="panel"><h2>الأولويات</h2><table class="ptable" id="ov-pris"></table>
-          <div class="scoreexp"><b>الوسيط R%</b>: وسيط Progress Ratio للمؤشرات القابلة للتصنيف؛ المؤشر الذي حقق مستهدفه يُعد أعلى من أي قيمة. الوسيط لا يتأثر بالقيم المتطرفة، ولا يُحسب متوسط لـ R لأن المؤشرات بوحدات وسرعات مختلفة.</div></div>
-      </section>
-    </div>
+    <section class="panel dmwrap">
+      <div class="row spread" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline"><h2>ماسة الرؤية: المحاور ← الأولويات ← المؤشرات</h2><span class="small muted">اضغط أي مؤشر أو أولوية أو محور لترى ملخصه وترابطه</span></div>
+      <div id="diamond"></div>
+      <div class="dmpop" id="dm-pop" hidden role="dialog" aria-label="ملخص"></div>
+      <div class="legend" id="dm-legend"></div>
+      <div class="scoreexp">كل نقطة مؤشر بلون تصنيف Progress Ratio نحو مستهدف <span class="tyl">2030</span>. الشكل الأخضر داخل الماسة يمثل <b>نضج كل محور</b>: نسبة مؤشراته «على المسار» من مؤشراته القابلة للتصنيف؛ الخط الأخضر المتقطع = 100%، والرمادي = 50%، والمركز = 0%. الرقم داخل كل محور هو هذه النسبة، والرقم داخل كل أولوية عدد مؤشراتها.</div>
+    </section>
   </main>
 
   <main id="v-focus" hidden>
@@ -1527,33 +1542,34 @@ function diamondSVG(list){
   AXES.forEach((a, i) => {
     const items = list.filter(x => x.axis === a); if (!items.length) return;
     const [hx, hy] = P(r1, ANG[i]);
-    links += `<line x1="${c}" y1="${c}" x2="${hx}" y2="${hy}" stroke="var(--line)" stroke-width="2"/>`;
+    links += `<line class="dmg k-a${i} k-x${i}" x1="${c}" y1="${c}" x2="${hx}" y2="${hy}" stroke="var(--line)" stroke-width="2"/>`;
     const pris = prioritiesOf(a), span = 84; let cur = ANG[i] - span / 2;
     const allP = allPriorities();
     pris.forEach(([p, n]) => {
       const w = span * n / items.length, mid = cur + w / 2, [px, py] = P(r2, mid);
       const pItems = items.filter(x => x.priority === p).sort((u, v) => CATS.indexOf(u.cat) - CATS.indexOf(v.cat));
       const ps = stats(pItems), pr = 13 + Math.sqrt(n) * 3.2, pidx = allP.findIndex(q => q[1] === p);
-      links += `<path d="M${hx} ${hy} Q${P((r1 + r2) / 2, mid).join(" ")} ${px} ${py}" fill="none" stroke="var(--line)" stroke-width="1.6"/>`;
+      links += `<path class="dmg k-p${pidx} k-x${i}" d="M${hx} ${hy} Q${P((r1 + r2) / 2, mid).join(" ")} ${px} ${py}" fill="none" stroke="var(--line)" stroke-width="1.6"/>`;
       pItems.forEach((x, j) => {
         const d = cur + w * (j + 0.5) / pItems.length, rr = pItems.length > 8 && j % 2 ? r3 + 24 : r3, [ix, iy] = P(rr, d);
-        links += `<line x1="${px}" y1="${py}" x2="${ix}" y2="${iy}" stroke="var(--line)" stroke-width="0.8"/>`;
+        const kc = `dmg k-i${x.id} k-s${pidx} k-x${i}`;
+        links += `<line class="${kc}" x1="${px}" y1="${py}" x2="${ix}" y2="${iy}" stroke="var(--line)" stroke-width="0.8"/>`;
         const rv = x.p.status === "review";
-        dots += `<circle class="dm-ind" data-open="${x.id}" data-tip="${esc(x.id + " · " + x.name + " — " + (rv ? "يحتاج مراجعة البيانات" : E.CAT[x.cat].ar) + (x.p.R != null && isFinite(x.p.R) ? " · R% " + fmtN(x.p.R*100,0) + "%" : x.p.achieved ? " · حقق المستهدف" : ""))}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="7" fill="${rv ? "var(--surface)" : CAT_C[x.cat]}" stroke="${rv ? "var(--k-back)" : "var(--surface)"}" stroke-width="${rv ? 2 : 1.5}" ${rv ? 'stroke-dasharray="2 2"' : ""}/>`;
+        dots += `<circle class="hit" data-dmi="${x.id}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15"/><circle class="dm-ind ${kc}" data-dmi="${x.id}" data-tip="${esc(x.id + " · " + x.name + " — " + (rv ? "يحتاج مراجعة البيانات" : E.CAT[x.cat].ar) + (x.p.R != null && isFinite(x.p.R) ? " · R% " + fmtN(x.p.R*100,0) + "%" : x.p.achieved ? " · حقق المستهدف" : ""))}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="7" fill="${rv ? "var(--surface)" : CAT_C[x.cat]}" stroke="${rv ? "var(--k-back)" : "var(--surface)"}" stroke-width="${rv ? 2 : 1.5}" ${rv ? 'stroke-dasharray="2 2"' : ""}/>`;
       });
       const words = p.split(" "), lab = words.slice(0, 2).join(" ") + (words.length > 2 ? "…" : "");
       const outward = P(r2 - pr - 13, mid);
-      nodes += `<g class="dm-pri" data-fpri="${pidx}" data-tip="${esc(p + " — " + n + " مؤشر · على المسار " + shareTxt(ps) + " · الوسيط R% " + medTxt(ps))}"><circle class="bg" cx="${px}" cy="${py}" r="${pr}" fill="var(--surface)" stroke="var(--line)"/>${donut(px, py, pr - 3, 5, pItems)}<text x="${px}" y="${py + 4}" text-anchor="middle" style="font-size:12px;font-weight:600">${n}</text></g>
-        <text x="${outward[0]}" y="${outward[1] + 4}" text-anchor="middle" style="font-size:10.5px;fill:var(--muted);pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round">${esc(lab)}</text>`;
+      nodes += `<g class="dm-pri dmg k-p${pidx} k-x${i}" data-dmp="${pidx}" data-tip="${esc(p + " — " + n + " مؤشر · على المسار " + shareTxt(ps) + " · الوسيط R% " + medTxt(ps))}"><circle class="bg" cx="${px}" cy="${py}" r="${pr}" fill="var(--surface)" stroke="var(--line)"/>${donut(px, py, pr - 3, 5, pItems)}<text x="${px}" y="${py + 4}" text-anchor="middle" style="font-size:12px;font-weight:600">${n}</text></g>
+        <text class="dmg k-p${pidx} k-x${i}" x="${outward[0]}" y="${outward[1] + 4}" text-anchor="middle" style="font-size:10.5px;fill:var(--muted);pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round">${esc(lab)}</text>`;
       cur += w;
     });
     const [l1, l2] = axisShort(a);
-    hubs += `<g class="dm-hub" data-faxis="${i}" data-tip="${esc(a + " — " + items.length + " مؤشر · على المسار " + shareTxt(st[i]) + " من القابل للتصنيف · الوسيط R% " + medTxt(st[i]))}"><circle class="bg" cx="${hx}" cy="${hy}" r="${hr}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(hx, hy, hr - 5, 8, items)}
+    hubs += `<g class="dm-hub dmg k-a${i} k-x${i}" data-dma="${i}" data-tip="${esc(a + " — " + items.length + " مؤشر · على المسار " + shareTxt(st[i]) + " من القابل للتصنيف · الوسيط R% " + medTxt(st[i]))}"><circle class="bg" cx="${hx}" cy="${hy}" r="${hr}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(hx, hy, hr - 5, 8, items)}
       <text x="${hx}" y="${hy - 12}" text-anchor="middle" style="font-size:12.5px;font-weight:700">${esc(l1)}</text><text x="${hx}" y="${hy + 4}" text-anchor="middle" style="font-size:9.5px;fill:var(--muted)">${esc(l2)}</text>
       <text x="${hx}" y="${hy + 24}" text-anchor="middle" style="font-size:15px;font-weight:700;fill:var(--k-on)">${shareTxt(st[i])}</text></g>`;
   });
   g += links + dots + nodes + hubs;
-  g += `<g class="dm-center" data-gocenter="1" data-tip="${esc("كل المؤشرات — " + list.length + " مؤشر · على المسار " + shareTxt(tot) + " من القابل للتصنيف · الوسيط R% " + medTxt(tot))}"><circle cx="${c}" cy="${c}" r="${rc}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(c, c, rc - 6, 8, list)}
+  g += `<g class="dm-center" data-dmclear="1" data-tip="${esc("كل المؤشرات — " + list.length + " مؤشر · على المسار " + shareTxt(tot) + " من القابل للتصنيف · الوسيط R% " + medTxt(tot))}"><circle cx="${c}" cy="${c}" r="${rc}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(c, c, rc - 6, 8, list)}
     <text x="${c}" y="${c + 2}" text-anchor="middle" style="font-size:24px;font-weight:700;font-family:var(--f-display)">${list.length}</text><text x="${c}" y="${c + 18}" text-anchor="middle" style="font-size:10px;fill:var(--muted)">مؤشراً</text></g>`;
   return g + `</svg>`;
 }
@@ -1566,13 +1582,53 @@ function renderOverview(){
   $("#ov-kpis").innerHTML = kp.map(([k, l, n, c]) => `<button class="kpi" data-ovcat="${k}" style="--c:${c}"><b class="num">${n}</b><span>${l}</span></button>`).join("");
   $("#diamond").innerHTML = diamondSVG(list);
   $("#dm-legend").innerHTML = CATS.map(k => `<span><i style="background:${CAT_C[k]};height:9px;width:9px;border-radius:50%"></i>${E.CAT[k].ar}</span>`).join("") + `<span><i style="border:1.5px dashed var(--k-back);height:9px;width:9px;border-radius:50%;background:transparent"></i>يحتاج مراجعة البيانات</span>`;
-  $("#ov-axes").innerHTML = AXES.map((a, i) => { const items = list.filter(x => x.axis === a); if (!items.length) return ""; const s = stats(items);
-    return `<button class="axcard" data-faxis="${i}"><span class="nm">${esc(a)}</span><span class="sc" style="color:var(--k-on)">${shareTxt(s)}</span>${stackBar(items)}<span class="meta">${items.length} مؤشر · ${s.cls} قابل للتصنيف · على المسار ${s.counts.on_track} · الوسيط R% ${N(medTxt(s))}</span></button>`; }).join("");
-  const allP = allPriorities();
-  $("#ov-pris").innerHTML = AXES.map(a => { const ps = allP.filter(q => q[0] === a); if (!ps.length) return "";
-    return `<tr class="ax"><td colspan="4">${esc(a)}</td></tr>` + ps.map(([, p, n]) => { const items = list.filter(x => x.priority === p), s = stats(items);
-      return `<tr data-fpri="${allP.findIndex(q => q[1] === p)}"><td>${esc(p)}</td><td class="num" style="white-space:nowrap">${n}</td><td style="width:34%">${stackBar(items)}</td><td class="num" style="white-space:nowrap;text-align:end">${N(medTxt(s))}</td></tr>`; }).join(""); }).join("");
+  dmClear();
 }
+
+/* ================= diamond: select → highlight path + compact card ================= */
+function dmClear(){ const svg = $("#diamond svg"); if (svg){ svg.classList.remove("sel"); svg.querySelectorAll(".hl,.sib,.cur").forEach(e => e.classList.remove("hl","sib","cur")); } const pp = $("#dm-pop"); if (pp) pp.hidden = true; }
+function dmSelect(kind, key, ev){
+  const svg = $("#diamond svg"); if (!svg) return;
+  dmClear(); svg.classList.add("sel"); $("#tip").style.display = "none";
+  const allP = allPriorities(), list = RAW.filter(inSet);
+  const mark = (sel, cls) => svg.querySelectorAll(sel).forEach(e => e.classList.add(cls));
+  let html = "", col = "var(--accent)";
+  if (kind === "i"){
+    const x = BY[key]; if (!x) return; const ai = AXES.indexOf(x.axis), k = allP.findIndex(q => q[1] === x.priority);
+    mark(`.k-s${k}`, "sib"); mark(`.k-a${ai}, .k-p${k}, .k-i${x.id}`, "hl"); mark(`circle.dm-ind.k-i${x.id}`, "cur");
+    col = x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
+    html = `<div class="hd">${catChip(x)}<span><span class="code">${x.id}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></span></div>
+      <h3>${esc(x.name)}</h3><div class="path">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
+      <div class="two"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
+      <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
+      <p class="why">${esc(whyTxt(x))}</p>
+      <div class="acts"><button class="btn primary" data-open="${x.id}">التفاصيل الكاملة</button><a class="btn" href="#focus-i-${x.id}">في التركيز</a></div>`;
+  } else {
+    const isA = kind === "a", ai = isA ? +key : AXES.indexOf(allP[+key][0]), p = isA ? null : allP[+key][1];
+    if (isA) mark(`.k-x${ai}`, "hl"); else { mark(`.k-a${ai}, .k-p${key}`, "hl"); mark(`.k-s${key}`, "hl"); }
+    const items = list.filter(x => isA ? x.axis === AXES[ai] : x.priority === p), s = stats(items);
+    const near = items.filter(x => rKey(x) != null).sort((u, v) => rKey(v) - rKey(u))[0];
+    html = `<div class="hd"><span class="small muted">${isA ? "محور" : "أولوية"}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></div>
+      <h3>${esc(isA ? AXES[ai] : p)}</h3>${isA ? "" : `<div class="path">${esc(AXES[ai])}</div>`}
+      <div class="two"><div><small>المؤشرات</small><b class="num">${items.length}</b></div><div><small>على المسار (من ${s.cls})</small><b class="num" style="color:var(--k-on)">${N(shareTxt(s))}</b></div></div>
+      ${stackBar(items)}
+      <p class="why">الوسيط R%: ${N(medTxt(s))}${near ? ` · الأقرب لمستهدفه: ${esc(near.name)}` : ""}</p>
+      <div class="acts"><a class="btn primary" href="${isA ? "#focus-a-" + ai : "#focus-p-" + key}">افتح في التركيز</a></div>`;
+  }
+  const pop = $("#dm-pop"); pop.innerHTML = html; pop.style.setProperty("--c", col); pop.hidden = false;
+  if (!isMobile() && ev){ const wr = $(".dmwrap").getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+    let lx = ev.clientX - wr.left + 16, ty = ev.clientY - wr.top - ph / 2;
+    if (lx + pw > wr.width - 8) lx = ev.clientX - wr.left - pw - 16;
+    pop.style.left = Math.max(8, lx) + "px"; pop.style.top = Math.max(8, Math.min(ty, wr.height - ph - 8)) + "px"; }
+}
+document.addEventListener("click", e => {
+  const t = e.target; if (!t.closest) return;
+  const n = t.closest("[data-dmi],[data-dmp],[data-dma]");
+  if (n && t.closest("#diamond")){ e.stopImmediatePropagation(); const d = n.dataset; d.dmi ? dmSelect("i", d.dmi, e) : d.dmp ? dmSelect("p", d.dmp, e) : dmSelect("a", d.dma, e); return; }
+  if (t.closest("[data-dmclear]")){ e.stopImmediatePropagation(); dmClear(); return; }
+  if (t.closest("#diamond")){ dmClear(); }
+  if (t.closest("#dm-pop a")) dmClear();
+}, true);
 
 /* ================= focus: one priority at a time ================= */
 function renderFocus(){
@@ -1747,6 +1803,7 @@ fileIn.addEventListener("change", () => handleFile(fileIn.files[0]));
 drop.addEventListener("drop", e => handleFile(e.dataTransfer.files[0]));
 document.addEventListener("mousemove", e => {
   const tp = e.target.closest && e.target.closest("[data-tip]"), tip0 = $("#tip");
+  if (isMobile() || (e.target.closest && e.target.closest("#dm-pop"))){ tip0.style.display = "none"; return; }
   if (tp){ tip0.textContent = tp.dataset.tip; tip0.style.display = "block"; const x = Math.min(e.clientX + 12, window.innerWidth - tip0.offsetWidth - 8); tip0.style.left = Math.max(8, x) + "px"; tip0.style.top = (e.clientY + 14) + "px"; return; }
   const r = e.target.closest && e.target.closest("rect[data-hy]"), tip = $("#tip");
   if (!r){ tip.style.display = "none"; return; }
