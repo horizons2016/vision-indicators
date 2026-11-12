@@ -200,7 +200,10 @@ aside.side{top:101px;height:calc(100vh - 101px)}
 .kpi b{font-size:24px}
 .cat{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:6px;white-space:nowrap}
 /* ألوان التصنيف: تدرّج إشاري ثابت في كل مكان (البطاقة، الجدول، الشريط الجانبي، بطاقات العدّ) */
-:root{--k-on:#1f7a3f;--k-on-bg:#e4f3e8;--k-needs:#8a6d00;--k-needs-bg:#fbf3cf;--k-break:#b35a00;--k-break-bg:#fde6d2;--k-back:#b23a32;--k-back-bg:#fbe7e5;--k-stall:#4f5b66;--k-stall-bg:#e3e7ea;--k-na:#7b807e;--k-na-bg:#eceeed}
+:root{--ax0:#b64e9d;--ax1:#1fa9b4;--ax2:#546cb0;--ax3:#69479c;--ax0-bg:#f6e7f2;--ax1-bg:#e1f5f6;--ax2-bg:#e7ebf6;--ax3-bg:#ede7f5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ax0:#d97cc1;--ax1:#4fd0da;--ax2:#8ea2e0;--ax3:#a585d6;--ax0-bg:#3a1f33;--ax1-bg:#14363a;--ax2-bg:#1f2840;--ax3-bg:#2a2140}}
+:root[data-theme="dark"]{--ax0:#d97cc1;--ax1:#4fd0da;--ax2:#8ea2e0;--ax3:#a585d6;--ax0-bg:#3a1f33;--ax1-bg:#14363a;--ax2-bg:#1f2840;--ax3-bg:#2a2140}
+:root{--k-on:#1b7139;--k-on-bg:#e4f3e8;--k-needs:#8a6d00;--k-needs-bg:#fbf3cf;--k-break:#b35a00;--k-break-bg:#fde6d2;--k-back:#b23a32;--k-back-bg:#fbe7e5;--k-stall:#4f5b66;--k-stall-bg:#e3e7ea;--k-na:#7b807e;--k-na-bg:#eceeed}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29}}
 :root[data-theme="dark"]{--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29}
 .c-on_track{color:var(--k-on);background:var(--k-on-bg)} .c-needs{color:var(--k-needs);background:var(--k-needs-bg)}
@@ -281,6 +284,12 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .fchips{display:flex;gap:6px;flex-wrap:wrap}
 .fchips button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font-size:13px}
 .fchips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#f-axes button{border-inline-start:4px solid var(--axc)}
+#f-axes button[aria-pressed="true"]{background:var(--axc);border-color:var(--axc);color:#fff}
+#f-pris button[aria-pressed="true"]{background:var(--axb);color:var(--ink);border-color:var(--axc)}
+.fm-crumb select{border-color:var(--axc,var(--line))!important} #fm-axis{background:var(--axb,var(--surface))!important;color:var(--axc,var(--ink))!important}
+.fm-sum{border-inline-start:5px solid var(--axc,var(--line))!important}
+.cat b{font-weight:800;margin-inline-end:1px}
 .fsum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .fgrid{display:grid;grid-template-columns:minmax(280px,380px) minmax(0,1fr);gap:14px;align-items:start}
 .flist{display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 260px);overflow:auto;padding-inline-end:2px}
@@ -771,7 +780,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <div id="diamond"></div>
       <div class="dmpop" id="dm-pop" hidden role="dialog" aria-label="ملخص"></div>
       <div class="legend" id="dm-legend"></div>
-      <div class="scoreexp">كل نقطة مؤشر بلون تصنيف Progress Ratio نحو مستهدف <span class="tyl">2030</span>. الشكل الأخضر داخل الماسة يمثل <b>نضج كل محور</b>: نسبة مؤشراته «على المسار» من مؤشراته القابلة للتصنيف؛ الخط الأخضر المتقطع = 100%، والرمادي = 50%، والمركز = 0%. الرقم داخل كل محور هو هذه النسبة، والرقم داخل كل أولوية عدد مؤشراتها.</div>
+      <div class="scoreexp">كل نقطة مؤشر بلون تصنيف Progress Ratio نحو مستهدف <span class="tyl">2030</span>. ألوان المحاور والأولويات هي ألوانها الرسمية في وثيقة الرؤية، وألوان النقاط هي حالة المؤشر. الشكل الملوّن داخل الماسة يمثل <b>نضج كل محور</b>: نسبة مؤشراته «على المسار» من مؤشراته القابلة للتصنيف؛ الخط الأخضر المتقطع = 100%، والرمادي = 50%، والمركز = 0%. الرقم داخل كل محور هو هذه النسبة، والرقم داخل كل أولوية عدد مؤشراتها، والحلقة الرفيعة حولهما توزيع حالات مؤشراتها.</div>
     </section>
   </main>
 
@@ -892,6 +901,11 @@ const AXES = ["الإنسان والمجتمع","الاقتصاد والتنمي
 const EVAL = { done:{label:"منجز", cls:"e-done", c:"var(--good)"}, track:{label:"على المسار", cls:"e-track", c:"var(--info)"}, not:{label:"غير منجز", cls:"e-not", c:"var(--bad)"}, none:{label:"لم يُقيَّم", cls:"e-none", c:"var(--grey)"} };
 const EV_ORDER = ["done","track","not","none"];
 const CATS = ["on_track","needs","breakthrough","backwards","stalled","na"];
+// ألوان المحاور الرسمية من عجلة «أولوياتنا الوطنية» في وثيقة الرؤية: للهيكل فقط (أين أنا؟)
+const AXC = ["var(--ax0)","var(--ax1)","var(--ax2)","var(--ax3)"], AXB = ["var(--ax0-bg)","var(--ax1-bg)","var(--ax2-bg)","var(--ax3-bg)"];
+const axC = a => AXC[AXES.indexOf(a)] || "var(--accent)";
+// رمز مع كل حالة حتى لا يعتمد الفهم على اللون وحده
+const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"!", backwards:"↓", stalled:"=", na:"–"};
 const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)"};
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
 
@@ -965,7 +979,7 @@ function targetTxt(x, ty){ ty = ty || ST.ty;
   if (ty === 2040) return x.t40 != null ? fv(x, x.t40) : "—";
   if (x.range) return fv(x, x.range[0]) + " – " + fv(x, x.range[1]); if (x.t30n != null) return fv(x, x.t30n); if (x.t30r != null) return "أفضل " + fmtN(x.t30r, 0); return x.t30text || "—"; }
 const rTxt = x => x.p && x.p.R != null && isFinite(x.p.R) ? fmtN(x.p.R * 100, 1) + "%" : (x.p && x.p.achieved ? "حقق المستهدف" : "—");
-const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">يحتاج مراجعة البيانات</span>` : `<span class="cat c-${x.cat}">${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
+const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ يحتاج مراجعة البيانات</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
 function ruleTxt(p){
   if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا يُحسب R)";
   if (p.status === "review") return "لم يُصنَّف: " + p.reason;
@@ -1537,36 +1551,42 @@ function diamondSVG(list){
   let g = `<svg class="diamond" viewBox="0 0 ${W} ${H}" role="img" aria-label="ماسة الرؤية: ${list.length} مؤشراً موزعة على المحاور والأولويات">`;
   g += `<polygon points="${poly(r1)}" fill="var(--bg)" stroke="var(--line)" stroke-width="1.5"/><polygon points="${poly(mat(1))}" fill="none" stroke="var(--k-on)" stroke-opacity=".55" stroke-dasharray="6 5"/><polygon points="${poly(mat(0.5))}" fill="none" stroke="var(--muted)" stroke-opacity=".5" stroke-dasharray="2 4"/>`;
   const st = AXES.map(a => stats(list.filter(x => x.axis === a)));
-  g += `<polygon points="${AXES.map((a,i) => P(mat(st[i].onShare ?? 0), ANG[i]).map(v => v.toFixed(1)).join(",")).join(" ")}" fill="var(--k-on)" fill-opacity=".22" stroke="var(--k-on)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  // شكل النضج: رأس كل محور بلونه الرسمي، وبُعده عن المركز = نسبة مؤشراته «على المسار»
+  const V = AXES.map((a,i) => P(mat(st[i].onShare ?? 0), ANG[i])), mid2 = (u, v) => [(u[0] + v[0]) / 2, (u[1] + v[1]) / 2], f1 = q => q.map(v => v.toFixed(1)).join(",");
+  AXES.forEach((a, i) => { const pv = V[(i + 3) % 4], nx = V[(i + 1) % 4];
+    g += `<polygon points="${[[c, c], mid2(pv, V[i]), V[i], mid2(V[i], nx)].map(f1).join(" ")}" fill="${AXC[i]}" fill-opacity=".38" stroke="none"/>`; });
+  g += `<polygon points="${V.map(f1).join(" ")}" fill="none" stroke="var(--ink)" stroke-opacity=".55" stroke-width="1.6" stroke-linejoin="round"/>`;
   let links = "", nodes = "", dots = "", hubs = "";
   AXES.forEach((a, i) => {
     const items = list.filter(x => x.axis === a); if (!items.length) return;
     const [hx, hy] = P(r1, ANG[i]);
-    links += `<line class="dmg k-a${i} k-x${i}" x1="${c}" y1="${c}" x2="${hx}" y2="${hy}" stroke="var(--line)" stroke-width="2"/>`;
+    const AC = AXC[i];
+    links += `<line class="dmg k-a${i} k-x${i}" x1="${c}" y1="${c}" x2="${hx}" y2="${hy}" stroke="${AC}" stroke-opacity=".5" stroke-width="2.5"/>`;
     const pris = prioritiesOf(a), span = 84; let cur = ANG[i] - span / 2;
     const allP = allPriorities();
     pris.forEach(([p, n]) => {
       const w = span * n / items.length, mid = cur + w / 2, [px, py] = P(r2, mid);
       const pItems = items.filter(x => x.priority === p).sort((u, v) => CATS.indexOf(u.cat) - CATS.indexOf(v.cat));
       const ps = stats(pItems), pr = 13 + Math.sqrt(n) * 3.2, pidx = allP.findIndex(q => q[1] === p);
-      links += `<path class="dmg k-p${pidx} k-x${i}" d="M${hx} ${hy} Q${P((r1 + r2) / 2, mid).join(" ")} ${px} ${py}" fill="none" stroke="var(--line)" stroke-width="1.6"/>`;
+      links += `<path class="dmg k-p${pidx} k-x${i}" d="M${hx} ${hy} Q${P((r1 + r2) / 2, mid).join(" ")} ${px} ${py}" fill="none" stroke="${AC}" stroke-opacity=".55" stroke-width="2"/>`;
       pItems.forEach((x, j) => {
         const d = cur + w * (j + 0.5) / pItems.length, rr = pItems.length > 8 && j % 2 ? r3 + 24 : r3, [ix, iy] = P(rr, d);
         const kc = `dmg k-i${x.id} k-s${pidx} k-x${i}`;
-        links += `<line class="${kc}" x1="${px}" y1="${py}" x2="${ix}" y2="${iy}" stroke="var(--line)" stroke-width="0.8"/>`;
+        links += `<line class="${kc}" x1="${px}" y1="${py}" x2="${ix}" y2="${iy}" stroke="${AC}" stroke-opacity=".35" stroke-width="1"/>`;
         const rv = x.p.status === "review";
         dots += `<circle class="hit" data-dmi="${x.id}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15"/><circle class="dm-ind ${kc}" data-dmi="${x.id}" data-tip="${esc(x.id + " · " + x.name + " — " + (rv ? "يحتاج مراجعة البيانات" : E.CAT[x.cat].ar) + (x.p.R != null && isFinite(x.p.R) ? " · R% " + fmtN(x.p.R*100,0) + "%" : x.p.achieved ? " · حقق المستهدف" : ""))}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="7" fill="${rv ? "var(--surface)" : CAT_C[x.cat]}" stroke="${rv ? "var(--k-back)" : "var(--surface)"}" stroke-width="${rv ? 2 : 1.5}" ${rv ? 'stroke-dasharray="2 2"' : ""}/>`;
       });
       const words = p.split(" "), lab = words.slice(0, 2).join(" ") + (words.length > 2 ? "…" : "");
-      const outward = P(r2 - pr - 13, mid);
-      nodes += `<g class="dm-pri dmg k-p${pidx} k-x${i}" data-dmp="${pidx}" data-tip="${esc(p + " — " + n + " مؤشر · على المسار " + shareTxt(ps) + " · الوسيط R% " + medTxt(ps))}"><circle class="bg" cx="${px}" cy="${py}" r="${pr}" fill="var(--surface)" stroke="var(--line)"/>${donut(px, py, pr - 3, 5, pItems)}<text x="${px}" y="${py + 4}" text-anchor="middle" style="font-size:12px;font-weight:600">${n}</text></g>
-        <text class="dmg k-p${pidx} k-x${i}" x="${outward[0]}" y="${outward[1] + 4}" text-anchor="middle" style="font-size:10.5px;fill:var(--muted);pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round">${esc(lab)}</text>`;
+      const cs = Math.cos(mid * Math.PI / 180), side = Math.abs(cs) > 0.6;   // المحوران الأفقيان: الاسم بجانب العقدة نحو الخارج
+      const outward = side ? [px + (cs > 0 ? 1 : -1) * (pr + 8), py - 1] : P(r2 - pr - 13, mid), anc = side ? (cs > 0 ? "start" : "end") : "middle";
+      nodes += `<g class="dm-pri dmg k-p${pidx} k-x${i}" data-dmp="${pidx}" data-tip="${esc(p + " — " + n + " مؤشر · على المسار " + shareTxt(ps) + " · الوسيط R% " + medTxt(ps))}">${donut(px, py, pr + 4, 3.5, pItems)}<circle class="bg" cx="${px}" cy="${py}" r="${pr}" fill="${AC}" stroke="var(--surface)" stroke-width="1.5"/><text x="${px}" y="${py + 4.5}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:#fff">${n}</text></g>
+        <text class="dmg k-p${pidx} k-x${i}" x="${outward[0]}" y="${outward[1] + 4}" text-anchor="${anc}" style="direction:ltr;unicode-bidi:plaintext;font-size:10.5px;font-weight:600;fill:${AC};pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round">${esc(lab)}</text>`;
       cur += w;
     });
     const [l1, l2] = axisShort(a);
-    hubs += `<g class="dm-hub dmg k-a${i} k-x${i}" data-dma="${i}" data-tip="${esc(a + " — " + items.length + " مؤشر · على المسار " + shareTxt(st[i]) + " من القابل للتصنيف · الوسيط R% " + medTxt(st[i]))}"><circle class="bg" cx="${hx}" cy="${hy}" r="${hr}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(hx, hy, hr - 5, 8, items)}
-      <text x="${hx}" y="${hy - 12}" text-anchor="middle" style="font-size:12.5px;font-weight:700">${esc(l1)}</text><text x="${hx}" y="${hy + 4}" text-anchor="middle" style="font-size:9.5px;fill:var(--muted)">${esc(l2)}</text>
-      <text x="${hx}" y="${hy + 24}" text-anchor="middle" style="font-size:15px;font-weight:700;fill:var(--k-on)">${shareTxt(st[i])}</text></g>`;
+    hubs += `<g class="dm-hub dmg k-a${i} k-x${i}" data-dma="${i}" data-tip="${esc(a + " — " + items.length + " مؤشر · على المسار " + shareTxt(st[i]) + " من القابل للتصنيف · الوسيط R% " + medTxt(st[i]))}">${donut(hx, hy, hr + 5, 4, items)}<circle class="bg" cx="${hx}" cy="${hy}" r="${hr}" fill="${AXB[i]}" stroke="${AC}" stroke-width="3.5"/>
+      <text x="${hx}" y="${hy - 12}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:${AC}">${esc(l1)}</text><text x="${hx}" y="${hy + 4}" text-anchor="middle" style="font-size:9.5px;fill:var(--muted)">${esc(l2)}</text>
+      <text x="${hx}" y="${hy + 25}" text-anchor="middle" style="font-size:15px;font-weight:700;fill:var(--ink)">${shareTxt(st[i])}</text></g>`;
   });
   g += links + dots + nodes + hubs;
   g += `<g class="dm-center" data-dmclear="1" data-tip="${esc("كل المؤشرات — " + list.length + " مؤشر · على المسار " + shareTxt(tot) + " من القابل للتصنيف · الوسيط R% " + medTxt(tot))}"><circle cx="${c}" cy="${c}" r="${rc}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(c, c, rc - 6, 8, list)}
@@ -1581,7 +1601,7 @@ function renderOverview(){
     .concat([["rest", "ثابت · لا يُصنَّف · يحتاج مراجعة", tot.counts.stalled + tot.counts.na + tot.counts.review, "var(--k-na)"]]);
   $("#ov-kpis").innerHTML = kp.map(([k, l, n, c]) => `<button class="kpi" data-ovcat="${k}" style="--c:${c}"><b class="num">${n}</b><span>${l}</span></button>`).join("");
   $("#diamond").innerHTML = diamondSVG(list);
-  $("#dm-legend").innerHTML = CATS.map(k => `<span><i style="background:${CAT_C[k]};height:9px;width:9px;border-radius:50%"></i>${E.CAT[k].ar}</span>`).join("") + `<span><i style="border:1.5px dashed var(--k-back);height:9px;width:9px;border-radius:50%;background:transparent"></i>يحتاج مراجعة البيانات</span>`;
+  $("#dm-legend").innerHTML = `<span style="flex-basis:100%;height:0"></span>` + AXES.map((a, i) => `<span><i style="background:${AXC[i]};height:10px;width:16px;border-radius:3px"></i>${esc(a)}</span>`).join("") + `<span style="flex-basis:100%;height:0"></span>` + CATS.map(k => `<span><i style="background:${CAT_C[k]};height:9px;width:9px;border-radius:50%"></i>${CAT_SYM[k]} ${E.CAT[k].ar}</span>`).join("") + `<span><i style="border:1.5px dashed var(--k-back);height:9px;width:9px;border-radius:50%;background:transparent"></i>يحتاج مراجعة البيانات</span>`;
   dmClear();
 }
 
@@ -1598,7 +1618,7 @@ function dmSelect(kind, key, ev){
     mark(`.k-s${k}`, "sib"); mark(`.k-a${ai}, .k-p${k}, .k-i${x.id}`, "hl"); mark(`circle.dm-ind.k-i${x.id}`, "cur");
     col = x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
     html = `<div class="hd">${catChip(x)}<span><span class="code">${x.id}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></span></div>
-      <h3>${esc(x.name)}</h3><div class="path">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
+      <h3>${esc(x.name)}</h3><div class="path" style="color:${axC(x.axis)};font-weight:600">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
       <div class="two"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
       <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
       <p class="why">${esc(whyTxt(x))}</p>
@@ -1609,12 +1629,13 @@ function dmSelect(kind, key, ev){
     const items = list.filter(x => isA ? x.axis === AXES[ai] : x.priority === p), s = stats(items);
     const near = items.filter(x => rKey(x) != null).sort((u, v) => rKey(v) - rKey(u))[0];
     html = `<div class="hd"><span class="small muted">${isA ? "محور" : "أولوية"}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></div>
-      <h3>${esc(isA ? AXES[ai] : p)}</h3>${isA ? "" : `<div class="path">${esc(AXES[ai])}</div>`}
+      <h3 style="color:${AXC[ai]}">${esc(isA ? AXES[ai] : p)}</h3>${isA ? "" : `<div class="path" style="color:${AXC[ai]};font-weight:600">${esc(AXES[ai])}</div>`}
       <div class="two"><div><small>المؤشرات</small><b class="num">${items.length}</b></div><div><small>على المسار (من ${s.cls})</small><b class="num" style="color:var(--k-on)">${N(shareTxt(s))}</b></div></div>
       ${stackBar(items)}
       <p class="why">الوسيط R%: ${N(medTxt(s))}${near ? ` · الأقرب لمستهدفه: ${esc(near.name)}` : ""}</p>
       <div class="acts"><a class="btn primary" href="${isA ? "#focus-a-" + ai : "#focus-p-" + key}">افتح في التركيز</a></div>`;
   }
+  if (kind !== "i") col = AXC[kind === "a" ? +key : AXES.indexOf(allP[+key][0])];
   const pop = $("#dm-pop"); pop.innerHTML = html; pop.style.setProperty("--c", col); pop.hidden = false;
   if (!isMobile() && ev){ const wr = $(".dmwrap").getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
     let lx = ev.clientX - wr.left + 16, ty = ev.clientY - wr.top - ph / 2;
@@ -1636,12 +1657,13 @@ function renderFocus(){
   if (ST.fAxis == null || !RAW.some(x => inSet(x) && x.axis === AXES[ST.fAxis])) ST.fAxis = AXES.findIndex(a => RAW.some(x => inSet(x) && x.axis === a));
   const ax = AXES[ST.fAxis], pris = allP.filter(q => q[0] === ax);
   if (ST.fPri !== "all" && (ST.fPri == null || !pris.some(q => q[1] === ST.fPri))) ST.fPri = pris.length ? pris[0][1] : "all";
-  $("#f-axes").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<button data-fsetaxis="${i}" aria-pressed="${i === ST.fAxis}">${esc(a)}</button>` : "").join("");
+  $("#f-axes").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<button data-fsetaxis="${i}" aria-pressed="${i === ST.fAxis}" style="--axc:${AXC[i]}">${esc(a)}</button>` : "").join("");
   $("#f-pris").innerHTML = `<button data-fsetpri="all" aria-pressed="${ST.fPri === "all"}">كل أولويات المحور</button>` + pris.map(([, p, n]) => `<button data-fsetpri="${esc(p)}" aria-pressed="${ST.fPri === p}">${esc(p)} <span class="muted">(${n})</span></button>`).join("");
   const items = sortFocus(RAW.filter(x => inSet(x) && x.axis === ax && (ST.fPri === "all" || x.priority === ST.fPri)));
   $("#f-sort").value = ST.fSort;
   const s = stats(items);
-  $("#f-title").textContent = ST.fPri === "all" ? ax : ST.fPri;
+  $("#f-title").textContent = ST.fPri === "all" ? ax : ST.fPri; $("#f-title").style.color = AXC[ST.fAxis];
+  document.querySelector("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]); document.querySelector("#v-focus").style.setProperty("--axb", AXB[ST.fAxis]);
   $("#f-meta").textContent = `${items.length} مؤشر · مستهدف ${ST.ty}`;
   $("#f-sum").innerHTML = `<div class="kpi" style="--c:var(--ink)"><b class="num">${items.length}</b><span>مؤشراً</span></div>
     <div class="kpi" style="--c:var(--k-on)"><b class="num">${shareTxt(s)}</b><span>على المسار من القابل للتصنيف (${s.cls})</span></div>
