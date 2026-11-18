@@ -961,7 +961,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-835cae40fd";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-f3ad8fe545";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -973,7 +973,7 @@ const CATS = ["on_track","needs","breakthrough","backwards","stalled","na"];
 const AXC = ["var(--ax0)","var(--ax1)","var(--ax2)","var(--ax3)"], AXB = ["var(--ax0-bg)","var(--ax1-bg)","var(--ax2-bg)","var(--ax3-bg)"];
 const axC = a => AXC[AXES.indexOf(a)] || "var(--accent)";
 // رمز مع كل حالة حتى لا يعتمد الفهم على اللون وحده
-// اسم الأولوية الرسمي كما في وثيقة الرؤية؛ ملف المؤشرات المحدثة يكتبها باسم مختلف (للعرض والتجميع فقط، والبيانات كما هي)
+// اسم الأولوية الرسمي كما في وثيقة الرؤية؛ ملف مؤشرات الرؤية (المحدثة) يكتبها باسم مختلف (للعرض والتجميع فقط، والبيانات كما هي)
 const PRI_ALIAS = {"المواطنة والهوية والثقافة والقيم": "المواطنة والهوية والتراث والثقافة الوطنية"};
 const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓", stalled:"=", na:"–"};
 const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)"};
@@ -981,7 +981,7 @@ const LV_LABEL = ["غير قابل للقياس","قياس التقدم","الت
 
 const ST = { fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
   assess:{}, db:null, user:null, me:null, admin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
-try { const s = localStorage.getItem("ovd-set"); if (s) ST.set = s; const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
+try { const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
 let RAW = [], BY = {}, YMIN = 2010, KIDS = {};
 
 const num = v => { if (v == null || v === "") return null; if (typeof v === "number") return isFinite(v) ? v : null;
@@ -1014,7 +1014,8 @@ function buildModel(ds){
       rel: {last: i.rel_last || null, next: i.rel_next || null, due: i.rel_due || null, note: i.rel_note || null, src: i.rel_src || null},
     };
   };
-  const act = ds.indicators.filter(i => i.active !== "لا");
+  // المؤشر الأصلي الذي له مقابل في مؤشرات الرؤية (حقل dup) لا يُعرض، حتى لا تتكرر المعلومة
+  const act = ds.indicators.filter(i => i.active !== "لا" && !i.dup);
   KIDS = {}; act.filter(i => i.parent).map(mk).forEach(k => (KIDS[k.parent] = KIDS[k.parent] || []).push(k));
   RAW = act.filter(i => !i.parent).map(mk);
   RAW.forEach(x => { if (KIDS[x.id]) x.kids = KIDS[x.id]; });
@@ -1114,7 +1115,7 @@ const rateTxt = (x, v) => v == null || !isFinite(v) ? "—" : x.p.method === "CA
 /* ================= filtering ================= */
 const norm = s => String(s||"").toLowerCase().replace(/[ً-ٰٟـ]/g,"").replace(/[إأآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ي").replace(/[^\p{L}\p{N}\s\-]/gu," ").replace(/\s+/g," ").trim();
 const stripAl = w => w.length > 4 && w.startsWith("ال") ? w.slice(2) : w;
-const inSet = x => ST.set === "all" || x.set === ST.set;
+const inSet = x => x.set === ST.set;
 const matchQ = x => !ST.q || norm(ST.q).split(" ").filter(Boolean).map(stripAl).every(t => x._k.includes(t));
 const baseList = () => RAW.filter(x => inSet(x) && (!ST.axis || x.axis === ST.axis) && (!ST.pri || x.priority === ST.pri) && matchQ(x));
 function filtered(){
@@ -1185,7 +1186,7 @@ function rowHTML(x){
 function renderDash(){
   const base = baseList(), list = filtered();
   $("#title").textContent = ST.pri || ST.axis || "كل المؤشرات";
-  $("#count").textContent = `${list.length} مؤشر` + (ST.set === "updated" ? " · المحدثة" : ST.set === "original" ? " · الأصلية" : "");
+  $("#count").textContent = `${list.length} مؤشر` + (ST.set === "updated" ? " · مؤشرات الرؤية" : " · المؤشرات المساندة");
   $("#kpis").innerHTML = `<button class="kpi" data-ev="" aria-pressed="${!ST.ev}" style="--c:var(--ink)"><b class="num">${base.length}</b><span>كل المؤشرات</span></button>` +
     EV_ORDER.map(k => `<button class="kpi" data-ev="${k}" aria-pressed="${ST.ev===k}" style="--c:${EVAL[k].c}"><b class="num">${base.filter(x=>x.ev===k).length}</b><span>${EVAL[k].label}</span></button>`).join("");
   $("#kpis2").innerHTML = CATS.map(k => `<button class="kpi" data-cat="${k}" aria-pressed="${ST.cat===k}" style="--c:${CAT_C[k]}"><b class="num">${base.filter(x=>x.cat===k).length}</b><span>${E.CAT[k].ar} · ${E.CAT[k].en}</span></button>`).join("");
@@ -1315,7 +1316,7 @@ function openDrawer(id, target){
   const evalCtl = ST.admin ? `<div class="evalopts" role="group" aria-label="تقييم المؤشر">${EV_ORDER.map(k => `<button type="button" class="${EVAL[k].cls}" data-setev="${k}" aria-pressed="${x.ev===k}">${EVAL[k].label}</button>`).join("")}</div>` : `<div>${badge(x)}</div>`;
   const lastOut = x.curAll && x.curAll.y > (isFinite(cr.calcTo) ? cr.calcTo : 9999) ? `<div class="msg warn">قراءة ${x.curAll.y} (${N(x.curAll.v != null ? fv(x, x.curAll.v) : "الترتيب " + x.curAll.r)}) خارج فترة الحساب ولم تدخل المعادلة.</div>` : "";
   const html = `
-    <div class="dh"><div><div class="small muted">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h2 style="font-size:18px">${esc(x.name)}</h2><div class="small muted"><span class="code">${x.id}</span> · ${x.set==="updated"?"المؤشرات المحدثة":"المؤشرات الأصلية"}${x.intl?" · دولي":""} · <span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span></div></div>
+    <div class="dh"><div><div class="small muted">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h2 style="font-size:18px">${esc(x.name)}</h2><div class="small muted"><span class="code">${x.id}</span> · ${x.set==="updated"?"مؤشرات الرؤية":"المؤشرات المساندة"}${x.intl?" · دولي":""} · <span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span></div></div>
       <div style="display:flex;gap:6px"><button class="btn" data-copylink="${x.id}">نسخ الرابط</button><button class="btn" data-close aria-label="إغلاق">✕</button></div></div>
     <div class="db">
       <div class="itabs" role="tablist">${["الملخص","القراءات","المنهجية","المصدر"].map((n, i) => `<button role="tab" data-itab="${i}" aria-selected="${(ST.indTab||0) === i}">${n}</button>`).join("")}</div>
@@ -1424,7 +1425,7 @@ function exportResults(){
   const H = ["الرمز","المجموعة","المحور","الأولوية","المؤشر","الوحدة","سنة آخر قراءة","آخر قراءة","نوع القراءة","مصدر القراءة","سنة المستهدف","المستهدف","طريقة الحساب","أول قراءة مستخدمة (سنة)","أول قراءة مستخدمة","آخر قراءة مستخدمة (سنة)","آخر قراءة مستخدمة","المعدل الفعلي","المعدل المطلوب","R","R%","التصنيف الإحصائي","القاعدة المطبّقة","حقق المستهدف","الفجوة المتبقية","مستوى الأهلية","التوقع (تقديري)","حد أدنى 80%","حد أعلى 80%","احتمال تحقيق المستهدف","فترة العرض","فترة الحساب"];
   const val = (x, v, f) => v == null ? "" : f === "r" ? v : x.pct ? +(v*100).toFixed(4) : +v.toFixed(6);
   const rows = filtered().map(x => { const p = x.p, f = p.field;
-    return [x.id, x.set==="updated"?"محدث":"أصلي", x.axis, x.priority, x.name, x.unit, x.cur?x.cur.y:"", x.cur?(x.cur.v!=null?val(x,x.cur.v,"v"):x.cur.r):"", x.cur?(x.cur.kind||"فعلية"):"", x.cur?(x.cur.src||""):"",
+    return [x.id, x.set==="updated"?"مؤشرات الرؤية":"المؤشرات المساندة", x.axis, x.priority, x.name, x.unit, x.cur?x.cur.y:"", x.cur?(x.cur.v!=null?val(x,x.cur.v,"v"):x.cur.r):"", x.cur?(x.cur.kind||"فعلية"):"", x.cur?(x.cur.src||""):"",
       ST.ty, targetTxt(x), p.method, p.first?p.first.y:"", p.first?val(x,p.first.val,f):"", p.latest?p.latest.y:"", p.latest?val(x,p.latest.val,f):"",
       p.actual!=null&&isFinite(p.actual)?+p.actual.toFixed(8):"", p.required!=null&&isFinite(p.required)?+p.required.toFixed(8):"", p.R!=null&&isFinite(p.R)?+p.R.toFixed(4):"", p.R!=null&&isFinite(p.R)?+(p.R*100).toFixed(2):"",
       E.CAT[x.cat].ar, ruleTxt(p), p.achieved?"نعم":"لا", gapTxt(x), x.el.level,
@@ -1435,7 +1436,7 @@ function exportResults(){
 }
 
 /* ================= excel: export template ================= */
-const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],
+const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["dup","مقابله في مؤشرات الرؤية"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],
   ["calc","طريقة حساب التقدم"],["agg","نوع التجميع"],["cap","سقف أهلية التحليل"],["approval","حالة الاعتماد المنهجي"],["challenges","التحديات"],["explain","ملاحظات تفسيرية"],["initiatives","المبادرات المرتبطة"],["factors","العوامل المؤثرة (البطاقة)"],["supporting","المؤشرات المساندة (البطاقة)"],["risk","تقدير عدم التحقق (البطاقة)"]];
 const NUM_KEYS = new Set(["base","t30","t30hi","t30rank","t40"]);
 const RD_COLS = ["الرمز","اسم المؤشر (للعرض فقط)","السنة","القيمة","الترتيب","المصدر","نوع القراءة","انقطاع السلسلة (تغيير التعريف)","موثوقية المصدر","ملاحظة"];
@@ -1487,6 +1488,7 @@ function parseWorkbook(buf){
     if (o.type && !["وطني","دولي"].includes(o.type)) Er.push(`${at}: نوع المؤشر يجب أن يكون وطني أو دولي.`);
     NUM_KEYS.forEach(k => { const n = num(o[k]); if (Number.isNaN(n)) Er.push(`${at}: «${IND_COLS.find(c=>c[0]===k)[1]}» ليس رقماً.`); else o[k] = n; });
     o.active = o.active === "لا" ? "لا" : "نعم";
+    o.dup = o.dup ? String(o.dup).trim().toUpperCase().replace(/\s/g,"") : null;
     o.calc = o.calc ? String(o.calc).trim() : "Linear"; if (!LISTS.calc.includes(o.calc)) Er.push(`${at}: طريقة حساب التقدم يجب أن تكون Linear أو CAGR.`);
     if (o.calc === "CAGR" && (o.unit === "%" || o.unit === "ترتيب")) Er.push(`${at}: لا يُستخدم CAGR مع ${o.unit === "%" ? "النسب" : "الترتيب"}.`);
     if (o.agg != null && !LISTS.agg.includes(o.agg)) Er.push(`${at}: نوع التجميع «${o.agg}» غير معروف.`);
@@ -1498,6 +1500,7 @@ function parseWorkbook(buf){
     inds.push(o);
   });
   const codes = new Set(inds.map(i => i.code)), unit = Object.fromEntries(inds.map(i => [i.code, i.unit])), calc = Object.fromEntries(inds.map(i => [i.code, i.calc]));
+  inds.forEach(o => { if (!o.dup) return; const t = inds.find(z => z.code === o.dup); if (!t) Er.push(`${o.code}: «مقابله في مؤشرات الرؤية» يشير إلى رمز غير موجود (${o.dup}).`); else if (t.set !== "محدث") Er.push(`${o.code}: «مقابله في مؤشرات الرؤية» يجب أن يكون مؤشراً من مؤشرات الرؤية.`); });
   const reads = [], key = new Map();
   R.forEach((row, i) => {
     const ln = i + 2, c = String(get(row,"الرمز") || "").trim().toUpperCase().replace(/\s/g,"");
@@ -1731,7 +1734,7 @@ document.addEventListener("click", e => { if (e.target.closest && e.target.close
 function knownPriorities(){ const m = new Map(); RAW.forEach(x => { if (!m.has(x.priority)) m.set(x.priority, x.axis); }); return AXES.flatMap(a => [...m].filter(([, ax]) => ax === a).map(([p]) => [a, p])); }
 function renderOverview(){
   const list = RAW.filter(inSet), tot = stats(list), c = tot.counts;
-  $("#ov-meta").textContent = `${ST.set === "updated" ? "المؤشرات المحدثة" : ST.set === "original" ? "المؤشرات الأصلية" : "كل المؤشرات"} · مستهدف ${ST.ty}`;
+  $("#ov-meta").textContent = `${ST.set === "updated" ? "مؤشرات الرؤية" : "المؤشرات المساندة"} · مستهدف ${ST.ty}`;
   $("#ov-tot").innerHTML = `<div class="k"><b class="num">${list.length}</b><span>مؤشراً</span></div>
     <div class="k"><b class="num" style="color:var(--k-on)">↑ ${c.on_track}</b><span>على المسار</span></div>
     <div class="k"><b class="num" style="color:var(--k-back)">↓ ${c.backwards}</b><span>يتراجع</span></div>
@@ -1922,11 +1925,11 @@ function readHash(){
     const m = h.match(/^focus-(a|p|i)-(.+)$/);
     if (m && m[1] === "a"){ ST.fAxis = +m[2]; ST.fPri = "all"; ST.fInd = null; }
     if (m && m[1] === "p"){ const e = allPriorities()[+m[2]]; if (e){ ST.fAxis = AXES.indexOf(e[0]); ST.fPri = e[1]; ST.fInd = null; } }
-    if (m && m[1] === "i" && BY[m[2]]){ const x = BY[m[2]]; if (!inSet(x)) ST.set = "all"; ST.fAxis = AXES.indexOf(x.axis); ST.fPri = x.priority; ST.fInd = x.id; }
+    if (m && m[1] === "i" && BY[m[2]]){ const x = BY[m[2]]; if (!inSet(x)) ST.set = x.set; ST.fAxis = AXES.indexOf(x.axis); ST.fPri = x.priority; ST.fInd = x.id; }
     render(); return;
   }
   ST.page = h === "admin" ? "admin" : "dash";
-  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = "all"; closeDrawer(); if (ST.ind !== id) ST.indTab = 0; ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
+  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = BY[id].set; closeDrawer(); if (ST.ind !== id) ST.indTab = 0; ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
   closeDrawer(); $("#drawer").dataset.id = "";
   if (h.startsWith("a-")){ ST.axis = AXES[+h.slice(2)] || null; ST.pri = null; }
   else if (h.startsWith("p-")){ const all = AXES.flatMap(a => prioritiesOf(a).map(p => [a, p[0]])); const e = all[+h.slice(2)]; if (e){ ST.axis = e[0]; ST.pri = e[1]; } }
@@ -1937,7 +1940,7 @@ function readHash(){
 /* ================= render ================= */
 function setSeg(){
   const nU = RAW.filter(x=>x.set==="updated").length, nO = RAW.filter(x=>x.set==="original").length;
-  $("#setseg").innerHTML = [["updated",`المحدثة (${nU})`],["original",`الأصلية (${nO})`],["all","الكل"]].map(([k,l]) => `<button data-set="${k}" aria-pressed="${ST.set===k}">${l}</button>`).join("");
+  $("#setseg").innerHTML = [["updated",`مؤشرات الرؤية (${nU})`],["original",`المؤشرات المساندة (${nO})`]].map(([k,l]) => `<button data-set="${k}" aria-pressed="${ST.set===k}">${l}</button>`).join("");
 }
 function render(){
   compute(); setSeg(); renderTree(); renderControls();
