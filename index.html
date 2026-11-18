@@ -875,9 +875,8 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <select id="m-pri" aria-label="الأولوية"></select>
     </div>
     <div class="crumb"><h2 id="title">كل المؤشرات</h2><span class="small muted" id="count"></span></div>
-    <div class="kpihead"><span>التقييم اليدوي · فريق المديرية</span></div>
-    <div class="kpis k5" id="kpis"></div>
-    <div class="kpihead"><span>تصنيف المسار الإحصائي · Progress Ratio نحو مستهدف <span id="tylbl">2030</span></span><span>حقل مستقل عن التقييم اليدوي</span></div>
+    <div class="kpis k5" id="kpis" hidden></div>
+    <div class="kpihead"><span>تصنيف المسار الإحصائي · Progress Ratio نحو مستهدف <span id="tylbl">2030</span></span></div>
     <div class="kpis k6" id="kpis2"></div>
     <div class="filters">
       <select id="f-type" aria-label="نوع المؤشر"><option value="">كل الأنواع</option><option value="intl">دولي</option><option value="nat">وطني</option></select>
@@ -888,7 +887,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <button class="btn" id="reset" hidden>إلغاء التصفية</button>
     </div>
     <section class="grid" id="grid" aria-live="polite"></section>
-    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>R%</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th><th>التقييم</th></tr></thead><tbody id="tbody"></tbody></table></section>
+    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>R%</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
   </main>
 
   <main id="v-admin" hidden>
@@ -962,7 +961,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-b86a124f56";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-45385eeeb9";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1131,13 +1130,13 @@ function cardHTML(x){
       <span class="tg">مستهدف ${ST.ty}<b>${N(targetTxt(x))}</b></span></span>
     ${spark(x)}
     <span class="rline"><span>${catChip(x)}</span><span>R% <b>${N(rTxt(x))}</b></span></span>
-    <span class="foot">${badge(x)}<span style="display:flex;gap:6px;align-items:center">${x.age!=null&&x.age>=2?`<span class="age ${ageCls(x.age)}">${ageTxt(x.age)}</span>`:""}<span class="code">${x.id}</span></span></span>
+    <span class="foot"><span></span><span style="display:flex;gap:6px;align-items:center">${x.age!=null&&x.age>=2?`<span class="age ${ageCls(x.age)}">${ageTxt(x.age)}</span>`:""}<span class="code">${x.id}</span></span></span>
   </div>`;
 }
 function rowHTML(x){
   return `<tr data-open="${x.id}" tabindex="0"><td class="n code">${x.id}</td><td>${esc(x.name)}</td><td class="small">${esc(x.priority)}</td>
     <td class="n">${N(curTxt(x))} <span class="small muted">${x.cur?x.cur.y:""}</span></td><td class="n">${N(targetTxt(x))}</td>
-    <td class="n">${N(rTxt(x))}</td><td>${catChip(x)}</td><td class="n">${N(gapTxt(x))}</td><td><span class="lv lv${x.el.level}">${x.el.level}</span></td><td>${badge(x)}</td></tr>`;
+    <td class="n">${N(rTxt(x))}</td><td>${catChip(x)}</td><td class="n">${N(gapTxt(x))}</td><td><span class="lv lv${x.el.level}">${x.el.level}</span></td></tr>`;
 }
 function renderDash(){
   const base = baseList(), list = filtered();
@@ -1289,7 +1288,6 @@ function openDrawer(id, target){
         <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
           <div class="tile"><small>المعدل الفعلي</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.actual))}</b></div><div class="tile"><small>المعدل المطلوب</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.required))}</b></div><div class="tile"><small>الأهلية</small><b style="font-size:14px"><span class="lv lv${x.el.level}">${x.el.level}</span> ${LV_LABEL[x.el.level]}</b></div></div>
       </div>
-      <div class="evalbox"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3 style="font-size:14px">التقييم اليدوي · فريق المديرية</h3><span class="small muted">${a&&a.at?`آخر تقييم ${new Date(a.at).toLocaleDateString("ar-OM")}${a.by&&ST.names[a.by]?" · "+esc(ST.names[a.by]):""}`:""}</span></div>${evalCtl}<div class="small muted">حقل مستقل عن التصنيف الإحصائي.</div></div>
       </div>
       <div data-tabp="1" ${(ST.indTab||0) !== 1 ? "hidden" : ""}>
       ${periodHTML(x)}
@@ -1375,7 +1373,7 @@ function saveFile(name, data){
 }
 function exportResults(){
   const cr = calcRange();
-  const H = ["الرمز","المجموعة","المحور","الأولوية","المؤشر","الوحدة","سنة آخر قراءة","آخر قراءة","نوع القراءة","مصدر القراءة","سنة المستهدف","المستهدف","طريقة الحساب","أول قراءة مستخدمة (سنة)","أول قراءة مستخدمة","آخر قراءة مستخدمة (سنة)","آخر قراءة مستخدمة","المعدل الفعلي","المعدل المطلوب","R","R%","التصنيف الإحصائي","القاعدة المطبّقة","حقق المستهدف","الفجوة المتبقية","مستوى الأهلية","التوقع (تقديري)","حد أدنى 80%","حد أعلى 80%","احتمال تحقيق المستهدف","التقييم اليدوي","فترة العرض","فترة الحساب"];
+  const H = ["الرمز","المجموعة","المحور","الأولوية","المؤشر","الوحدة","سنة آخر قراءة","آخر قراءة","نوع القراءة","مصدر القراءة","سنة المستهدف","المستهدف","طريقة الحساب","أول قراءة مستخدمة (سنة)","أول قراءة مستخدمة","آخر قراءة مستخدمة (سنة)","آخر قراءة مستخدمة","المعدل الفعلي","المعدل المطلوب","R","R%","التصنيف الإحصائي","القاعدة المطبّقة","حقق المستهدف","الفجوة المتبقية","مستوى الأهلية","التوقع (تقديري)","حد أدنى 80%","حد أعلى 80%","احتمال تحقيق المستهدف","فترة العرض","فترة الحساب"];
   const val = (x, v, f) => v == null ? "" : f === "r" ? v : x.pct ? +(v*100).toFixed(4) : +v.toFixed(6);
   const rows = filtered().map(x => { const p = x.p, f = p.field;
     return [x.id, x.set==="updated"?"محدث":"أصلي", x.axis, x.priority, x.name, x.unit, x.cur?x.cur.y:"", x.cur?(x.cur.v!=null?val(x,x.cur.v,"v"):x.cur.r):"", x.cur?(x.cur.kind||"فعلية"):"", x.cur?(x.cur.src||""):"",
@@ -1383,7 +1381,7 @@ function exportResults(){
       p.actual!=null&&isFinite(p.actual)?+p.actual.toFixed(8):"", p.required!=null&&isFinite(p.required)?+p.required.toFixed(8):"", p.R!=null&&isFinite(p.R)?+p.R.toFixed(4):"", p.R!=null&&isFinite(p.R)?+(p.R*100).toFixed(2):"",
       E.CAT[x.cat].ar, ruleTxt(p), p.achieved?"نعم":"لا", gapTxt(x), x.el.level,
       x.showFc?val(x,x.el.forecast.point,f):"", x.showFc?val(x,x.el.forecast.lo,f):"", x.showFc?val(x,x.el.forecast.hi,f):"", x.showP?+(x.el.mc.p*100).toFixed(1):"",
-      EVAL[x.ev].label, `${ST.from}-${ST.to}`, isFinite(cr.calcFrom)?`${cr.calcFrom}-${cr.calcTo}`:"كل السنوات"]; });
+      `${ST.from}-${ST.to}`, isFinite(cr.calcFrom)?`${cr.calcFrom}-${cr.calcTo}`:"كل السنوات"]; });
   const csv = "﻿" + [H, ...rows].map(r => r.map(c => { const s = String(c ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; }).join(",")).join("\r\n");
   saveFile(`نتائج-مؤشرات-الرؤية-${ST.from}-${ST.to}-مستهدف${ST.ty}.csv`, new Blob([csv], {type:"text/csv"}));
 }
