@@ -961,7 +961,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-cb7f468dd8";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-d1f9a0f780";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -982,7 +982,7 @@ const LV_LABEL = ["غير قابل للقياس","قياس التقدم","الت
 const ST = { fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
   assess:{}, db:null, user:null, me:null, admin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
 try { const s = localStorage.getItem("ovd-set"); if (s) ST.set = s; const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
-let RAW = [], BY = {}, YMIN = 2010;
+let RAW = [], BY = {}, YMIN = 2010, KIDS = {};
 
 const num = v => { if (v == null || v === "") return null; if (typeof v === "number") return isFinite(v) ? v : null;
   const t = String(v).trim().replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace("٫",".").replace(/,/g,"").replace("%","");
@@ -995,7 +995,7 @@ function buildModel(ds){
   (ds.readings || []).forEach(a => { (rd[a[0]] = rd[a[0]] || []).push({y:a[1], v:a[2], r:a[3], src:a[4], kind:a[5] || "فعلية", brk:a[6] === "نعم" || a[6] === true, rel:a[7] || "غير مقيّمة", note:a[8]}); });
   (ds.path || []).forEach(([c,y,p]) => { (pt[c] = pt[c] || []).push({y, p}); });
   (ds.notes || []).forEach(([c,y,t,s]) => { (nt[c] = nt[c] || []).push({y, t, s}); });
-  RAW = ds.indicators.filter(i => i.active !== "لا").map(i => {
+  const mk = i => {
     const pct = i.unit === "%", k = pct ? 100 : 1, sc = v => v == null ? null : v / k;
     const S = {};
     (rd[i.code] || []).forEach(r => { S[r.y] = {...(S[r.y]||{y:r.y}), ...r, v: sc(r.v)}; });
@@ -1010,11 +1010,16 @@ function buildModel(ds){
       challenges:i.challenges, explain:i.explain, initiatives:i.initiatives, factors:i.factors, supporting:i.supporting, risk:i.risk,
       notes: (nt[i.code] || []).sort((a,b) => a.y - b.y),
       series: Object.values(S).sort((a,b) => a.y - b.y),
+      parent: i.parent || null, grade: i.grade || null, subject: i.subject || null,
     };
-  });
+  };
+  const act = ds.indicators.filter(i => i.active !== "لا");
+  KIDS = {}; act.filter(i => i.parent).map(mk).forEach(k => (KIDS[k.parent] = KIDS[k.parent] || []).push(k));
+  RAW = act.filter(i => !i.parent).map(mk);
+  RAW.forEach(x => { if (KIDS[x.id]) x.kids = KIDS[x.id]; });
   BY = Object.fromEntries(RAW.map(x => [x.id, x]));
   RAW.forEach(x => { x._k = norm([x.name, x.id, x.priority, x.owner].join(" ")); });
-  const ys = RAW.flatMap(x => x.series.filter(s => s.v != null || s.r != null).map(s => s.y)).filter(y => y <= NOW);
+  const ys = [...RAW, ...Object.values(KIDS).flat()].flatMap(x => x.series.filter(s => s.v != null || s.r != null).map(s => s.y)).filter(y => y <= NOW);
   YMIN = ys.length ? Math.min(...ys) : 2010;
   if (ST.from == null || ST.from < YMIN) ST.from = YMIN;
   if (ST.to == null) ST.to = NOW;
@@ -1024,7 +1029,7 @@ function buildModel(ds){
 function calcRange(){ return ST.calcLinked ? {calcFrom:ST.from, calcTo:ST.to} : {calcFrom:-Infinity, calcTo:Infinity}; }
 function compute(){
   const cr = calcRange();
-  RAW.forEach(x => {
+  [...RAW, ...Object.values(KIDS).flat()].forEach(x => {
     const act = x.series.filter(r => r.y <= NOW && (r.v != null || r.r != null));
     x.curAll = act[act.length-1] || null;
     const inDisp = act.filter(r => r.y >= ST.from && r.y <= ST.to);
@@ -1037,6 +1042,28 @@ function compute(){
     x.showFc = x.el.showForecast && x.approval !== "مرفوض";
     x.showP = x.el.showProbability && x.approval !== "مرفوض";
   });
+  /* مؤشر رئيسي بمكونات: يُعدّ مؤشراً واحداً، وتصنيفه أضعف تصنيف بين مكوناته */
+  const SEV = ["backwards", "breakthrough", "stalled", "needs", "on_track"];
+  RAW.forEach(x => {
+    if (!x.kids) return;
+    const cs = x.kids.filter(k => k.p.status !== "review").map(k => k.cat).filter(c => c !== "na");
+    const c = SEV.find(v => cs.includes(v)) || "na";
+    x.cat = c;
+    x.p = {...x.p, cat: c, status: cs.length ? "ok" : x.p.status, achieved: cs.length > 0 && x.kids.every(k => k.p.achieved), R: null, reason: "تصنيف مركّب من المكونات"};
+    const last = x.kids.map(k => k.curAll).filter(Boolean).sort((a, b) => b.y - a.y)[0];
+    if (last) { x.age = NOW - last.y; }
+  });
+}
+function kidsHTML(x){
+  const g = {}; x.kids.forEach(k => (g[k.grade || ""] = g[k.grade || ""] || []).push(k));
+  const tile = (t, v) => `<div class="tile"><small>${t}</small><b class="num" style="font-size:16px">${N(v)}</b></div>`;
+  return `<div class="sec"><div class="hd"><h3>التصنيف العام للمؤشر</h3>${catChip(x)}</div><div class="small muted">مؤشر واحد في القائمة المعتمدة يتكوّن من ${x.kids.length} مكونات، ولكل مكوّن خط أساسه ومستهدفاته. التصنيف العام هو أضعف تصنيف بين المكونات.</div></div>` +
+    Object.entries(g).map(([gr, ks]) => `<div class="sec"><div class="hd"><h3>${esc(gr)}</h3></div>${ks.map(k => `
+      <div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px">
+        <div class="hd"><b>${esc(k.subject || k.name)}</b>${catChip(k)}</div>
+        <div class="tiles">${tile("خط الأساس", k.base != null ? fv(k, k.base) : "—")}${tile("آخر قراءة", k.curAll ? curTxt({...k, cur: k.curAll}) + " · " + k.curAll.y : "—")}${tile("مستهدف 2030", targetTxt(k, 2030))}${tile("مستهدف 2040", targetTxt(k, 2040))}</div>
+        ${chartSVG(k)}
+      </div>`).join("")}</div>`).join("");
 }
 
 /* ================= formatting ================= */
@@ -1209,6 +1236,7 @@ function tipFor(x, y){
 
 /* ================= drawer ================= */
 function calcDetails(x){
+  if (x.kids) return `<div class="small muted">تفاصيل الحساب لكل مكوّن تظهر في بطاقته ضمن «الملخص».</div>`;
   const p = x.p, f = p.field, cr = calcRange();
   const used = p.used.map(u => `${u.y}: ${fvf(x, u.val, f)}`).join("، ") || "—";
   const exc = p.excluded.map(e => `${e.y} (${e.reason})`).join("، ");
@@ -1276,6 +1304,7 @@ function openDrawer(id, target){
       <div class="itabs" role="tablist">${["الملخص","القراءات","المنهجية","المصدر"].map((n, i) => `<button role="tab" data-itab="${i}" aria-selected="${(ST.indTab||0) === i}">${n}</button>`).join("")}</div>
       <div data-tabp="0" ${(ST.indTab||0) !== 0 ? "hidden" : ""}>
       <div class="small muted">فترة العرض ${ST.from}–${ST.to} · فترة الحساب ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات"} · المستهدف ${ST.ty}</div>
+      ${x.kids ? kidsHTML(x) : `
       <div class="tiles">
         <div class="tile"><small>خط الأساس</small><b class="num">${x.base!=null?N(fv(x,x.base)):"—"}</b></div>
         <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + esc(x.cur.src) : ""):""}</div></div>
@@ -1288,6 +1317,7 @@ function openDrawer(id, target){
         <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
           <div class="tile"><small>المعدل الفعلي</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.actual))}</b></div><div class="tile"><small>المعدل المطلوب</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.required))}</b></div><div class="tile"><small>الأهلية</small><b style="font-size:14px"><span class="lv lv${x.el.level}">${x.el.level}</span> ${LV_LABEL[x.el.level]}</b></div></div>
       </div>
+      `}
       </div>
       <div data-tabp="1" ${(ST.indTab||0) !== 1 ? "hidden" : ""}>
       ${periodHTML(x)}
@@ -1387,7 +1417,7 @@ function exportResults(){
 }
 
 /* ================= excel: export template ================= */
-const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],
+const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["parent","المؤشر الرئيسي"],["grade","المكوّن"],["subject","البند"],
   ["calc","طريقة حساب التقدم"],["agg","نوع التجميع"],["cap","سقف أهلية التحليل"],["approval","حالة الاعتماد المنهجي"],["challenges","التحديات"],["explain","ملاحظات تفسيرية"],["initiatives","المبادرات المرتبطة"],["factors","العوامل المؤثرة (البطاقة)"],["supporting","المؤشرات المساندة (البطاقة)"],["risk","تقدير عدم التحقق (البطاقة)"]];
 const NUM_KEYS = new Set(["base","t30","t30hi","t30rank","t40"]);
 const RD_COLS = ["الرمز","اسم المؤشر (للعرض فقط)","السنة","القيمة","الترتيب","المصدر","نوع القراءة","انقطاع السلسلة (تغيير التعريف)","موثوقية المصدر","ملاحظة"];
