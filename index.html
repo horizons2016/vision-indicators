@@ -116,7 +116,7 @@ main{padding:16px 18px 40px;display:flex;flex-direction:column;gap:14px;min-widt
 .dh{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;z-index:1}
 .db{padding:16px 18px 30px;display:flex;flex-direction:column;gap:16px}
 .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.tile{background:var(--bg);border-radius:10px;padding:9px 11px;min-width:0}
+.tile{background:var(--bg);border-radius:10px;padding:9px 11px;min-width:0;overflow-wrap:anywhere}
 .tile small{display:block;font-size:11px;color:var(--muted)}
 .tile b{font-family:var(--f-display);font-size:19px;font-weight:600;overflow-wrap:anywhere}
 .tile.cur b{color:var(--accent)}
@@ -283,6 +283,19 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .caltbl a.ind{color:var(--ink);font-weight:600;text-decoration:none} .caltbl a.ind:hover{color:var(--accent)}
 .caltbl .tag{display:inline-block;font-size:11px;color:var(--muted);margin-inline-start:6px}
 .caltbl .nt{font-size:11.5px;color:var(--sand);margin-top:3px}
+.calchips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.calchips button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.calchips button b{font-weight:700;color:var(--muted)}
+.calchips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.calchips button[aria-pressed="true"] b{color:#fff}
+.calchips button:disabled{opacity:.45;cursor:default}
+.calq{flex:1;min-width:200px;max-width:340px}
+.calq input{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px}
+.rcard .rhd{all:unset;cursor:pointer;display:flex;align-items:baseline;gap:8px;border-radius:6px}
+.rcard .rhd:focus-visible{outline:2px solid var(--rc);outline-offset:2px}
+.rcard .rhd b{font-family:var(--f-display);font-size:26px;line-height:1;color:var(--rc)} .rcard .rhd span{font-size:12.5px;font-weight:600}
+.rcard .rhd:hover span{text-decoration:underline}
+.rcard[aria-current="true"]{box-shadow:0 0 0 2px var(--rc)}
 .calbar select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13px}
 @media (max-width:860px){ .relstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .caltbl .hide-m{display:none} .caltbl th,.caltbl td{padding:7px 6px} .caltbl .nt{display:none} .caltbl td:first-child{width:52%} .rst{white-space:normal} }
 @media (max-width:560px){ .relstrip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px} .relstrip .rcard{flex:0 0 84%;scroll-snap-align:start} }
@@ -962,10 +975,11 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     <div class="crumb"><h2>تقويم الإصدارات</h2><span class="small muted" id="cal-meta"></span></div>
     <section class="relstrip" id="cal-rel" aria-label="ملخص الإصدارات"></section>
     <div class="calbar">
-      <div class="seg" role="group" aria-label="المجموعة" id="cal-set"><button data-calset="" aria-pressed="true">كل المؤشرات</button><button data-calset="updated" aria-pressed="false">مؤشرات الرؤية</button><button data-calset="original" aria-pressed="false">المؤشرات المساندة</button></div>
-      <select id="cal-type" aria-label="نوع المؤشر"><option value="">دولي ووطني</option><option value="intl">دولي</option><option value="nat">وطني</option></select>
-      <select id="cal-st" aria-label="الحالة"><option value="">كل الحالات</option><option value="soon">يصدر قريباً</option><option value="planned">مجدول</option><option value="late">تجاوز الموعد</option><option value="open">موعد غير محدد</option><option value="stop">متوقف</option><option value="none">لم تُسجَّل بيانات الإصدار</option></select>
+      <div class="seg" role="group" aria-label="المجموعة" id="cal-set"><button data-calset="">كل المؤشرات</button><button data-calset="updated">مؤشرات الرؤية</button><button data-calset="original">المؤشرات المساندة</button></div>
+      <div class="seg" role="group" aria-label="نوع المؤشر" id="cal-type"><button data-caltype="">دولي ووطني</button><button data-caltype="intl">دولي</button><button data-caltype="nat">وطني</button></div>
+      <label class="calq" for="cal-q"><input id="cal-q" type="search" placeholder="ابحث باسم المؤشر أو رمزه أو الجهة" autocomplete="off" aria-label="بحث في التقويم"></label>
     </div>
+    <div class="calchips" id="cal-st" role="group" aria-label="تصفية حسب حالة الإصدار"></div>
     <div class="caltbl"><table><thead><tr><th>المؤشر</th><th class="hide-m">الجهة المصدرة</th><th class="hide-m">آخر إصدار</th><th>الإصدار القادم</th><th>الحالة</th></tr></thead><tbody id="cal-body"></tbody></table></div>
     <p class="small muted">مواعيد الإصدار القادم تقديرية ما لم تعلنها الجهة المصدرة. المؤشرات الوطنية تُعبَّأ مواعيدها تدريجياً من تقويم المركز الوطني للإحصاء والمعلومات.</p>
   </main>
@@ -975,7 +989,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <div class="crumb"><h2 id="admin-title">إدارة البيانات</h2><span class="small muted" id="ds-state"></span><span style="flex:1"></span><button class="btn" id="admin-out" hidden>خروج من وضع الإدارة</button></div>
       <section class="panel lockbox" id="admin-lock" hidden>
         <h2>دخول الإدارة</h2>
-        <p class="small muted" style="margin:0">تصدير البيانات وتحديثها متاحان للمسؤولين فقط. المستخدمون يطّلعون على المؤشرات ويشاركون أي مؤشر نصاً أو PDF من بطاقته.</p>
+        <p class="small muted" style="margin:0">تصدير البيانات وتحديثها متاحان للمسؤولين فقط. المستخدمون يطّلعون على المؤشرات ويشاركون أي مؤشر نصاً أو صورة أو PDF من بطاقته.</p>
         <form id="admin-unlock"><label class="small">رمز الإدارة<br><input type="password" id="admin-pass" autocomplete="current-password" required></label><button class="btn primary" type="submit">دخول</button></form>
       </section>
       <div class="msg warn" id="local-note" hidden>هذه نسخة خارج Claude: الفحص والمعاينة والتصدير تعمل على جهازك فقط، ولا يُنشر شيء من هنا. لنشر التحديث ارفع ملف <code>data/dataset.json</code> المُصدَّر إلى مستودع GitHub، فالصلاحية هناك لأعضاء المستودع.</div>
@@ -1050,7 +1064,7 @@ const SITE = true;
 // وضع الإدارة في نسخة الموقع: رمز يُتحقق منه ببصمة SHA-256 (الرمز نفسه لا يُحفظ في الكود)
 const ADMIN_HASH = "7c80f504a337677160a527056091384498f08c42cf7fc9276f212b6057bdcae0";
 async function sha256(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(v => v.toString(16).padStart(2, "0")).join(""); }
-const BUILD = "ov-cal-c45d88";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-exp-887238";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1068,7 +1082,7 @@ const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓
 const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)", dev:"var(--k-dev)"};
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
 
-const ST = { cal:{set:"", type:"", st:""}, fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
+const ST = { cal:{set:"", type:"", st:"", q:""}, fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
   assess:{}, db:null, user:null, me:null, admin:false, siteAdmin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
 try { const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
 try { ST.siteAdmin = localStorage.getItem("ovd-admin-key") === ADMIN_HASH; localStorage.removeItem("ovd-admin"); } catch(e){}
@@ -1185,7 +1199,8 @@ function releaseHTML(x){
 /* ================= release calendar ================= */
 const relStop = x => /^متوقف/.test((x.rel && x.rel.next) || "");
 const relDay = s => { const m = String(s || "").match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
-const REL_ST = {soon:"يصدر قريباً", planned:"مجدول", late:"تجاوز الموعد — تحقق من صدوره", open:"موعد غير محدد", stop:"متوقف", none:"لم تُسجَّل بيانات الإصدار"};
+const REL_ST = {soon:"يصدر قريباً", planned:"مجدول لاحقاً", late:"تجاوز الموعد — تحقق من صدوره", open:"موعد غير محدد", stop:"متوقف", none:"بلا بيانات إصدار"};
+const REL_CHIPS = [["", "الكل"], ["recent", "صدر حديثاً"], ["soon", "يصدر قريباً"], ["planned", "مجدول لاحقاً"], ["late", "تجاوز الموعد"], ["open", "موعد غير محدد"], ["stop", "متوقف"], ["none", "بلا بيانات إصدار"]];
 const REL_RECENT_DAYS = 90, REL_SOON_MONTHS = 3;
 function relStatus(x){
   const r = x.rel || {};
@@ -1207,7 +1222,9 @@ function relCardsHTML(L){
   const recent = L.filter(o => o.recent).sort((a, b) => b.d - a.d), soon = L.filter(o => o.st === "soon").sort(byDue),
         late = L.filter(o => o.st === "late").sort(byDue), stop = L.filter(o => o.st === "stop");
   const item = (o, t) => `<a href="#i-${o.x.id}" title="${esc(o.x.name)}"><span class="nm">${esc(o.x.name)}</span><span class="dt">${t}</span></a>`;
-  const card = (cls, title, list, fmt, empty) => `<article class="rcard ${cls}"><div class="hd"><b class="num">${list.length}</b><span>${title}</span></div>${list.length ? `<div class="ls">${list.slice(0, 4).map(o => item(o, fmt(o))).join("")}${list.length > 4 ? `<a class="more" href="#calendar">+ ${list.length - 4} أخرى في التقويم</a>` : ""}</div>` : `<div class="small muted">${empty}</div>`}</article>`;
+  const cur = ST.page === "cal" ? ST.cal.st : null;
+  const card = (cls, title, list, fmt, empty) => { const key = cls.slice(2);
+    return `<article class="rcard ${cls}" aria-current="${cur === key}"><button class="rhd" data-calgo="${key}" title="اعرض هذه المؤشرات في التقويم"><b class="num">${list.length}</b><span>${title}</span></button>${list.length ? `<div class="ls">${list.slice(0, 4).map(o => item(o, fmt(o))).join("")}${list.length > 4 ? `<a class="more" href="#calendar" data-calgo="${key}">+ ${list.length - 4} أخرى في التقويم</a>` : ""}</div>` : `<div class="small muted">${empty}</div>`}</article>`; };
   return card("r-recent", `صدر حديثاً (آخر ${REL_RECENT_DAYS} يوماً)`, recent, o => fmtDay(o.d), "لا إصدارات جديدة خلال الفترة") +
     card("r-soon", `يصدر قريباً (${REL_SOON_MONTHS} أشهر)`, soon, o => fmtMon(o.x.rel.due), "لا إصدارات متوقعة قريباً") +
     card("r-late", "تجاوز موعده المتوقع", late, o => fmtMon(o.x.rel.due), "لا يوجد") +
@@ -1215,26 +1232,38 @@ function relCardsHTML(L){
 }
 function renderRelStrip(){ $("#ov-rel").innerHTML = relCardsHTML(relList()); }
 function renderCal(){
-  const all = relList(), f = ST.cal || (ST.cal = {set:"", type:"", st:""});
+  const all = relList(), f = ST.cal;
   document.querySelectorAll("#cal-set button").forEach(b => b.setAttribute("aria-pressed", b.dataset.calset === f.set));
-  $("#cal-type").value = f.type; $("#cal-st").value = f.st;
-  const L = all.filter(o => (!f.set || o.x.set === f.set) && (!f.type || (f.type === "intl" ? o.x.intl : !o.x.intl)) && (!f.st || o.st === f.st));
-  $("#cal-rel").innerHTML = relCardsHTML(L);
-  const withInfo = all.filter(o => o.st !== "none").length;
-  $("#cal-meta").textContent = `${L.length} مؤشراً معروضاً · بيانات الإصدار مسجلة لـ ${withInfo} من ${all.length}`;
+  document.querySelectorAll("#cal-type button").forEach(b => b.setAttribute("aria-pressed", b.dataset.caltype === f.type));
+  if ($("#cal-q").value !== f.q) $("#cal-q").value = f.q;
+  const qq = norm(f.q);
+  const base = all.filter(o => (!f.set || o.x.set === f.set) && (!f.type || (f.type === "intl" ? o.x.intl : !o.x.intl))
+    && (!qq || norm([o.x.name, o.x.id, o.x.issuer, o.x.src].join(" ")).includes(qq)));
+  const hit = (o, k) => !k || (k === "recent" ? o.recent : o.st === k);
+  $("#cal-st").innerHTML = REL_CHIPS.map(([k, t]) => { const n = base.filter(o => hit(o, k)).length;
+    return `<button data-calst="${k}" aria-pressed="${f.st === k}"${n || f.st === k ? "" : " disabled"}>${t} <b class="num">${n}</b></button>`; }).join("");
+  const L = base.filter(o => hit(o, f.st));
+  $("#cal-rel").innerHTML = relCardsHTML(base);
+  $("#cal-meta").textContent = `${L.length} من ${all.length} مؤشراً · بيانات الإصدار مسجلة لـ ${all.filter(o => o.st !== "none").length}`;
   const row = o => { const x = o.x, r = x.rel;
     return `<tr><td><a class="ind" href="#i-${x.id}">${esc(x.name)}</a><span class="tag">${x.id} · ${x.set === "updated" ? "مؤشرات الرؤية" : "مساند"} · ${x.intl ? "دولي" : "وطني"}</span>${r.note ? `<div class="nt">${esc(r.note)}</div>` : ""}</td>
       <td class="hide-m small">${esc(x.issuer || x.src || "—")}${r.src ? `<div><a href="${esc(r.src)}" target="_blank" rel="noopener">${esc(r.src.replace(/^https?:\/\//, "").split("/")[0])}</a></div>` : ""}</td>
       <td class="small hide-m">${esc(r.last || "—")}${o.d ? `<div class="muted">${fmtDay(o.d)}</div>` : ""}</td>
       <td class="small">${esc(r.next || "—")}${r.due && !relStop(x) ? `<div class="muted">${fmtMon(r.due)}</div>` : ""}</td>
       <td>${o.recent ? `<span class="rst recent">صدر حديثاً</span> ` : ""}<span class="rst ${o.st}">${REL_ST[o.st]}</span></td></tr>`; };
-  const dated = L.filter(o => ["soon", "planned", "late"].includes(o.st)).sort((a, b) => relDate(a.x.rel.due) - relDate(b.x.rel.due));
-  let html = "", cur = "";
-  dated.forEach(o => { const m = fmtMon(o.x.rel.due); if (m !== cur){ cur = m; html += `<tr class="mon"><td colspan="5">${m}</td></tr>`; } html += row(o); });
-  [["open", "موعد الإصدار القادم غير محدد"], ["stop", "مؤشرات توقف إصدارها — تحتاج قراراً من الفريق"], ["none", "لم تُسجَّل بيانات الإصدار بعد"]].forEach(([k, t]) => {
-    const g = L.filter(o => o.st === k); if (g.length) html += `<tr class="grp"><td colspan="5">${t} (${g.length})</td></tr>` + g.map(row).join("");
-  });
-  $("#cal-body").innerHTML = html || `<tr><td colspan="5" class="small muted">لا توجد مؤشرات بهذه التصفية.</td></tr>`;
+  let html = "";
+  if (f.st === "recent"){
+    const g = L.slice().sort((a, b) => b.d - a.d);
+    if (g.length) html = `<tr class="grp"><td colspan="5">صدر خلال آخر ${REL_RECENT_DAYS} يوماً — الأحدث أولاً</td></tr>` + g.map(row).join("");
+  } else {
+    const dated = L.filter(o => ["soon", "planned", "late"].includes(o.st)).sort((a, b) => relDate(a.x.rel.due) - relDate(b.x.rel.due));
+    let cur = "";
+    dated.forEach(o => { const m = fmtMon(o.x.rel.due); if (m !== cur){ cur = m; html += `<tr class="mon"><td colspan="5">${m}</td></tr>`; } html += row(o); });
+    [["open", "موعد الإصدار القادم غير محدد"], ["stop", "مؤشرات توقف إصدارها — تحتاج قراراً من الفريق"], ["none", "بلا بيانات إصدار بعد"]].forEach(([k, t]) => {
+      const g = L.filter(o => o.st === k); if (g.length) html += `<tr class="grp"><td colspan="5">${t} (${g.length})</td></tr>` + g.map(row).join("");
+    });
+  }
+  $("#cal-body").innerHTML = html || `<tr><td colspan="5" class="small muted">لا توجد مؤشرات بهذه التصفية. <button class="btn" data-calreset="1">إلغاء التصفية</button></td></tr>`;
 }
 function kidsHTML(x){
   const g = {}; x.kids.forEach(k => (g[k.grade || ""] = g[k.grade || ""] || []).push(k));
@@ -2139,6 +2168,7 @@ async function copyText(t){
   try { const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); const ok = document.execCommand("copy"); ta.remove(); return ok; } catch(_){ return false; }
 }
 let deb;
+$("#cal-q").addEventListener("input", e => { ST.cal.q = e.target.value; renderCal(); });
 $("#q").addEventListener("input", () => { clearTimeout(deb); deb = setTimeout(() => { ST.q = $("#q").value; if (ST.page !== "dash") location.hash = "#all"; else renderDash(); }, 50); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter"){ const f = document.querySelector("#v-dash [data-open]"); if (f) f.click(); } });
 document.addEventListener("keydown", e => {
@@ -2214,9 +2244,18 @@ document.addEventListener("click", async e => {
     if (d.gocenter){ location.hash = "#all"; return; }
     if (d.ovcat){ ST.cat = ["all","rest"].includes(d.ovcat) ? null : d.ovcat; ST.axis = ST.pri = null; location.hash = "#all"; setTimeout(() => renderDash(), 0); return; }
   }
-  const cs = e.target.closest("[data-calset]");
-  if (cs){ ST.cal.set = cs.dataset.calset; renderCal(); return; }
-  const el = e.target.closest("[data-open],[data-set],[data-axis],[data-pri],[data-ev],[data-cat],[data-close],[data-sharecopy],[data-sharepdf],[data-setev],[data-view],[data-ty],[data-asub],[data-cmpmode],#reset,#publish,#cancel,#preview-apply,#export-pending");
+  const cg = e.target.closest("[data-calgo],[data-calst],[data-caltype],[data-calset],[data-calreset]");
+  if (cg){ e.preventDefault(); const d = cg.dataset;
+    if (d.calreset){ ST.cal = {set:"", type:"", st:"", q:""}; }
+    if (d.calset !== undefined) ST.cal.set = d.calset;
+    if (d.caltype !== undefined) ST.cal.type = d.caltype;
+    if (d.calst !== undefined) ST.cal.st = d.calst;
+    if (d.calgo !== undefined){
+      if (ST.page !== "cal"){ ST.cal = {set:"", type:"", st:d.calgo, q:""}; location.hash = "#calendar"; return; }
+      ST.cal.st = ST.cal.st === d.calgo ? "" : d.calgo;
+    }
+    renderCal(); return; }
+  const el = e.target.closest("[data-open],[data-set],[data-axis],[data-pri],[data-ev],[data-cat],[data-close],[data-sharecopy],[data-sharepdf],[data-shareimg],[data-setev],[data-view],[data-ty],[data-asub],[data-cmpmode],#reset,#publish,#cancel,#preview-apply,#export-pending");
   if (!el) return; const d = el.dataset;
   if (d.open){ closeDrawer(); location.hash = "#i-" + d.open; return; }
   if (d.view){ ST.view = d.view; try { localStorage.setItem("ovd-view", ST.view); } catch(_){} renderDash(); return; }
@@ -2230,7 +2269,8 @@ document.addEventListener("click", async e => {
   if (d.cat){ ST.cat = ST.cat === d.cat ? null : d.cat; renderDash(); return; }
   if (d.close !== undefined){ closeDrawer(); $("#drawer").dataset.id = ""; go(); return; }
   if (d.sharecopy){ shareCopy(d.sharecopy); return; }
-  if (d.sharepdf){ sharePDF(d.sharepdf); return; }
+  if (d.sharepdf){ exportCard(d.sharepdf, "pdf"); return; }
+  if (d.shareimg){ exportCard(d.shareimg, "png"); return; }
   if (el.id === "reset"){ ST.axis = ST.pri = ST.ev = ST.cat = null; ST.q = ""; $("#q").value = ""; ["#f-type","#f-fresh","#f-elig"].forEach(s => $(s).value = ""); render(); go(); return; }
   if (el.id === "cancel"){ ST.pending = null; $("#check").innerHTML = ""; return; }
   if (el.id === "preview-apply"){ if (!ST.pending) return; ST.ds = {...ST.pending.ds, meta:{file:ST.pending.fileName}}; ST.dsSource = "preview"; buildModel(ST.ds); render(); toast("تعرض اللوحة الآن بيانات الملف (معاينة غير منشورة)"); return; }
@@ -2263,7 +2303,6 @@ document.addEventListener("change", e => {
   if (id === "fm-pri"){ ST.fPri = e.target.value; ST.fInd = null; renderFocus(); go(); }
   if (id === "fd-axis"){ ST.fAxis = +e.target.value; ST.fPri = null; ST.fInd = null; renderFocus(); go(); }
   if (id === "fd-pri"){ ST.fPri = e.target.value; ST.fInd = null; renderFocus(); go(); }
-  if (id === "cal-type" || id === "cal-st"){ ST.cal = ST.cal || {set:"", type:"", st:""}; ST.cal[id === "cal-type" ? "type" : "st"] = e.target.value; renderCal(); }
   if (id === "fd-ind"){ ST.fInd = e.target.value; renderFocus(); go(); window.scrollTo && window.scrollTo(0, 0); }
 });
 document.addEventListener("click", e => {
@@ -2297,8 +2336,8 @@ $("#admin-out").addEventListener("click", () => {
   applyRole(); location.hash = "#overview"; toast("تم الخروج من وضع الإدارة");
 });
 
-/* ================= مشاركة المؤشر: نسخ نص أو PDF — بلا روابط ================= */
-const shareBtns = id => `<span class="shr"><button class="btn" data-sharecopy="${id}" title="نسخ بيانات المؤشر نصاً">نسخ</button><button class="btn" data-sharepdf="${id}" title="حفظ بطاقة المؤشر PDF">PDF</button></span>`;
+/* ================= مشاركة المؤشر: نسخ نص أو صورة أو PDF — بلا روابط ================= */
+const shareBtns = id => `<span class="shr"><button class="btn" data-sharecopy="${id}" title="نسخ بيانات المؤشر نصاً">نسخ</button><button class="btn" data-shareimg="${id}" title="حفظ بطاقة المؤشر صورة (PNG)">صورة</button><button class="btn" data-sharepdf="${id}" title="حفظ بطاقة المؤشر ملف PDF">PDF</button></span>`;
 const today = () => new Date().toLocaleDateString("ar-OM-u-nu-latn", {year:"numeric", month:"long", day:"numeric"});
 const LRM = "‎", lt = v => /^[-−+]?\d/.test(String(v)) ? LRM + v + LRM : v;   // حتى تظهر الأرقام والنسب صحيحة داخل النص العربي
 const catTxt = x => x.p.status === "review" ? "قيد التحقق" : E.CAT[x.cat].ar + (x.p.achieved ? " · حقق المستهدف" : "");
@@ -2345,6 +2384,155 @@ function sharePDF(id){
   window.addEventListener("afterprint", done);
   toast("اختر «حفظ بصيغة PDF» من نافذة الطباعة");
   setTimeout(() => { try { window.print(); } catch(_){ done(); toast("تعذر فتح الطباعة على هذا الجهاز"); } }, 250);
+}
+
+/* ================= تصدير بطاقة المؤشر مباشرة: صورة PNG أو ملف PDF (بلا نافذة طباعة) ================= */
+const EXP = {bg:"#ffffff", ink:"#15211e", muted:"#5d6b67", line:"#dde3e1", soft:"#f2f4f3", accent:"#0d6b5a", good:"#1f7a3f", sand:"#b8862f", bad:"#b23a32"};
+const expFont = (w, s, disp) => `${w} ${s}px ${getComputedStyle(document.documentElement).getPropertyValue(disp ? "--f-display" : "--f-body").trim() || "Tahoma,sans-serif"}`;
+const clean = s => String(s == null ? "" : s).replace(/[‎‏]/g, "");
+function wrapLines(c, text, maxW){
+  const out = []; clean(text).split("\n").forEach(par => {
+    let line = ""; par.split(/\s+/).forEach(w => { const t = line ? line + " " + w : w; if (c.measureText(t).width > maxW && line){ out.push(line); line = w; } else line = t; });
+    out.push(line);
+  }); return out;
+}
+/* chart drawn natively on canvas (mirrors chartSVG) */
+function drawChart(c, x, X0, Y0, W, H){
+  const pts = x.series.filter(r => r.v != null && r.y <= NOW && r.y >= ST.from && r.y <= ST.to);
+  const path = x.series.filter(r => r.p != null && r.y >= ST.from);
+  c.save(); c.strokeStyle = EXP.line; c.lineWidth = 1; c.strokeRect(X0 + .5, Y0 + .5, W - 1, H - 1);
+  if (!pts.length && !path.length){ c.fillStyle = EXP.muted; c.font = expFont(400, 13); c.textAlign = "center"; c.fillText("لا توجد قراءات رقمية في فترة العرض", X0 + W / 2, Y0 + H / 2); c.restore(); return; }
+  const sc = v => x.pct ? v * 100 : v, tgt = ST.ty === 2040 ? x.t40 : x.t30n;
+  const ys = [...pts.map(r => sc(r.v)), ...path.map(r => sc(r.p))]; if (tgt != null) ys.push(sc(tgt)); if (ST.ty === 2030 && x.range) ys.push(sc(x.range[0]), sc(x.range[1]));
+  const yrs = [...pts.map(r => r.y), ...path.map(r => r.y), ST.ty === 2040 && tgt != null ? 2040 : 2030], x0 = Math.min(...yrs), x1 = Math.max(...yrs);
+  let lo = Math.min(...ys), hi = Math.max(...ys); if (lo === hi){ lo -= 1; hi += 1; } const pad = (hi - lo) * .1; lo -= pad; hi += pad;
+  const L = X0 + 58, R = X0 + W - 16, T = Y0 + 14, B = Y0 + H - 30;
+  const PX = y => L + (R - L) * (y - x0) / Math.max(1, x1 - x0), PY = v => T + (B - T) * (1 - (v - lo) / (hi - lo));
+  c.font = expFont(400, 12); c.direction = "ltr";
+  for (let i = 0; i <= 4; i++){ const t = lo + (hi - lo) * i / 4, yy = PY(t); c.strokeStyle = EXP.line; c.beginPath(); c.moveTo(L, yy); c.lineTo(R, yy); c.stroke();
+    c.fillStyle = EXP.muted; c.textAlign = "right"; c.fillText(fmtN(t, Math.abs(hi - lo) < 5 ? 2 : Math.abs(hi - lo) < 50 ? 1 : 0), L - 8, yy + 4); }
+  const step = Math.max(1, Math.ceil((x1 - x0) / 8)); c.textAlign = "center"; for (let y = x0; y <= x1; y += step) c.fillText(String(y), PX(y), B + 20);
+  if (ST.ty === 2030 && x.range){ c.globalAlpha = .12; c.fillStyle = EXP.good; const a = PY(sc(x.range[1])), b = PY(sc(x.range[0])); c.fillRect(L, a, R - L, Math.max(1, b - a)); c.globalAlpha = 1; }
+  else if (tgt != null){ c.strokeStyle = EXP.good; c.lineWidth = 1.5; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(L, PY(sc(tgt))); c.lineTo(R, PY(sc(tgt))); c.stroke(); c.setLineDash([]); }
+  const poly = (arr, f) => { c.beginPath(); arr.forEach((r, i) => { const px = PX(r.y), py = PY(sc(f(r))); i ? c.lineTo(px, py) : c.moveTo(px, py); }); };
+  if (path.length > 1){ c.strokeStyle = EXP.sand; c.lineWidth = 2; c.setLineDash([5, 4]); poly(path, r => r.p); c.stroke(); c.setLineDash([]); }
+  const act = pts.filter(r => (r.kind || "فعلية") === "فعلية");
+  if (act.length){
+    poly(act, r => r.v); c.lineTo(PX(act[act.length - 1].y), B); c.lineTo(PX(act[0].y), B); c.closePath(); c.globalAlpha = .08; c.fillStyle = EXP.accent; c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = EXP.accent; c.lineWidth = 2.5; poly(act, r => r.v); c.stroke();
+  }
+  pts.forEach(r => { const est = (r.kind || "فعلية") !== "فعلية"; c.beginPath(); c.arc(PX(r.y), PY(sc(r.v)), est ? 4.5 : 3.5, 0, Math.PI * 2);
+    c.fillStyle = est ? "#fff" : EXP.accent; c.fill(); c.lineWidth = 2; c.strokeStyle = est ? EXP.sand : EXP.accent; c.stroke(); });
+  c.restore();
+  /* legend under the chart */
+  c.save(); c.font = expFont(400, 12); c.direction = "rtl"; c.textAlign = "right"; let lx = X0 + W;
+  [[EXP.accent, "قراءة فعلية"], ...(path.length > 1 ? [[EXP.sand, "المسار المستهدف"]] : []), ...(tgt != null || x.range ? [[EXP.good, "المستهدف " + ST.ty]] : [])].forEach(([col, t]) => {
+    c.fillStyle = col; c.fillRect(lx - 12, Y0 + H + 9, 12, 4); c.fillStyle = EXP.muted; c.fillText(t, lx - 18, Y0 + H + 16); lx -= 30 + c.measureText(t).width; });
+  c.restore();
+}
+/* full card layout; returns used height. Drawing on a 1×1 scratch canvas = measuring pass */
+function drawCard(c, x){
+  const W = 900, M = 40, CW = W - 2 * M, RX = W - M;
+  let y = M; const brk = c.__brk = [];
+  c.fillStyle = EXP.bg; c.fillRect(0, 0, W, 20000);
+  c.direction = "rtl"; c.textAlign = "right"; c.textBaseline = "alphabetic";
+  const txt = (t, size, opt) => { opt = opt || {}; c.font = expFont(opt.w || 400, size, opt.disp); c.fillStyle = opt.color || EXP.ink;
+    const lines = wrapLines(c, t, opt.maxW || CW), lh = Math.round(size * (opt.lh || 1.55));
+    lines.forEach(l => { y += lh; c.fillText(l, opt.x || RX, y - Math.round(size * .35)); }); return lines.length * lh; };
+  /* header */
+  const logo = document.querySelector(".vlogo");
+  if (logo && logo.complete && logo.naturalWidth){ const h = 56, w = h * logo.naturalWidth / logo.naturalHeight; c.drawImage(logo, M, y, w, h); }
+  const y0 = y; txt("لوحة مؤشرات رؤية عُمان 2040", 18, {w:700, disp:1, color:EXP.accent}); txt(today(), 13, {color:EXP.muted}); y = Math.max(y, y0 + 58) + 8;
+  c.fillStyle = EXP.accent; c.fillRect(M, y, CW, 2.5); y += 14;
+  txt(`${x.axis} ‹ ${x.priority}`, 13, {color:EXP.muted});
+  txt(x.name, 24, {w:700, disp:1, lh:1.45});
+  const R = !x.kids && x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدم نحو مستهدف ${ST.ty}: ${clean(rTxt(x))}` : "";
+  txt(`${x.id} · التصنيف: ${catTxt(x)}${R}`, 14, {color:EXP.muted}); y += 10;
+  const block = k => {
+    /* tiles */
+    const tiles = [["خط الأساس", k.base != null ? fv(k, k.base) : "—"], ["آخر قراءة" + (k.curAll ? " (" + k.curAll.y + ")" : ""), k.curAll ? curTxt({...k, cur:k.curAll}) : "—"], ["مستهدف 2030", targetTxt(k, 2030)], ["مستهدف 2040", targetTxt(k, 2040)]];
+    const g = 10, tw = (CW - 3 * g) / 4, th = 70;
+    tiles.forEach(([l, v], i) => { const tx = RX - i * (tw + g);
+      c.fillStyle = EXP.soft; c.fillRect(tx - tw, y, tw, th); c.strokeStyle = EXP.line; c.lineWidth = 1; c.strokeRect(tx - tw + .5, y + .5, tw - 1, th - 1);
+      c.textAlign = "right"; c.direction = "rtl"; c.font = expFont(400, 12); c.fillStyle = EXP.muted; c.fillText(clean(l), tx - 10, y + 22);
+      c.font = expFont(700, 20, 1); c.fillStyle = EXP.ink; let s = clean(v); while (c.measureText(s).width > tw - 20 && s.length > 4) s = s.slice(0, -2) + "…"; c.fillText(s, tx - 10, y + 54); });
+    y += th + 16;
+    drawChart(c, k, M, y, CW, 270); y += 270 + 30; brk.push(y);
+    /* readings table */
+    const rows = k.series.filter(r => r.y <= NOW && (r.v != null || r.r != null)).slice(-8);
+    if (!rows.length) return;
+    const cols = [["السنة", 70], ["القيمة", 110], ["الترتيب", 80], ["النوع", 70], ["المصدر", CW - 330]];
+    const row = (cells, head) => { c.font = expFont(head ? 600 : 400, 12.5); const srcL = wrapLines(c, cells[4], cols[4][1] - 12), h = Math.max(1, srcL.length) * 19 + 12;
+      if (head){ c.fillStyle = EXP.soft; c.fillRect(M, y, CW, h); }
+      let cx = RX; c.fillStyle = head ? EXP.muted : EXP.ink; c.textAlign = "right"; c.direction = "rtl";
+      cells.forEach((v, i) => { if (i < 4) c.fillText(clean(v), cx - 6, y + 21); else srcL.forEach((l, j) => c.fillText(l, cx - 6, y + 21 + j * 19)); cx -= cols[i][1]; });
+      y += h; c.fillStyle = EXP.line; c.fillRect(M, y - 1, CW, 1); brk.push(y); };
+    row(cols.map(cc => cc[0]).concat([]).slice(0, 5), true);
+    rows.forEach(r => row([String(r.y), r.v != null ? fv(k, r.v) : "—", r.r != null ? fmtN(r.r, 0) : "—", r.kind || "فعلية", r.src || "—"]));
+    y += 10;
+  };
+  if (x.kids) x.kids.forEach(k => { brk.push(y); y += 6; txt([k.grade, k.subject || k.name].filter(Boolean).join(" · ") + " — " + catTxt(k), 16, {w:700}); y += 6; block(k); });
+  else block(x);
+  brk.push(y);
+  txt(`مصدر البيانات: ${x.src || x.issuer || "—"}${x.freq ? " · الدورية: " + x.freq : ""}`, 12.5, {color:EXP.muted});
+  y += 10; c.fillStyle = EXP.line; c.fillRect(M, y, CW, 1); y += 4;
+  txt("لوحة مؤشرات رؤية عُمان 2040 · " + today(), 11.5, {color:EXP.muted});
+  return y + M;
+}
+function cardCanvas(x){
+  const S = 2, probe = document.createElement("canvas").getContext("2d"), H = Math.ceil(drawCard(probe, x));
+  const cv = document.createElement("canvas"); cv.width = 900 * S; cv.height = H * S;
+  const c = cv.getContext("2d"); c.scale(S, S); drawCard(c, x); cv.__brk = (c.__brk || []).map(v => Math.round(v * S)); return cv;
+}
+const b64bytes = d => { const s = atob(d.split(",")[1]), a = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; };
+/* minimal PDF: one JPEG per A4 page (card split into page-height slices) */
+function canvasPDF(cv){
+  const PW = 595.28, PH = 841.89, MG = 24, IW = PW - 2 * MG, sc = IW / cv.width, sliceH = Math.floor((PH - 2 * MG) / sc);
+  const pages = [], B = (cv.__brk || []).slice().sort((a, b) => a - b);
+  for (let top = 0, h; top < cv.height; top += h){
+    h = Math.min(sliceH, cv.height - top);
+    if (top + h < cv.height){ const cut = B.filter(b => b > top + sliceH * .35 && b <= top + sliceH).pop(); if (cut) h = cut - top; }
+    const s = document.createElement("canvas"); s.width = cv.width; s.height = h;
+    const sc2 = s.getContext("2d"); sc2.fillStyle = "#fff"; sc2.fillRect(0, 0, s.width, h); sc2.drawImage(cv, 0, top, cv.width, h, 0, 0, cv.width, h);
+    pages.push({jpg: b64bytes(s.toDataURL("image/jpeg", .9)), w: s.width, h});
+  }
+  const enc = new TextEncoder(), parts = [], offs = []; let len = 0;
+  const push = p => { const b = typeof p === "string" ? enc.encode(p) : p; parts.push(b); len += b.length; };
+  const obj = (n, body) => { offs[n] = len; push(`${n} 0 obj\n`); body.forEach(push); push("\nendobj\n"); };
+  push("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
+  const N = pages.length, kids = pages.map((_, i) => `${3 + i * 3} 0 R`).join(" ");
+  obj(1, ["<< /Type /Catalog /Pages 2 0 R >>"]); obj(2, [`<< /Type /Pages /Kids [${kids}] /Count ${N} >>`]);
+  pages.forEach((p, i) => { const pn = 3 + i * 3, im = pn + 1, ct = pn + 2, dw = IW, dh = p.h * sc;
+    obj(pn, [`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im${i} ${im} 0 R >> >> /Contents ${ct} 0 R >>`]);
+    obj(im, [`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`, p.jpg, "\nendstream"]);
+    const cs = `q ${dw.toFixed(2)} 0 0 ${dh.toFixed(2)} ${MG} ${(PH - MG - dh).toFixed(2)} cm /Im${i} Do Q`;
+    obj(ct, [`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`]); });
+  const total = 3 + N * 3, xref = len;
+  push(`xref\n0 ${total}\n0000000000 65535 f \n` + offs.slice(1, total).map(o => String(o).padStart(10, "0") + " 00000 n \n").join(""));
+  push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(parts, {type: "application/pdf"});
+}
+async function deliverFile(blob, name){
+  const f = typeof File === "function" ? new File([blob], name, {type: blob.type}) : null;
+  const touch = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+  if (f && touch && navigator.canShare && navigator.canShare({files: [f]})){
+    try { await navigator.share({files: [f], title: name}); return "shared"; } catch(e){ if (e && e.name === "AbortError") return "cancel"; }
+  }
+  const a = document.createElement("a"), u = URL.createObjectURL(blob); a.href = u; a.download = name; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 4000); return "saved";
+}
+async function exportCard(id, kind){
+  const x = BY[id]; if (!x) return;
+  const base = `مؤشر ${x.id}`;
+  try {
+    const cv = cardCanvas(x);
+    const blob = kind === "pdf" ? canvasPDF(cv) : new Blob([b64bytes(cv.toDataURL("image/png"))], {type: "image/png"});
+    const r = await deliverFile(blob, `${base}.${kind === "pdf" ? "pdf" : "png"}`);
+    if (r === "saved") toast(kind === "pdf" ? "حُفظ ملف PDF في التنزيلات" : "حُفظت الصورة في التنزيلات");
+  } catch(err){
+    if (kind === "pdf"){ sharePDF(id); return; }   // احتياط: نافذة الطباعة عند تعذر الإنشاء المباشر
+    toast("تعذر إنشاء الصورة على هذا الجهاز");
+  }
 }
 
 /* ================= boot ================= */
