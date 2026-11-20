@@ -1,6 +1,6 @@
 // مؤشرات الرؤية: يعمل بدون إنترنت ويتحدث تلقائياً.
 // الصفحة والبيانات: من الشبكة أولاً متجاوزاً كل ذاكرة مؤقتة، ومن النسخة المحفوظة عند انقطاع الاتصال فقط.
-const VERSION = "ov-exp-887238";
+const VERSION = "ov-ana-0443dd";
 const SHELL = ["./", "index.html", "data/dataset.json", "version.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const fresh = url => fetch(new Request(url, {cache: "no-store", credentials: "same-origin"}));
 
@@ -17,9 +17,9 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   const same = url.origin === location.origin;
   const isPage = req.mode === "navigate" || (same && /\/(index\.html)?$/.test(url.pathname));
-  const isData = same && /\/(data\/dataset|version)\.json$/.test(url.pathname);
+  const isData = same && /\/(data\/dataset\.json|data\/internal\.enc|version\.json)$/.test(url.pathname);
   if (isPage || isData) {
-    const key = isPage ? "index.html" : url.pathname.endsWith("version.json") ? "version.json" : "data/dataset.json";
+    const key = isPage ? "index.html" : url.pathname.endsWith("version.json") ? "version.json" : url.pathname.endsWith("internal.enc") ? "data/internal.enc" : "data/dataset.json";
     // ملاحظة: لا يجوز تمرير خيارات مع طلب من نوع navigate، لذلك نبني طلباً جديداً من العنوان
     e.respondWith(fresh(isPage ? new URL("index.html", self.registration.scope).href : req.url).then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(key, copy)); }

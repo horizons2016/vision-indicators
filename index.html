@@ -468,6 +468,11 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 @media (max-width:1100px){ .ov{grid-template-columns:1fr} }
 @media (max-width:860px){ .fgrid{grid-template-columns:1fr} .fsum{grid-template-columns:1fr 1fr} .flist{max-height:none} }
 @media (max-width:860px){ .controls{position:static} .kpis.k5,.kpis.k6{grid-template-columns:repeat(3,1fr)} aside.side{top:0} }
+/* ===== الواجهة العامة: بلا تصنيفات ولا تحليل (يظهر بعد رمز التحليل) ===== */
+body.pub .ana, body.pub .kpihead, body.pub #kpis2, body.pub #f-elig, body.pub .tree .minibar, body.pub #ov-tot,
+body.pub .stackbar, body.pub #f-bar, body.pub .fsort, body.pub .cmpbox{display:none!important}
+body.pub .itabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.pub .pcard .m3{grid-template-columns:1fr}
 /* ===== مشاركة: نسخ / PDF — بلا روابط ===== */
 .shr{display:inline-flex;gap:6px}
 .lockbox{max-width:460px}
@@ -907,9 +912,9 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
   <div class="controls" id="controls" role="group" aria-label="الفترة والمستهدف">
     <label for="y-from">فترة العرض من</label><select id="y-from"></select>
     <label for="y-to">إلى</label><select id="y-to"></select>
-    <label><input type="checkbox" id="y-calc" checked> تطبيق الفترة على الحسابات</label>
+    <label class="ana"><input type="checkbox" id="y-calc" checked> تطبيق الفترة على الحسابات</label>
     <span style="display:inline-flex;gap:6px;align-items:center;color:var(--muted)">سنة المستهدف <span class="seg" id="tyseg"><button data-ty="2030" aria-pressed="true">2030</button><button data-ty="2040" aria-pressed="false">2040</button></span></span>
-    <span class="note" id="calcnote"></span>
+    <span class="note ana" id="calcnote"></span>
     <span style="flex:1"></span>
     <button class="btn" id="export" hidden>تصدير النتائج (CSV)</button>
   </div>
@@ -968,7 +973,23 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <button class="btn" id="reset" hidden>إلغاء التصفية</button>
     </div>
     <section class="grid" id="grid" aria-live="polite"></section>
-    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>R%</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
+    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th class="ana">R%</th><th class="ana">التصنيف</th><th class="ana">الفجوة المتبقية</th><th class="ana">الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
+  </main>
+
+  <main id="v-ana" hidden>
+    <div class="admin">
+      <div class="crumb"><h2>وضع التحليل</h2></div>
+      <section class="panel lockbox" id="ana-lock">
+        <h2>دخول وضع التحليل</h2>
+        <p class="small muted" style="margin:0">يعرض تصنيف المسار ونسب التقدم والتوقعات، والبيانات الداخلية لبطاقات المؤشرات (محفوظة مشفّرة ولا تُفتح إلا بالرمز). خاص بفريق العمل والمختصين.</p>
+        <form id="ana-unlock"><label class="small">رمز التحليل<br><input type="password" id="ana-pass" autocomplete="off" required></label><button class="btn primary" type="submit">دخول</button></form>
+      </section>
+      <section class="panel lockbox" id="ana-on" hidden>
+        <h2>وضع التحليل مفعّل على هذا الجهاز</h2>
+        <p class="small muted" style="margin:0">التصنيفات ونسب التقدم والتوقعات والبيانات الداخلية ظاهرة الآن في كل الصفحات. عند الانتهاء على جهاز مشترك اضغط «خروج».</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn primary" href="#overview">الذهاب إلى الرئيسية</a><button class="btn" id="ana-out" type="button">خروج من وضع التحليل</button></div>
+      </section>
+    </div>
   </main>
 
   <main id="v-cal" hidden>
@@ -989,9 +1010,10 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <div class="crumb"><h2 id="admin-title">إدارة البيانات</h2><span class="small muted" id="ds-state"></span><span style="flex:1"></span><button class="btn" id="admin-out" hidden>خروج من وضع الإدارة</button></div>
       <section class="panel lockbox" id="admin-lock" hidden>
         <h2>دخول الإدارة</h2>
-        <p class="small muted" style="margin:0">تصدير البيانات وتحديثها متاحان للمسؤولين فقط. المستخدمون يطّلعون على المؤشرات ويشاركون أي مؤشر نصاً أو صورة أو PDF من بطاقته.</p>
+        <p class="small muted" style="margin:0">تصدير البيانات وتحديثها متاحان للمسؤولين فقط. المستخدمون يطّلعون على المؤشرات ويشاركون أي مؤشر نصاً أو صورة أو PDF من بطاقته. لتنزيل ملفات النشر يلزم أيضاً فتح وضع التحليل.</p>
         <form id="admin-unlock"><label class="small">رمز الإدارة<br><input type="password" id="admin-pass" autocomplete="current-password" required></label><button class="btn primary" type="submit">دخول</button></form>
       </section>
+      <div class="msg warn" id="admin-ana-note" hidden>لتنزيل النموذج أو ملفات النشر افتح وضع التحليل أولاً من الرابط ‎#analysis‎ (بالرمز)، لأن البيانات الداخلية تُفك وتُشفَّر به.</div>
       <div class="msg warn" id="local-note" hidden>هذه نسخة خارج Claude: الفحص والمعاينة والتصدير تعمل على جهازك فقط، ولا يُنشر شيء من هنا. لنشر التحديث ارفع ملف <code>data/dataset.json</code> المُصدَّر إلى مستودع GitHub، فالصلاحية هناك لأعضاء المستودع.</div>
       <div class="subnav" id="asub" data-adm><button data-asub="upload" aria-pressed="true">تحديث البيانات</button><button data-asub="elig" aria-pressed="false">الأهلية الإحصائية</button><button data-asub="valid" aria-pressed="false">صلاحية البيانات</button><button data-asub="pub" aria-pressed="false">النشر والسجل</button></div>
 
@@ -1062,9 +1084,27 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
 // وضع الإدارة في نسخة الموقع: رمز يُتحقق منه ببصمة SHA-256 (الرمز نفسه لا يُحفظ في الكود)
-const ADMIN_HASH = "7c80f504a337677160a527056091384498f08c42cf7fc9276f212b6057bdcae0";
+const ADMIN_HASH = "c705a5bfc4b48df008bdaaffa3bdadc730d4006822523f7abfc92b79f20a6cb8";
+// البيانات الداخلية (حقول بطاقات الفريق والملاحظات السنوية) لا تُنشر في dataset.json؛ تُحفظ في data/internal.enc مشفّرة (AES-GCM، مفتاح PBKDF2 من رمز التحليل)
+const ANA_FIELDS = ["owner","risk","review","approval","factors","supporting","challenges","explain","initiatives","stage_note"];
+const KDF_ITER = 310000;
+const b64 = u8 => { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
+const ub64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
+async function deriveKey(pass, salt){
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:KDF_ITER, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, true, ["encrypt","decrypt"]);
+}
+async function decryptEnv(key, env){ return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM", iv:ub64(env.iv)}, key, ub64(env.ct)))); }
+function splitDs(ds){
+  const fields = {};
+  const indicators = ds.indicators.map(i => { const o = {...i}, f = {};
+    ANA_FIELDS.forEach(k => { if (k in o){ if (o[k] != null && o[k] !== "") f[k] = o[k]; delete o[k]; } });
+    if (Object.keys(f).length) fields[i.code] = f; return o; });
+  return { pub: {...ds, indicators, notes: []}, internal: {v:1, fields, notes: ds.notes || []} };
+}
+const joinDs = (pub, intl) => ({...pub, indicators: pub.indicators.map(i => ({...i, ...((intl.fields || {})[i.code] || {})})), notes: intl.notes || []});
 async function sha256(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(v => v.toString(16).padStart(2, "0")).join(""); }
-const BUILD = "ov-exp-887238";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-ana-0443dd";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1083,15 +1123,22 @@ const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
 
 const ST = { cal:{set:"", type:"", st:"", q:""}, fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
-  assess:{}, db:null, user:null, me:null, admin:false, siteAdmin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
+  assess:{}, db:null, user:null, me:null, admin:false, siteAdmin:false, ana:false, anaKey:null, anaSalt:null, intl:null, pubDs:null, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
 try { const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
 try { ST.siteAdmin = localStorage.getItem("ovd-admin-key") === ADMIN_HASH; localStorage.removeItem("ovd-admin"); } catch(e){}
 // صلاحية الإدارة: داخل Claude من صلاحية التحرير، وفي الموقع من رمز الإدارة
 const isAdmin = () => IN_CLAUDE ? !!ST.admin : !!ST.siteAdmin;
+// وضع التحليل: التصنيفات ونسب التقدم والتوقعات والبيانات الداخلية. الواجهة العامة تعرض القراءات والمستهدفات والمصادر فقط
+const ANA = () => IN_CLAUDE || !!ST.ana;
+const ana = h => ANA() ? h : "";
 function applyRole(){
-  const a = isAdmin();
+  const a = isAdmin(), t = ANA();
   $("#nav-admin").hidden = !a; $("#export").hidden = !a;
-  $("#role").textContent = a ? "مدير" : "اطلاع"; $("#role").classList.toggle("admin", a);
+  document.body.classList.toggle("pub", !t);
+  if (!t){ ST.cat = null; if (ST.indTab === 2) ST.indTab = 0; const fe = $("#f-elig"); if (fe) fe.value = "";
+    document.querySelectorAll('#v-dash select option[value="r"], #v-dash select option[value="eval"]').forEach(o => { o.disabled = true; if (o.selected) o.parentNode.value = "tree"; }); }
+  else document.querySelectorAll('#v-dash select option[value="r"], #v-dash select option[value="eval"]').forEach(o => o.disabled = false);
+  $("#role").textContent = a ? "مدير" : t ? "تحليل" : "اطلاع"; $("#role").classList.toggle("admin", a || t);
 }
 let RAW = [], BY = {}, YMIN = 2010, KIDS = {};
 
@@ -1268,7 +1315,7 @@ function renderCal(){
 function kidsHTML(x){
   const g = {}; x.kids.forEach(k => (g[k.grade || ""] = g[k.grade || ""] || []).push(k));
   const tile = (t, v) => `<div class="tile"><small>${t}</small><b class="num" style="font-size:16px">${N(v)}</b></div>`;
-  return `<div class="sec"><div class="hd"><h3>التصنيف العام للمؤشر</h3>${catChip(x)}</div><div class="small muted">مؤشر واحد في القائمة المعتمدة يتكوّن من ${x.kids.length} مكونات، ولكل مكوّن خط أساسه ومستهدفاته. التصنيف العام هو أضعف تصنيف بين المكونات.</div></div>` +
+  return `<div class="sec ana"><div class="hd"><h3>التصنيف العام للمؤشر</h3>${catChip(x)}</div><div class="small muted">مؤشر واحد في القائمة المعتمدة يتكوّن من ${x.kids.length} مكونات، ولكل مكوّن خط أساسه ومستهدفاته. التصنيف العام هو أضعف تصنيف بين المكونات.</div></div>` +
     Object.entries(g).map(([gr, ks]) => `<div class="sec"><div class="hd"><h3>${esc(gr)}</h3></div>${ks.map(k => `
       <div style="display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:10px">
         <div class="hd"><b>${esc(k.subject || k.name)}</b>${catChip(k)}</div>
@@ -1286,8 +1333,9 @@ const curTxt = x => !x.cur ? "—" : x.cur.v != null ? fv(x, x.cur.v) : "الت�
 function targetTxt(x, ty){ ty = ty || ST.ty;
   if (ty === 2040) return x.t40 != null ? fv(x, x.t40) : x.stage === "dev" ? "يُحدَّد لاحقاً" : "—";
   if (x.range) return fv(x, x.range[0]) + " – " + fv(x, x.range[1]); if (x.t30n != null) return fv(x, x.t30n); if (x.t30r != null) return "أفضل " + fmtN(x.t30r, 0); return x.t30text || "—"; }
+const cc = x => !ANA() ? "var(--accent)" : x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
 const rTxt = x => x.p && x.p.R != null && isFinite(x.p.R) ? fmtN(x.p.R * 100, 1) + "%" : (x.p && x.p.achieved ? "حقق المستهدف" : "—");
-const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ قيد التحقق</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
+const catChip = x => !ANA() ? "" : x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ قيد التحقق</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
 function ruleTxt(p){
   if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا يُحسب R)";
   if (p.status === "review") return "لم يُصنَّف: " + p.reason;
@@ -1360,21 +1408,21 @@ function spark(x){
 }
 function cardHTML(x){
   const est = x.cur && x.cur.kind && x.cur.kind !== "فعلية" ? `<span class="est">${esc(x.cur.kind)}</span>` : "";
-  return `<div class="card" data-open="${x.id}" role="button" tabindex="0" style="--c:${CAT_C[x.cat]}">
+  return `<div class="card" data-open="${x.id}" role="button" tabindex="0" style="--c:${cc(x)}">
     <span class="cmpbox"><input type="checkbox" class="cmpchk" data-cmp="${x.id}" aria-label="أضف للمقارنة" ${ST.cmp.has(x.id)?"checked":""}></span>
     <span class="pri">${esc(x.priority)}</span>
     <span class="nm">${esc(x.name)}</span>
     <span class="vals"><span><span class="big num">${N(curTxt(x))}</span> ${est}<br><span class="yr">${x.cur ? "آخر قراءة " + x.cur.y : "لا قراءة في الفترة"}</span></span>
       <span class="tg">مستهدف ${ST.ty}<b>${N(targetTxt(x))}</b></span></span>
     ${spark(x)}
-    <span class="rline"><span>${catChip(x)}</span><span>R% <b>${N(rTxt(x))}</b></span></span>
+    ${ana(`<span class="rline"><span>${catChip(x)}</span><span>R% <b>${N(rTxt(x))}</b></span></span>`)}
     <span class="foot"><span></span><span style="display:flex;gap:6px;align-items:center">${x.age!=null&&x.age>=2?`<span class="age ${(x.relOk ? "" : ageCls(x.age))}">${ageTxt(x.age)}</span>`:""}<span class="code">${x.id}</span></span></span>
   </div>`;
 }
 function rowHTML(x){
   return `<tr data-open="${x.id}" tabindex="0"><td class="n code">${x.id}</td><td>${esc(x.name)}</td><td class="small">${esc(x.priority)}</td>
     <td class="n">${N(curTxt(x))} <span class="small muted">${x.cur?x.cur.y:""}</span></td><td class="n">${N(targetTxt(x))}</td>
-    <td class="n">${N(rTxt(x))}</td><td>${catChip(x)}</td><td class="n">${N(gapTxt(x))}</td><td><span class="lv lv${x.el.level}">${x.el.level}</span></td></tr>`;
+    ${ana(`<td class="n">${N(rTxt(x))}</td><td>${catChip(x)}</td><td class="n">${N(gapTxt(x))}</td><td><span class="lv lv${x.el.level}">${x.el.level}</span></td>`)}</tr>`;
 }
 function renderDash(){
   const base = baseList(), list = filtered();
@@ -1507,13 +1555,13 @@ function openDrawer(id, target){
     const isAct = r.y <= NOW && (r.v != null || r.r != null);
     const use = !isAct ? "" : usedYears.has(r.y) ? `<span style="color:var(--good)">مستخدمة</span>` : excl[r.y] ? `<span class="small muted">${esc(excl[r.y])}</span>` : `<span class="small muted">خارج الحساب</span>`;
     return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?esc(r.src||"—")+(r.note?`<div class="small" style="color:#b8862f;margin-top:2px">${esc(r.note)}</div>`:""):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
-  const evalCtl = ST.admin ? `<div class="evalopts" role="group" aria-label="تقييم المؤشر">${EV_ORDER.map(k => `<button type="button" class="${EVAL[k].cls}" data-setev="${k}" aria-pressed="${x.ev===k}">${EVAL[k].label}</button>`).join("")}</div>` : `<div>${badge(x)}</div>`;
+  const evalCtl = ST.admin ? `<div class="evalopts" role="group" aria-label="تقييم المؤشر">${EV_ORDER.map(k => `<button type="button" class="${EVAL[k].cls}" data-setev="${k}" aria-pressed="${x.ev===k}">${EVAL[k].label}</button>`).join("")}</div>` : ana(`<div>${badge(x)}</div>`);
   const lastOut = x.curAll && x.curAll.y > (isFinite(cr.calcTo) ? cr.calcTo : 9999) ? `<div class="msg warn">قراءة ${x.curAll.y} (${N(x.curAll.v != null ? fv(x, x.curAll.v) : "الترتيب " + x.curAll.r)}) خارج فترة الحساب ولم تدخل المعادلة.</div>` : "";
   const html = `
     <div class="dh"><div><div class="small muted">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h2 style="font-size:18px">${esc(x.name)}</h2><div class="small muted"><span class="code">${x.id}</span> · ${x.set==="updated"?"مؤشرات الرؤية":"المؤشرات المساندة"}${x.intl?" · دولي":""} · <span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span></div></div>
       <div style="display:flex;gap:6px">${shareBtns(x.id)}<button class="btn" data-close aria-label="إغلاق">✕</button></div></div>
     <div class="db">
-      <div class="itabs" role="tablist">${["الملخص","القراءات","المنهجية","المصدر"].map((n, i) => `<button role="tab" data-itab="${i}" aria-selected="${(ST.indTab||0) === i}">${n}</button>`).join("")}</div>
+      <div class="itabs" role="tablist">${["الملخص","القراءات","المنهجية","المصدر"].map((n, i) => i === 2 && !ANA() ? "" : `<button role="tab" data-itab="${i}" aria-selected="${(ST.indTab||0) === i}">${n}</button>`).join("")}</div>
       <div data-tabp="0" ${(ST.indTab||0) !== 0 ? "hidden" : ""}>
       <div class="small muted">فترة العرض ${ST.from}–${ST.to} · فترة الحساب ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات"} · المستهدف ${ST.ty}</div>
       ${x.kids ? kidsHTML(x) : `
@@ -1523,9 +1571,9 @@ function openDrawer(id, target){
         <div class="tile"><small>مستهدف 2030</small><b class="num">${N(targetTxt(x, 2030))}</b></div>
         <div class="tile"><small>مستهدف 2040</small><b class="num">${N(targetTxt(x, 2040))}</b></div>
       </div>
-      ${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}
+      ${chartSVG(x, {fc: x.showFc && ANA() ? x.el.forecast : null, fcYear: x.showFc && ANA() ? x.el.forecast.y : 0})}
       ${lastOut}
-      <div class="sec"><div class="hd"><h3>التقدم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
+      <div class="sec ana"><div class="hd"><h3>التقدم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
         <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
           <div class="tile"><small>المعدل الفعلي</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.actual))}</b></div><div class="tile"><small>المعدل المطلوب</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.required))}</b></div><div class="tile"><small>الأهلية</small><b style="font-size:14px"><span class="lv lv${x.el.level}">${x.el.level}</span> ${LV_LABEL[x.el.level]}</b></div></div>
       </div>
@@ -1543,12 +1591,12 @@ function openDrawer(id, target){
       </div>
       <div data-tabp="3" ${(ST.indTab||0) !== 3 ? "hidden" : ""}>
       <dl class="facts">
-        <dt>الجهة المالكة</dt><dd>${esc(x.owner||"—")}</dd><dt>جهة الإصدار</dt><dd>${esc(x.issuer||"—")}</dd>
+        ${ana(`<dt>الجهة المالكة</dt><dd>${esc(x.owner||"—")}</dd>`)}<dt>جهة الإصدار</dt><dd>${esc(x.issuer||"—")}</dd>
         <dt>مصدر البيانات</dt><dd>${esc(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
         <dt>طريقة الحساب</dt><dd>${esc(x.methodText||"—")}</dd><dt>الوحدة · الاتجاه</dt><dd>${esc(x.unit)} · ${x.dir==="down"?"الانخفاض أفضل":"الارتفاع أفضل"}</dd>
         <dt>طريقة حساب التقدم</dt><dd>${x.method}</dd><dt>نوع التجميع</dt><dd>${esc(x.aggLabel||"غير محدد")}</dd>
       </dl>
-      ${textBlocks(x)}
+      ${ana(textBlocks(x))}
       </div>
       ${ST.admin?`<div class="evalbox"><h3 style="font-size:14px">إضافة قراءة سريعة</h3>
         <form class="upd" data-updfor="${x.id}">
@@ -1639,6 +1687,7 @@ const LISTS = { calc:["Linear","CAGR"], agg:Object.values(E.AGG), cap:Object.val
 let DL = null;
 function exportTemplate(){
   if (!isAdmin()){ toast("تصدير البيانات متاح للمسؤول فقط"); return; }
+  if (!IN_CLAUDE && !ST.intl){ toast("افتح وضع التحليل أولاً (#analysis) حتى يشمل النموذج البيانات الداخلية"); return; }
   if (typeof XLSX === "undefined"){ toast("تعذر تحميل مكتبة Excel. تأكد من الاتصال."); return; }
   const ds = ST.ds, wb = XLSX.utils.book_new();
   const ins = [["نموذج بيانات مؤشرات الرؤية"],["عدّل الأوراق ثم ارفع الملف من «إدارة البيانات»."],["النسب المئوية تُكتب كرقم: 3.1 تعني 3.1%."],["الترتيب الدولي في عمود «الترتيب» لا «القيمة»."],["طريقة حساب التقدم: Linear أو CAGR (CAGR للمستويات الموجبة فقط)."],["نوع التجميع: " + LISTS.agg.join(" | ")],["سقف أهلية التحليل يقيّد ولا يرفع: " + LISTS.cap.join(" | ")],["نوع القراءة: فعلية | تقديرية | أولية. انقطاع السلسلة: اكتب «نعم» في سنة تغيّر التعريف."],["لا تغيّر أسماء الأوراق أو الأعمدة، ولا رمز مؤشر قائم. لإيقاف مؤشر اكتب «لا» في «فعّال»."],[`تاريخ التصدير: ${new Date().toISOString().slice(0,10)}`]];
@@ -1800,8 +1849,9 @@ function renderAdmin(){
   const m = ST.ds.meta || {}, ok = isAdmin();
   $("#admin-lock").hidden = ok; $("#admin-out").hidden = !(ok && !IN_CLAUDE);
   document.querySelectorAll("[data-adm]").forEach(el => { if (!ok) el.hidden = true; });
-  if (!ok){ $("#local-note").hidden = true; $("#ds-state").textContent = ""; $("#admin-title").textContent = "إدارة البيانات"; return; }
+  if (!ok){ $("#admin-ana-note").hidden = true; $("#local-note").hidden = true; $("#ds-state").textContent = ""; $("#admin-title").textContent = "إدارة البيانات"; return; }
   $("#asub").hidden = false;
+  $("#admin-ana-note").hidden = IN_CLAUDE || !!ST.intl;
   $("#admin-title").textContent = IN_CLAUDE && ST.admin ? "إدارة البيانات" : "أدوات البيانات";
   $("#local-note").hidden = IN_CLAUDE && ST.admin;
   $("#ds-state").textContent = ST.dsSource === "db" ? `المنشور: ${m.file ? "«" + m.file + "» · " : ""}${m.at ? new Date(m.at).toLocaleString("ar-OM") : ""}${m.by && ST.names[m.by] ? " · " + ST.names[m.by] : ""}` : ST.dsSource === "preview" ? "معاينة محلية لملف لم يُنشر" : ST.dsSource === "file" ? "البيانات من data/dataset.json" : "البيانات الأولية من بطاقات المؤشرات";
@@ -1945,7 +1995,7 @@ function renderOverview(){
     const ai = AXES.indexOf(a), items = list.filter(x => x.priority === p), s = stats(items), k = allP.findIndex(q => q[1] === p);
     if (!items.length) return `<article class="pcard ghost" style="--axc:${AXC[ai]}"><span class="ax">${esc(a)}</span><h3>${esc(p)}</h3><span class="small">لا توجد مؤشرات في هذه المجموعة</span></article>`;
     return `<article class="pcard" style="--axc:${AXC[ai]}"><span class="ax">${esc(a)}</span><h3>${esc(p)}</h3>
-      <div class="m3"><div><b class="num">${items.length}</b><small>مؤشر</small></div><div><b class="num" style="color:var(--k-on)">${N(shareTxt(s))}</b><small>على المسار</small></div><div><b class="num" style="color:var(--k-back)">${s.counts.backwards}</b><small>يتراجع</small></div></div>
+      <div class="m3"><div><b class="num">${items.length}</b><small>مؤشر</small></div>${ana(`<div><b class="num" style="color:var(--k-on)">${N(shareTxt(s))}</b><small>على المسار</small></div><div><b class="num" style="color:var(--k-back)">${s.counts.backwards}</b><small>يتراجع</small></div>`)}</div>
       ${stackBar(items)}<a class="go" href="#focus-p-${k}">افتح في التركيز ←</a></article>`;
   }).join("");
 }
@@ -1965,8 +2015,8 @@ function dmSelect(kind, key, ev){
     html = `<div class="hd">${catChip(x)}<span><span class="code">${x.id}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></span></div>
       <h3>${esc(x.name)}</h3><div class="path" style="color:${axC(x.axis)};font-weight:600">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
       <div class="two"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
-      <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
-      <p class="why">${esc(whyTxt(x))}</p>
+      ${ana(`<div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
+      <p class="why">${esc(whyTxt(x))}</p>`)}
       <div class="acts"><a class="btn primary" href="#focus-i-${x.id}">افتح في التركيز</a><a class="btn" href="#i-${x.id}">كل التفاصيل</a></div>`;
   } else {
     const isA = kind === "a", ai = isA ? +key : AXES.indexOf(allP[+key][0]), p = isA ? null : allP[+key][1];
@@ -2009,35 +2059,35 @@ function renderFocus(){
   const s = stats(items);
   $("#f-title").textContent = ST.fPri === "all" ? ax : ST.fPri; $("#f-title").style.color = AXC[ST.fAxis];
   document.querySelector("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]); document.querySelector("#v-focus").style.setProperty("--axb", AXB[ST.fAxis]);
-  $("#f-meta").textContent = `${items.length} مؤشر · على المسار ${shareTxt(s)} · الوسيط R% ${medTxt(s)} · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
+  $("#f-meta").textContent = ANA() ? `${items.length} مؤشر · على المسار ${shareTxt(s)} · الوسيط R% ${medTxt(s)} · مستهدف ${ST.ty}` : `${items.length} مؤشر · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
   if (!items.some(x => x.id === ST.fInd)) ST.fInd = items.length ? items[0].id : null;
-  $("#f-list").innerHTML = items.map(x => `<button class="frow" data-fsel="${x.id}" aria-pressed="${x.id === ST.fInd}" style="--c:${x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat]}">
+  $("#f-list").innerHTML = items.map(x => `<button class="frow" data-fsel="${x.id}" aria-pressed="${x.id === ST.fInd}" style="--c:${cc(x)}">
       <span class="t">${esc(x.name)}</span>
-      <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>R% <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
+      <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span>${ana(`<span>R% <b style="color:var(--ink)">${N(rTxt(x))}</b></span>`)}</span>
       <span class="r">${catChip(x)}<span class="code">${x.id}</span></span></button>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   $("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]);
   $("#fd-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
   $("#fd-pri").innerHTML = `<option value="all" ${ST.fPri === "all" ? "selected" : ""}>كل أولويات المحور</option>` + pris.map(([, p, n]) => `<option value="${esc(p)}" ${ST.fPri === p ? "selected" : ""}>${esc(p)} (${n})</option>`).join("");
   if (isMobile()){ renderFocusMobile(ax, pris, items, s); return; }
-  $("#fd-ind").innerHTML = items.map((x, i) => `<option value="${x.id}" ${x.id === ST.fInd ? "selected" : ""}>${(i + 1)}. ${x.p.status === "review" ? "؟" : CAT_SYM[x.cat]} ${esc(x.name)}</option>`).join("");
+  $("#fd-ind").innerHTML = items.map((x, i) => `<option value="${x.id}" ${x.id === ST.fInd ? "selected" : ""}>${(i + 1)}. ${!ANA() ? "" : x.p.status === "review" ? "؟" : CAT_SYM[x.cat]} ${esc(x.name)}</option>`).join("");
   if (ST.fInd && BY[ST.fInd]) BY[ST.fInd]._pos = (items.findIndex(x => x.id === ST.fInd) + 1) + " من " + items.length;
   $("#f-panel").innerHTML = ST.fInd && BY[ST.fInd] ? focusCardHTML(BY[ST.fInd]) : `<div class="empty">اختر مؤشراً.</div>`;
 }
 function focusCardHTML(x){
-  const col = x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat], p = x.p || {};
+  const col = cc(x), p = x.p || {};
   const pace = p.actual != null && isFinite(p.actual) && p.required != null && isFinite(p.required);
   return `<div class="fc" style="--c:${col}">
     <div class="path" style="color:${axC(x.axis)}">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
     <h2>${esc(x.name)}</h2>
     <div class="meta">${catChip(x)}<span class="code">${x.id}</span><span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span>${x._pos ? `<span class="fpos" style="margin-inline-start:auto">${x._pos}</span>` : ""}</div>
-    <div class="chart">${isMobile() ? (sparkSVG(x) || `<p class="small muted" style="margin:0;padding:18px;text-align:center">لا توجد قراءات كافية للرسم</p>`) : chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}</div>
+    <div class="chart">${isMobile() ? (sparkSVG(x) || `<p class="small muted" style="margin:0;padding:18px;text-align:center">لا توجد قراءات كافية للرسم</p>`) : chartSVG(x, {fc: x.showFc && ANA() ? x.el.forecast : null, fcYear: x.showFc && ANA() ? x.el.forecast.y : 0})}</div>
     <div class="q4">
       <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + esc(x.cur.src) : "") : ""}</div></div>
       <div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div>
-      <div><small>Progress Ratio</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>
-      <div><small>${pace ? "المتحقق سنوياً" : "الفجوة المتبقية"}</small><b class="num">${pace ? N(rateTxt(x, p.actual).split(" ")[0]) : N(gapTxt(x))}</b>${pace ? `<div class="sub">المطلوب ${N(rateTxt(x, p.required).split(" ")[0])}</div>` : ""}</div>
+      ${ana(`<div><small>Progress Ratio</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>`)}
+      <div class="ana"><small>${pace ? "المتحقق سنوياً" : "الفجوة المتبقية"}</small><b class="num">${pace ? N(rateTxt(x, p.actual).split(" ")[0]) : N(gapTxt(x))}</b>${pace ? `<div class="sub">المطلوب ${N(rateTxt(x, p.required).split(" ")[0])}</div>` : ""}</div>
     </div>
-    <p class="why">${esc(whyTxt(x))}</p>
+    ${ana(`<p class="why">${esc(whyTxt(x))}</p>`)}
     <div class="acts"><a class="btn primary" href="#i-${x.id}">التفاصيل والمنهجية ←</a>${shareBtns(x.id)}</div>
   </div>`;
 }
@@ -2045,6 +2095,7 @@ function focusCardHTML(x){
 const rKey = x => x.p.status === "review" || !CLASSIFIED.has(x.cat) ? null : x.p.achieved ? Infinity : (x.p.R != null && isFinite(x.p.R) ? x.p.R : null);
 function sortFocus(list){
   const byId = (u, v) => u.id.localeCompare(v.id, "en", {numeric:true});
+  if (!ANA()) return list.sort(byId);
   if (ST.fSort === "cat") return list.sort((u, v) => CATS.indexOf(u.cat) - CATS.indexOf(v.cat) || byId(u, v));
   const sgn = ST.fSort === "near" ? -1 : 1;
   return list.sort((u, v) => { const a = rKey(u), b = rKey(v); if (a == null && b == null) return byId(u, v); if (a == null) return 1; if (b == null) return -1; return a === b ? byId(u, v) : sgn * (a < b ? -1 : 1); });
@@ -2083,17 +2134,17 @@ function whyTxt(x){
 function renderFocusMobile(ax, pris, items, s){
   $("#fm-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
   $("#fm-pri").innerHTML = `<option value="all" ${ST.fPri === "all" ? "selected" : ""}>كل الأولويات</option>` + pris.map(([, p, n]) => `<option value="${esc(p)}" ${ST.fPri === p ? "selected" : ""}>${esc(p)} (${n})</option>`).join("");
-  $("#fm-sum").innerHTML = `<div class="row"><span><b>${items.length}</b> مؤشر · على المسار <b>${N(shareTxt(s))}</b> · الوسيط R% <b>${N(medTxt(s))}</b></span>
+  $("#fm-sum").innerHTML = `<div class="row"><span><b>${items.length}</b> مؤشر${ANA() ? ` · على المسار <b>${N(shareTxt(s))}</b> · الوسيط R% <b>${N(medTxt(s))}</b>` : ""}</span>
     <select class="fsort" id="fm-sort" aria-label="الترتيب"><option value="cat">حسب التصنيف</option><option value="near">الأقرب أولاً</option><option value="far">الأبعد أولاً</option></select></div>${stackBar(items)}`;
   $("#fm-sort").value = ST.fSort;
-  const col = x => x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
+  const col = cc;
   $("#fm-cards").innerHTML = items.map(x => `<article class="fcard" data-fcard="${x.id}" style="--c:${col(x)}">
       <div class="top">${catChip(x)}<span class="code">${x.id}</span></div>
       <h3>${esc(x.name)}</h3>
       ${sparkSVG(x)}
       <div class="big"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
-      <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
-      <p class="why">${esc(whyTxt(x))}</p>
+      ${ana(`<div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
+      <p class="why">${esc(whyTxt(x))}</p>`)}
       <div style="display:flex;gap:8px;align-items:center"><a class="more" href="#i-${x.id}" style="flex:1;text-align:center;text-decoration:none">كل التفاصيل والمنهجية ←</a>${shareBtns(x.id)}</div></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   const cnt = id => { const k = items.findIndex(x => x.id === id); $("#fm-count").textContent = k >= 0 ? `المؤشر ${k + 1} من ${items.length}` : ""; };
   cnt(ST.fInd);
@@ -2111,6 +2162,7 @@ function renderFocusMobile(ax, pris, items, s){
 /* ================= routing ================= */
 function stateHash(){
   if (ST.page === "admin") return "#admin";
+  if (ST.page === "ana") return "#analysis";
   if (ST.page === "overview") return "#overview";
   if (ST.page === "ind" && ST.ind) return "#i-" + ST.ind;
   if (ST.page === "focus"){ if (ST.fInd) return "#focus-i-" + ST.fInd; const allP = allPriorities(); if (ST.fPri && ST.fPri !== "all") return "#focus-p-" + allP.findIndex(q => q[1] === ST.fPri); return "#focus-a-" + (ST.fAxis ?? 0); }
@@ -2122,6 +2174,7 @@ function go(){ const h = stateHash(); if (location.hash !== h) history.replaceSt
 function readHash(){
   const h = location.hash.slice(1);
   if (h === "" || h === "overview"){ ST.page = "overview"; closeDrawer(); render(); return; }
+  if (h === "analysis"){ ST.page = "ana"; closeDrawer(); render(); window.scrollTo(0, 0); return; }
   if (h === "calendar"){ ST.page = "cal"; closeDrawer(); render(); window.scrollTo(0, 0); return; }
   if (h.startsWith("focus")){
     ST.page = "focus"; closeDrawer();
@@ -2148,7 +2201,7 @@ function setSeg(){
 function render(){
   compute(); setSeg(); renderTree(); renderControls();
   const pg = ST.page;
-  ["overview","dash","focus","admin","ind","cal"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
+  ["overview","dash","focus","admin","ind","cal","ana"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
   document.body.classList.toggle("noside", pg !== "dash");
   document.body.dataset.pg = pg;
   document.querySelectorAll(".navtabs a").forEach(a => a.setAttribute("aria-current", a.dataset.nav === pg ? "page" : "false"));
@@ -2156,7 +2209,7 @@ function render(){
   document.querySelectorAll(".navtabs a").forEach(a => { if (pg === "ind" && a.dataset.nav === "focus") a.setAttribute("aria-current", "page"); });
   $("#ctl-sum").textContent = `مستهدف ${ST.ty} · ${ST.from}–${ST.to}${ST.calcLinked ? "" : " · الحساب: كل السنوات"}`;
   applyRole();
-  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else if (pg === "cal") renderCal(); else renderDash();
+  if (pg === "ana") renderAna(); else if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else if (pg === "cal") renderCal(); else renderDash();
   const d = $("#drawer");
   if (!d.hidden){ if (d.dataset.mode === "cmp") openCompare(); else if (d.dataset.id) openDrawer(d.dataset.id); }
 }
@@ -2186,7 +2239,7 @@ $("#m-pri").addEventListener("input", e => { ST.pri = e.target.value || null; if
 $("#scrim").addEventListener("click", () => { closeDrawer(); $("#drawer").dataset.id = ""; go(); });
 $("#export").addEventListener("click", exportResults);
 $("#dl-tpl").addEventListener("click", exportTemplate); $("#dl-tpl2").addEventListener("click", exportTemplate);
-$("#dl-json").addEventListener("click", () => isAdmin() && saveFile("dataset.json", new Blob([JSON.stringify({...ST.ds, meta:{...(ST.ds.meta||{}), exported:new Date().toISOString()}})], {type:"application/json"})));
+$("#dl-json").addEventListener("click", () => { if (isAdmin()) publishFiles({...ST.ds, meta:{...(ST.ds.meta||{}), exported:new Date().toISOString()}}); });
 $("#cmpgo").addEventListener("click", openCompare);
 $("#cmpclr").addEventListener("click", () => { ST.cmp.clear(); renderDash(); if ($("#drawer").dataset.mode === "cmp") closeDrawer(); });
 const fileIn = $("#file"), drop = $("#drop");
@@ -2274,7 +2327,7 @@ document.addEventListener("click", async e => {
   if (el.id === "reset"){ ST.axis = ST.pri = ST.ev = ST.cat = null; ST.q = ""; $("#q").value = ""; ["#f-type","#f-fresh","#f-elig"].forEach(s => $(s).value = ""); render(); go(); return; }
   if (el.id === "cancel"){ ST.pending = null; $("#check").innerHTML = ""; return; }
   if (el.id === "preview-apply"){ if (!ST.pending) return; ST.ds = {...ST.pending.ds, meta:{file:ST.pending.fileName}}; ST.dsSource = "preview"; buildModel(ST.ds); render(); toast("تعرض اللوحة الآن بيانات الملف (معاينة غير منشورة)"); return; }
-  if (el.id === "export-pending"){ if (!ST.pending || !isAdmin()) return; saveFile("dataset.json", new Blob([JSON.stringify({...ST.pending.ds, meta:{file:ST.pending.fileName, exported:new Date().toISOString()}})], {type:"application/json"})); return; }
+  if (el.id === "export-pending"){ if (!ST.pending || !isAdmin()) return; publishFiles({...ST.pending.ds, meta:{file:ST.pending.fileName, exported:new Date().toISOString()}}); return; }
   if (el.id === "publish"){
     if (!ST.pending || !ST.db || !ST.admin){ toast("النشر متاح للمدير داخل Claude فقط"); return; }
     el.disabled = true; const p = ST.pending;
@@ -2322,6 +2375,58 @@ if (MQ.addEventListener) MQ.addEventListener("change", () => render());
   d.addEventListener("touchend", () => { if (y0 == null) return; d.classList.remove("dragging"); y0 = null; d.style.setProperty("--dy", "0px"); if (dy > 110){ closeDrawer(); go(); } });
 })();
 
+/* ================= وضع التحليل: فك البيانات الداخلية ================= */
+const fetchEnv = () => fetch("data/internal.enc", {cache:"no-cache"}).then(r => r.ok ? r.json() : null).catch(() => null);
+function applyInternal(){
+  if (!ST.intl || !ST.pubDs || ST.dsSource !== "file") return;
+  ST.ds = joinDs(ST.pubDs, ST.intl); buildModel(ST.ds); stamp(); readHash();
+}
+async function loadInternal(silent){
+  let saved = null; try { saved = JSON.parse(localStorage.getItem("ovd-ana") || "null"); } catch(_){}
+  if (!saved || !saved.k) return;
+  ST.ana = true; applyRole();   // يظهر التحليل فوراً؛ البيانات الداخلية تلحق بعد الفك
+  try {
+    const env = await fetchEnv(); if (!env) return;
+    if (env.salt !== saved.s){ throw new Error("salt"); }
+    const key = await crypto.subtle.importKey("raw", ub64(saved.k), {name:"AES-GCM"}, true, ["encrypt","decrypt"]);
+    ST.intl = await decryptEnv(key, env); ST.anaKey = key; ST.anaSalt = ub64(env.salt); applyInternal();
+  } catch(_){
+    ST.ana = false; ST.intl = null; ST.anaKey = null; try { localStorage.removeItem("ovd-ana"); } catch(_){}
+    if (ST.pubDs && ST.dsSource === "file"){ ST.ds = ST.pubDs; buildModel(ST.ds); }
+    render(); if (!silent) toast("تغيّر رمز التحليل؛ أدخل الرمز الجديد من صفحة التحليل");
+  }
+}
+function renderAna(){ $("#ana-lock").hidden = ANA(); $("#ana-on").hidden = !ANA() || IN_CLAUDE; }
+$("#ana-unlock").addEventListener("submit", async e => {
+  e.preventDefault();
+  const v = $("#ana-pass").value.trim(); if (!v) return;
+  if (!(window.crypto && crypto.subtle)){ toast("المتصفح لا يدعم فك التشفير. افتح الرابط عبر https."); return; }
+  const btn = e.target.querySelector("button"); btn.disabled = true; btn.textContent = "جارٍ التحقق…";
+  try {
+    const env = await fetchEnv(); if (!env){ toast("تعذر تحميل ملف البيانات الداخلية. تحقق من الاتصال."); return; }
+    const salt = ub64(env.salt), key = await deriveKey(v, salt);
+    let intl; try { intl = await decryptEnv(key, env); } catch(_){ $("#ana-pass").value = ""; toast("رمز غير صحيح"); return; }
+    const raw = new Uint8Array(await crypto.subtle.exportKey("raw", key));
+    try { localStorage.setItem("ovd-ana", JSON.stringify({k:b64(raw), s:env.salt})); } catch(_){}
+    ST.ana = true; ST.intl = intl; ST.anaKey = key; ST.anaSalt = salt; $("#ana-pass").value = "";
+    applyInternal(); applyRole(); render(); toast("تم الدخول إلى وضع التحليل");
+  } finally { btn.disabled = false; btn.textContent = "دخول"; }
+});
+$("#ana-out").addEventListener("click", () => {
+  ST.ana = false; ST.intl = null; ST.anaKey = null; ST.anaSalt = null; try { localStorage.removeItem("ovd-ana"); } catch(_){}
+  if (ST.pubDs && ST.dsSource === "file"){ ST.ds = ST.pubDs; buildModel(ST.ds); }
+  location.hash = "#overview"; render(); toast("تم الخروج من وضع التحليل");
+});
+// النشر: ملف عام بلا حقول داخلية + ملف داخلي مشفّر بمفتاح التحليل
+async function publishFiles(ds){
+  if (!ST.anaKey){ toast("افتح وضع التحليل أولاً (#analysis): ملف البيانات الداخلية يُشفَّر برمزه"); return; }
+  const {pub, internal} = splitDs(ds), iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM", iv}, ST.anaKey, new TextEncoder().encode(JSON.stringify(internal))));
+  saveFile("dataset.json", new Blob([JSON.stringify(pub)], {type:"application/json"}));
+  setTimeout(() => saveFile("internal.enc", new Blob([JSON.stringify({v:1, kdf:"PBKDF2-SHA256", iter:KDF_ITER, salt:b64(ST.anaSalt), iv:b64(iv), ct:b64(ct)})], {type:"application/octet-stream"})), 600);
+  toast("نُزّل ملفان: dataset.json وinternal.enc — ارفعهما معاً إلى مجلد data");
+}
+
 /* ================= وضع الإدارة (الموقع) ================= */
 $("#admin-unlock").addEventListener("submit", async e => {
   e.preventDefault();
@@ -2347,13 +2452,13 @@ function shareText(x){
   if (x.kids){
     x.kids.forEach(k => { const c = k.curAll;
       L.push(`• ${[k.grade, k.subject || k.name].filter(Boolean).join(" · ")}: ${c ? lt(curTxt({...k, cur:c})) + " (" + c.y + ")" : "لا توجد قراءة"} · مستهدف 2030: ${lt(targetTxt(k, 2030))}`); });
-    L.push(`التصنيف العام: ${catTxt(x)}`);
+    if (ANA()) L.push(`التصنيف العام: ${catTxt(x)}`);
   } else {
     const c = x.curAll;
     L.push(`آخر قراءة: ${c ? lt(curTxt({...x, cur:c})) + " (" + c.y + (c.kind && c.kind !== "فعلية" ? "، " + c.kind : "") + ")" : "لا توجد قراءة"}`);
     if (x.base != null) L.push(`خط الأساس: ${lt(fv(x, x.base))}`);
     L.push(`مستهدف 2030: ${lt(targetTxt(x, 2030))} · مستهدف 2040: ${lt(targetTxt(x, 2040))}`);
-    L.push(`التصنيف: ${catTxt(x)}` + (x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدم: ${lt(rTxt(x))}` : ""));
+    if (ANA()) L.push(`التصنيف: ${catTxt(x)}` + (x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدم: ${lt(rTxt(x))}` : ""));
     const s = srcOf(x, c); if (s) L.push(`المصدر: ${s}`);
   }
   L.push("", `لوحة مؤشرات رؤية عُمان 2040 · ${today()}`);
@@ -2370,11 +2475,11 @@ function sharePDF(id){
   const rows = k => k.series.filter(r => r.y <= NOW && (r.v != null || r.r != null)).slice(-8).map(r => `<tr><td>${r.y}</td><td>${N(r.v != null ? fv(k, r.v) : "—")}</td><td>${r.r != null ? fmtN(r.r, 0) : "—"}</td><td>${esc(r.kind || "فعلية")}</td><td>${esc(r.src || "—")}</td></tr>`).join("");
   const table = k => { const r = rows(k); return r ? `<table><thead><tr><th>السنة</th><th>القيمة</th><th>الترتيب</th><th>النوع</th><th>المصدر</th></tr></thead><tbody>${r}</tbody></table>` : ""; };
   const body = x.kids
-    ? x.kids.map(k => `<div class="kid"><b>${esc([k.grade, k.subject || k.name].filter(Boolean).join(" · "))}</b> — ${esc(catTxt(k))}${tiles(k)}${chartSVG(k)}${table(k)}</div>`).join("")
+    ? x.kids.map(k => `<div class="kid"><b>${esc([k.grade, k.subject || k.name].filter(Boolean).join(" · "))}</b>${ANA() ? " — " + esc(catTxt(k)) : ""}${tiles(k)}${chartSVG(k)}${table(k)}</div>`).join("")
     : `${tiles(x)}${chartSVG(x)}${table(x)}`;
   ps.innerHTML = `<div class="ph"><div><b>لوحة مؤشرات رؤية عُمان 2040</b><div class="path">${esc(today())}</div></div>${logo ? `<img src="${logo.src}" alt="">` : ""}</div>
     <div class="path">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h1>${esc(x.name)}</h1>
-    <div class="path">${x.id} · التصنيف: <b>${esc(catTxt(x))}</b>${!x.kids && x.p.R != null && isFinite(x.p.R) ? " · نسبة التقدم نحو مستهدف " + ST.ty + ": " + N(rTxt(x)) : ""}</div>
+    <div class="path">${x.id}${ANA() ? ` · التصنيف: <b>${esc(catTxt(x))}</b>` + (!x.kids && x.p.R != null && isFinite(x.p.R) ? " · نسبة التقدم نحو مستهدف " + ST.ty + ": " + N(rTxt(x)) : "") : ""}</div>
     ${body}
     <div class="path" style="margin-top:8px">مصدر البيانات: ${esc(x.src || x.issuer || "—")}${x.freq ? " · الدورية: " + esc(x.freq) : ""}</div>
     <div class="pf"><span>لوحة مؤشرات رؤية عُمان 2040</span><span>${esc(today())}</span></div>`;
@@ -2447,7 +2552,7 @@ function drawCard(c, x){
   txt(`${x.axis} ‹ ${x.priority}`, 13, {color:EXP.muted});
   txt(x.name, 24, {w:700, disp:1, lh:1.45});
   const R = !x.kids && x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدم نحو مستهدف ${ST.ty}: ${clean(rTxt(x))}` : "";
-  txt(`${x.id} · التصنيف: ${catTxt(x)}${R}`, 14, {color:EXP.muted}); y += 10;
+  txt(ANA() ? `${x.id} · التصنيف: ${catTxt(x)}${R}` : x.id, 14, {color:EXP.muted}); y += 10;
   const block = k => {
     /* tiles */
     const tiles = [["خط الأساس", k.base != null ? fv(k, k.base) : "—"], ["آخر قراءة" + (k.curAll ? " (" + k.curAll.y + ")" : ""), k.curAll ? curTxt({...k, cur:k.curAll}) : "—"], ["مستهدف 2030", targetTxt(k, 2030)], ["مستهدف 2040", targetTxt(k, 2040)]];
@@ -2471,7 +2576,7 @@ function drawCard(c, x){
     rows.forEach(r => row([String(r.y), r.v != null ? fv(k, r.v) : "—", r.r != null ? fmtN(r.r, 0) : "—", r.kind || "فعلية", r.src || "—"]));
     y += 10;
   };
-  if (x.kids) x.kids.forEach(k => { brk.push(y); y += 6; txt([k.grade, k.subject || k.name].filter(Boolean).join(" · ") + " — " + catTxt(k), 16, {w:700}); y += 6; block(k); });
+  if (x.kids) x.kids.forEach(k => { brk.push(y); y += 6; txt([k.grade, k.subject || k.name].filter(Boolean).join(" · ") + (ANA() ? " — " + catTxt(k) : ""), 16, {w:700}); y += 6; block(k); });
   else block(x);
   brk.push(y);
   txt(`مصدر البيانات: ${x.src || x.issuer || "—"}${x.freq ? " · الدورية: " + x.freq : ""}`, 12.5, {color:EXP.muted});
@@ -2544,7 +2649,7 @@ applyRole();   // أدوات الإدارة والتصدير لا تظهر إل�
 if (!IN_CLAUDE && /^https?:$/.test(location.protocol) && typeof fetch === "function"){
   if (SITE) $("#sub").textContent = "جارٍ تحميل البيانات…";
   fetch("data/dataset.json", {cache:"no-cache"}).then(r => r.ok ? r.json() : null).then(ds => {
-    if (ds && Array.isArray(ds.indicators)){ ST.ds = ds; ST.dsSource = "file"; buildModel(ds); stamp(); readHash(); }
+    if (ds && Array.isArray(ds.indicators)){ ST.pubDs = ds; ST.ds = ds; ST.dsSource = "file"; buildModel(ds); stamp(); readHash(); loadInternal(); }
     else if (SITE){ $("#sub").textContent = "تعذر تحميل البيانات"; toast("تعذر تحميل البيانات. تحقق من الاتصال ثم أعد فتح التطبيق."); }
   }).catch(() => { if (SITE){ $("#sub").textContent = "تعذر تحميل البيانات"; toast("تعذر تحميل البيانات. تحقق من الاتصال ثم أعد فتح التطبيق."); } });
 }
