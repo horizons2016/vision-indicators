@@ -962,7 +962,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-55c902a390";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-98a2fea00e";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1327,7 +1327,7 @@ function openDrawer(id, target){
   const rows = x.series.filter(r => r.y >= ST.from && ((r.y <= Math.min(ST.to, NOW) && (r.v != null || r.r != null)) || (r.p != null && r.y <= Math.max(ST.to, ST.ty)))).map(r => {
     const isAct = r.y <= NOW && (r.v != null || r.r != null);
     const use = !isAct ? "" : usedYears.has(r.y) ? `<span style="color:var(--good)">مستخدمة</span>` : excl[r.y] ? `<span class="small muted">${esc(excl[r.y])}</span>` : `<span class="small muted">خارج الحساب</span>`;
-    return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?esc(r.src||"—"):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
+    return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?esc(r.src||"—")+(r.note?`<div class="small" style="color:#b8862f;margin-top:2px">${esc(r.note)}</div>`:""):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
   const evalCtl = ST.admin ? `<div class="evalopts" role="group" aria-label="تقييم المؤشر">${EV_ORDER.map(k => `<button type="button" class="${EVAL[k].cls}" data-setev="${k}" aria-pressed="${x.ev===k}">${EVAL[k].label}</button>`).join("")}</div>` : `<div>${badge(x)}</div>`;
   const lastOut = x.curAll && x.curAll.y > (isFinite(cr.calcTo) ? cr.calcTo : 9999) ? `<div class="msg warn">قراءة ${x.curAll.y} (${N(x.curAll.v != null ? fv(x, x.curAll.v) : "الترتيب " + x.curAll.r)}) خارج فترة الحساب ولم تدخل المعادلة.</div>` : "";
   const html = `
@@ -1340,7 +1340,7 @@ function openDrawer(id, target){
       ${x.kids ? kidsHTML(x) : `
       <div class="tiles">
         <div class="tile"><small>خط الأساس</small><b class="num">${x.base!=null?N(fv(x,x.base)):"—"}</b></div>
-        <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + esc(x.cur.src) : ""):""}</div></div>
+        <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + esc(x.cur.src) : "") + (x.cur.note ? `<div style="color:#b8862f;margin-top:2px">${esc(x.cur.note)}</div>` : ""):""}</div></div>
         <div class="tile"><small>مستهدف 2030</small><b class="num">${N(targetTxt(x, 2030))}</b></div>
         <div class="tile"><small>مستهدف 2040</small><b class="num">${N(targetTxt(x, 2040))}</b></div>
       </div>
