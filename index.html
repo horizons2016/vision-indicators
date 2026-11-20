@@ -206,12 +206,12 @@ aside.side{top:101px;height:calc(100vh - 101px)}
 :root{--ax0:#b64e9d;--ax1:#1fa9b4;--ax2:#546cb0;--ax3:#69479c;--ax0-bg:#f6e7f2;--ax1-bg:#e1f5f6;--ax2-bg:#e7ebf6;--ax3-bg:#ede7f5}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ax0:#d97cc1;--ax1:#4fd0da;--ax2:#8ea2e0;--ax3:#a585d6;--ax0-bg:#3a1f33;--ax1-bg:#14363a;--ax2-bg:#1f2840;--ax3-bg:#2a2140}}
 :root[data-theme="dark"]{--ax0:#d97cc1;--ax1:#4fd0da;--ax2:#8ea2e0;--ax3:#a585d6;--ax0-bg:#3a1f33;--ax1-bg:#14363a;--ax2-bg:#1f2840;--ax3-bg:#2a2140}
-:root{--k-on:#1b7139;--k-on-bg:#e4f3e8;--k-needs:#8a6d00;--k-needs-bg:#fbf3cf;--k-break:#b35a00;--k-break-bg:#fde6d2;--k-back:#b23a32;--k-back-bg:#fbe7e5;--k-stall:#4f5b66;--k-stall-bg:#e3e7ea;--k-na:#7b807e;--k-na-bg:#eceeed}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29}}
-:root[data-theme="dark"]{--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29}
+:root{--k-on:#1b7139;--k-on-bg:#e4f3e8;--k-needs:#8a6d00;--k-needs-bg:#fbf3cf;--k-break:#b35a00;--k-break-bg:#fde6d2;--k-back:#b23a32;--k-back-bg:#fbe7e5;--k-stall:#4f5b66;--k-stall-bg:#e3e7ea;--k-na:#7b807e;--k-na-bg:#eceeed;--k-dev:#4a5f86;--k-dev-bg:#e6ebf4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29;--k-dev:#9fb2d6;--k-dev-bg:#1e2533}}
+:root[data-theme="dark"]{--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29;--k-dev:#9fb2d6;--k-dev-bg:#1e2533}
 .c-on_track{color:var(--k-on);background:var(--k-on-bg)} .c-needs{color:var(--k-needs);background:var(--k-needs-bg)}
 .c-breakthrough{color:var(--k-break);background:var(--k-break-bg)} .c-backwards{color:var(--k-back);background:var(--k-back-bg)}
-.c-stalled{color:var(--k-stall);background:var(--k-stall-bg)} .c-na{color:var(--k-na);background:var(--k-na-bg)}
+.c-stalled{color:var(--k-stall);background:var(--k-stall-bg)} .c-na{color:var(--k-na);background:var(--k-na-bg)} .c-dev{color:var(--k-dev);background:var(--k-dev-bg)}
 .c-review{color:var(--k-back);background:transparent;border:1.5px dashed var(--k-back)}
 .rline{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .rline b{color:var(--ink);font-variant-numeric:tabular-nums}
@@ -459,6 +459,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     backwards:    { ar: "يتراجع", en: "Off Track – Going Backwards" },
     stalled:      { ar: "ثابت · بلا تقدم", en: "No change (stalled)" },
     na:           { ar: "لا يُصنَّف", en: "Not classified" },
+    dev:          { ar: "قيد التطوير", en: "In development" },
   };
 
   const AGG = {
@@ -961,22 +962,22 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-f3ad8fe545";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-a957ee83d3";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
 const AXES = ["الإنسان والمجتمع","الاقتصاد والتنمية","الحوكمة والأداء المؤسسي","البيئة المستدامة"];
 const EVAL = { done:{label:"منجز", cls:"e-done", c:"var(--good)"}, track:{label:"على المسار", cls:"e-track", c:"var(--info)"}, not:{label:"غير منجز", cls:"e-not", c:"var(--bad)"}, none:{label:"لم يُقيَّم", cls:"e-none", c:"var(--grey)"} };
 const EV_ORDER = ["done","track","not","none"];
-const CATS = ["on_track","needs","breakthrough","backwards","stalled","na"];
+const CATS = ["on_track","needs","breakthrough","backwards","stalled","na","dev"];
 // ألوان المحاور الرسمية من عجلة «أولوياتنا الوطنية» في وثيقة الرؤية: للهيكل فقط (أين أنا؟)
 const AXC = ["var(--ax0)","var(--ax1)","var(--ax2)","var(--ax3)"], AXB = ["var(--ax0-bg)","var(--ax1-bg)","var(--ax2-bg)","var(--ax3-bg)"];
 const axC = a => AXC[AXES.indexOf(a)] || "var(--accent)";
 // رمز مع كل حالة حتى لا يعتمد الفهم على اللون وحده
 // اسم الأولوية الرسمي كما في وثيقة الرؤية؛ ملف مؤشرات الرؤية (المحدثة) يكتبها باسم مختلف (للعرض والتجميع فقط، والبيانات كما هي)
 const PRI_ALIAS = {"المواطنة والهوية والثقافة والقيم": "المواطنة والهوية والتراث والثقافة الوطنية"};
-const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓", stalled:"=", na:"–"};
-const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)"};
+const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓", stalled:"=", na:"–", dev:"◌"};
+const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)", dev:"var(--k-dev)"};
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
 
 const ST = { fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
@@ -1000,7 +1001,7 @@ function buildModel(ds){
     const S = {};
     (rd[i.code] || []).forEach(r => { S[r.y] = {...(S[r.y]||{y:r.y}), ...r, v: sc(r.v)}; });
     (pt[i.code] || []).forEach(p => { S[p.y] = {...(S[p.y]||{y:p.y}), p: sc(p.p)}; });
-    return {
+    const o = {
       id:i.code, set: i.set === "محدث" ? "updated" : "original", axis:i.axis, priority:PRI_ALIAS[i.priority] || i.priority, priorityRaw:i.priority, name:i.name, unit:i.unit,
       pct, intl: i.type === "دولي", dir: String(i.dir||"").includes("الانخفاض") ? "down" : "up",
       base: sc(i.base), t30n: i.t30hi != null ? null : sc(i.t30), range: i.t30hi != null && i.t30 != null ? [sc(i.t30), sc(i.t30hi)] : null,
@@ -1011,8 +1012,12 @@ function buildModel(ds){
       notes: (nt[i.code] || []).sort((a,b) => a.y - b.y),
       series: Object.values(S).sort((a,b) => a.y - b.y),
       parent: i.parent || null, grade: i.grade || null, subject: i.subject || null,
+      stage: i.stage === "قيد التطوير" ? "dev" : i.stage === "قيد التحقق" ? "verify" : null, stageNote: i.stage_note || null,
       rel: {last: i.rel_last || null, next: i.rel_next || null, due: i.rel_due || null, note: i.rel_note || null, src: i.rel_src || null},
     };
+    // «قيد التطوير»: المستهدف لم يُعتمد بعد، فلا يُعرض ولا يُحسب (القيم تبقى محفوظة في ملف البيانات)
+    if (o.stage === "dev") { o.t30n = null; o.range = null; o.t30r = null; o.t40 = null; o.t30text = "يُحدَّد لاحقاً"; o.series = o.series.map(r => ({...r, p: null})).filter(r => r.v != null || r.r != null); }
+    return o;
   };
   // المؤشر الأصلي الذي له مقابل في مؤشرات الرؤية (حقل dup) لا يُعرض، حتى لا تتكرر المعلومة
   const act = ds.indicators.filter(i => i.active !== "لا" && !i.dup);
@@ -1041,6 +1046,7 @@ function compute(){
     x.el = E.eligibility(x, {targetYear:ST.ty, now:NOW, ...cr});
     x.p = x.el.progress;
     x.cat = x.p.cat;
+    applyStage(x);
     x.ev = (ST.assess[x.id] && EVAL[ST.assess[x.id].s]) ? ST.assess[x.id].s : "none";
     x.showFc = x.el.showForecast && x.approval !== "مرفوض";
     x.showP = x.el.showProbability && x.approval !== "مرفوض";
@@ -1049,13 +1055,21 @@ function compute(){
   const SEV = ["backwards", "breakthrough", "stalled", "needs", "on_track"];
   RAW.forEach(x => {
     if (!x.kids) return;
-    const cs = x.kids.filter(k => k.p.status !== "review").map(k => k.cat).filter(c => c !== "na");
+    if (x.stage) return;
+    const cs = x.kids.filter(k => k.p.status !== "review").map(k => k.cat).filter(c => c !== "na" && c !== "dev");
     const c = SEV.find(v => cs.includes(v)) || "na";
     x.cat = c;
     x.p = {...x.p, cat: c, status: cs.length ? "ok" : x.p.status, achieved: cs.length > 0 && x.kids.every(k => k.p.achieved), R: null, reason: "تصنيف مركّب من المكونات"};
     const last = x.kids.map(k => k.curAll).filter(Boolean).sort((a, b) => b.y - a.y)[0];
     if (last) { x.age = NOW - last.y; }
   });
+}
+/* المسارات الثلاثة: مكتمل (يُصنَّف) · قيد التطوير (مستهدف لم يُعتمد أو مؤشر بلا بيانات) · قيد التحقق (بيانات فيها إشكال لدى الفريق) */
+function applyStage(x){
+  const noData = !x.kids && !x.series.some(s => s.v != null || s.r != null);
+  const st = x.stage || (!x.kids && (x.p.status === "no_target" || noData) ? "dev" : null);
+  if (st === "dev") { x.p = {...x.p, status: "dev", cat: "dev", achieved: false, R: null, reason: x.stageNote || (noData ? "مؤشر قيد التطوير: لم تصدر له بيانات بعد" : "مؤشر قيد التطوير: المستهدف لم يُعتمد بعد")}; x.cat = "dev"; }
+  else if (st === "verify") { x.p = {...x.p, status: "review", cat: "na", achieved: false, R: null, reason: x.stageNote || "بيانات المؤشر قيد التحقق لدى الفريق المختص"}; x.cat = "na"; }
 }
 const relDate = s => { const m = String(s || "").match(/^(\d{4})-(\d{1,2})/); return m ? new Date(+m[1], +m[2], 0) : null; };
 const AR_M = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
@@ -1091,10 +1105,10 @@ const fvf = (x, v, field) => field === "r" ? "الترتيب " + fmtN(v, 0) : fv
 const N = s => /^[-−+]?\d/.test(String(s)) ? `<bdi dir="ltr">${esc(s)}</bdi>` : esc(s);
 const curTxt = x => !x.cur ? "—" : x.cur.v != null ? fv(x, x.cur.v) : "الترتيب " + fmtN(x.cur.r, 0);
 function targetTxt(x, ty){ ty = ty || ST.ty;
-  if (ty === 2040) return x.t40 != null ? fv(x, x.t40) : "—";
+  if (ty === 2040) return x.t40 != null ? fv(x, x.t40) : x.stage === "dev" ? "يُحدَّد لاحقاً" : "—";
   if (x.range) return fv(x, x.range[0]) + " – " + fv(x, x.range[1]); if (x.t30n != null) return fv(x, x.t30n); if (x.t30r != null) return "أفضل " + fmtN(x.t30r, 0); return x.t30text || "—"; }
 const rTxt = x => x.p && x.p.R != null && isFinite(x.p.R) ? fmtN(x.p.R * 100, 1) + "%" : (x.p && x.p.achieved ? "حقق المستهدف" : "—");
-const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ يحتاج مراجعة البيانات</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
+const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ قيد التحقق</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
 function ruleTxt(p){
   if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا يُحسب R)";
   if (p.status === "review") return "لم يُصنَّف: " + p.reason;
@@ -1260,7 +1274,8 @@ function calcDetails(x){
   const exc = p.excluded.map(e => `${e.y} (${e.reason})`).join("، ");
   let body = `<div><b>فترة الحساب:</b> ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات المتاحة"} · <b>الطريقة:</b> ${p.method} · <b>سنة المستهدف:</b> ${ST.ty}</div>
     <div><b>القراءات المستخدمة:</b> ${used}</div>${exc ? `<div><b>غير مستخدمة:</b> ${esc(exc)}</div>` : ""}`;
-  if (p.status === "review") return body + `<div class="msg warn"><b>لم يُصنَّف:</b> ${esc(p.reason)}. يلزم تصحيح اتجاه الأفضلية أو المستهدف في ملف البيانات.</div>${isFinite(p.previewR) ? `<div class="small muted">للاطلاع فقط (غير معتمد): R% بالبيانات الحالية = ${fmtN(p.previewR*100,1)}%.</div>` : ""}`;
+  if (p.status === "dev") return body + `<div class="msg"><b>قيد التطوير:</b> ${esc(p.reason)}. تُعرض القراءات واتجاهها للاطلاع، ولا يدخل المؤشر في نسب الأداء حتى يُعتمد مستهدفه.</div>`;
+  if (p.status === "review") return body + `<div class="msg warn"><b>قيد التحقق:</b> ${esc(p.reason)}. لا يُصنَّف أداؤه حتى تُؤكَّد بياناته.</div>${isFinite(p.previewR) ? `<div class="small muted">للاطلاع فقط (غير معتمد): R% بالبيانات الحالية = ${fmtN(p.previewR*100,1)}%.</div>` : ""}`;
   if (p.status !== "ok" && !p.achieved) return body + `<div><b>النتيجة:</b> ${esc(p.reason || "لا يمكن الحساب")}</div>`;
   if (p.achieved && p.R == null) return body + `<div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div><div><b>النتيجة:</b> آخر قراءة (${fvf(x, p.latest.val, f)} في ${p.latest.y}) بلغت المستهدف${p.T != null ? " (" + fvf(x, p.T, f) + ")" : ""}، فالتصنيف «على المسار» دون حساب R.</div>`;
   const F = p.first, L = p.latest, raw = v => f === "r" ? fmtN(v,0) : x.pct ? fmtN(v*100,3) + "%" : fmtN(v,4);
@@ -1436,7 +1451,7 @@ function exportResults(){
 }
 
 /* ================= excel: export template ================= */
-const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["dup","مقابله في مؤشرات الرؤية"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],
+const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["dup","مقابله في مؤشرات الرؤية"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],["stage","مرحلة المؤشر (قيد التطوير / قيد التحقق)"],["stage_note","سبب المرحلة"],
   ["calc","طريقة حساب التقدم"],["agg","نوع التجميع"],["cap","سقف أهلية التحليل"],["approval","حالة الاعتماد المنهجي"],["challenges","التحديات"],["explain","ملاحظات تفسيرية"],["initiatives","المبادرات المرتبطة"],["factors","العوامل المؤثرة (البطاقة)"],["supporting","المؤشرات المساندة (البطاقة)"],["risk","تقدير عدم التحقق (البطاقة)"]];
 const NUM_KEYS = new Set(["base","t30","t30hi","t30rank","t40"]);
 const RD_COLS = ["الرمز","اسم المؤشر (للعرض فقط)","السنة","القيمة","الترتيب","المصدر","نوع القراءة","انقطاع السلسلة (تغيير التعريف)","موثوقية المصدر","ملاحظة"];
@@ -1477,7 +1492,7 @@ function parseWorkbook(buf){
     if (!o.code && !o.name) return;
     o.code = String(o.code || "").trim().toUpperCase().replace(/\s/g,"");
     const at = `المؤشرات سطر ${ln} (${o.code})`;
-    if (!/^[A-Z]{1,3}-\d{1,4}$/.test(o.code)){ Er.push(`المؤشرات سطر ${ln}: الرمز «${o.code}» غير صالح (مثال صحيح U-31).`); return; }
+    if (!/^[A-Z]{1,3}-\d{1,4}(-\d{1,2})?$/.test(o.code)){ Er.push(`المؤشرات سطر ${ln}: الرمز «${o.code}» غير صالح (مثال صحيح U-31).`); return; }
     if (seen.has(o.code)){ Er.push(`المؤشرات سطر ${ln}: الرمز ${o.code} مكرر.`); return; } seen.add(o.code);
     if (!["محدث","أصلي"].includes(o.set)) Er.push(`${at}: «المجموعة» يجب أن تكون محدث أو أصلي.`);
     if (!AXES.includes(o.axis)) Er.push(`${at}: المحور «${o.axis||""}» غير معروف.`);
@@ -1655,7 +1670,7 @@ const medTxt = s => s.med == null ? "—" : s.med === Infinity ? "حقق الم�
 const shareTxt = s => s.onShare == null ? "—" : fmtN(s.onShare * 100, 0) + "%";
 function stackBar(list){
   const parts = CATS.map(k => [k, list.filter(x => x.cat === k && x.p.status !== "review").length]).concat([["review", list.filter(x => x.p.status === "review").length]]).filter(p => p[1]);
-  return `<span class="stackbar" role="img" aria-label="${parts.map(([k,n]) => (k==="review"?"يحتاج مراجعة":E.CAT[k].ar) + " " + n).join("، ")}">${parts.map(([k,n]) => `<i style="flex:${n};background:${k==="review"?"repeating-linear-gradient(45deg,var(--k-back) 0 3px,transparent 3px 6px)":CAT_C[k]}" title="${k==="review"?"يحتاج مراجعة البيانات":E.CAT[k].ar}: ${n}"></i>`).join("")}</span>`;
+  return `<span class="stackbar" role="img" aria-label="${parts.map(([k,n]) => (k==="review"?"قيد التحقق":E.CAT[k].ar) + " " + n).join("، ")}">${parts.map(([k,n]) => `<i style="flex:${n};background:${k==="review"?"repeating-linear-gradient(45deg,var(--k-back) 0 3px,transparent 3px 6px)":CAT_C[k]}" title="${k==="review"?"قيد التحقق":E.CAT[k].ar}: ${n}"></i>`).join("")}</span>`;
 }
 const axisShort = a => ({"الإنسان والمجتمع":["الإنسان","والمجتمع"],"الاقتصاد والتنمية":["الاقتصاد","والتنمية"],"الحوكمة والأداء المؤسسي":["الحوكمة","والأداء المؤسسي"],"البيئة المستدامة":["البيئة","المستدامة"]}[a] || [a, ""]);
 function allPriorities(){ return AXES.flatMap(a => prioritiesOf(a).map(p => [a, p[0], p[1]])); }
@@ -1703,7 +1718,7 @@ function diamondSVG(list){
         const kc = `dmg k-i${x.id} k-s${pidx} k-x${i}`;
         links += `<line class="${kc}" x1="${px}" y1="${py}" x2="${ix}" y2="${iy}" stroke="${AC}" stroke-opacity=".35" stroke-width="1"/>`;
         const rv = x.p.status === "review";
-        dots += `<circle class="hit" data-dmi="${x.id}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15"/><circle class="dm-ind ${kc}" data-dmi="${x.id}" data-tip="${esc(x.id + " · " + x.name + " — " + (rv ? "يحتاج مراجعة البيانات" : E.CAT[x.cat].ar) + (x.p.R != null && isFinite(x.p.R) ? " · R% " + fmtN(x.p.R*100,0) + "%" : x.p.achieved ? " · حقق المستهدف" : ""))}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="7" fill="${rv ? "var(--surface)" : CAT_C[x.cat]}" stroke="${rv ? "var(--k-back)" : "var(--surface)"}" stroke-width="${rv ? 2 : 1.5}" ${rv ? 'stroke-dasharray="2 2"' : ""}/>`;
+        dots += `<circle class="hit" data-dmi="${x.id}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15"/><circle class="dm-ind ${kc}" data-dmi="${x.id}" data-tip="${esc(x.id + " · " + x.name + " — " + (rv ? "قيد التحقق" : E.CAT[x.cat].ar) + (x.p.R != null && isFinite(x.p.R) ? " · R% " + fmtN(x.p.R*100,0) + "%" : x.p.achieved ? " · حقق المستهدف" : ""))}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="7" fill="${rv ? "var(--surface)" : CAT_C[x.cat]}" stroke="${rv ? "var(--k-back)" : "var(--surface)"}" stroke-width="${rv ? 2 : 1.5}" ${rv ? 'stroke-dasharray="2 2"' : ""}/>`;
       });
       const words = p.split(" "), lab = words.slice(0, 2).join(" ") + (words.length > 2 ? "…" : "");
       const cs = Math.cos(mid * Math.PI / 180), side = Math.abs(cs) > 0.6;   // المحوران الأفقيان: الاسم بجانب العقدة نحو الخارج
@@ -1738,7 +1753,7 @@ function renderOverview(){
   $("#ov-tot").innerHTML = `<div class="k"><b class="num">${list.length}</b><span>مؤشراً</span></div>
     <div class="k"><b class="num" style="color:var(--k-on)">↑ ${c.on_track}</b><span>على المسار</span></div>
     <div class="k"><b class="num" style="color:var(--k-back)">↓ ${c.backwards}</b><span>يتراجع</span></div>
-    <div class="full">${stackBar(list)}<div class="rest"><span><i class="dot" style="background:var(--k-needs)"></i><b>${c.needs}</b> ${E.CAT.needs.ar}</span><span><i class="dot" style="background:var(--k-break)"></i><b>${c.breakthrough}</b> ${E.CAT.breakthrough.ar}</span><span><i class="dot" style="background:var(--k-na)"></i><b>${c.stalled + c.na + c.review}</b> ثابت أو لا يُصنَّف أو يحتاج مراجعة</span></div></div>`;
+    <div class="full">${stackBar(list)}<div class="rest"><span><i class="dot" style="background:var(--k-needs)"></i><b>${c.needs}</b> ${E.CAT.needs.ar}</span><span><i class="dot" style="background:var(--k-break)"></i><b>${c.breakthrough}</b> ${E.CAT.breakthrough.ar}</span><span><i class="dot" style="background:var(--k-na)"></i><b>${c.stalled + c.na}</b> ثابت أو لا يُصنَّف</span><span><i class="dot" style="background:var(--k-back)"></i><b>${c.review}</b> قيد التحقق</span><span><i class="dot" style="background:var(--k-dev)"></i><b>${c.dev}</b> قيد التطوير</span></div></div>`;
   const allP = allPriorities();
   $("#ov-cards").innerHTML = knownPriorities().map(([a, p]) => {
     const ai = AXES.indexOf(a), items = list.filter(x => x.priority === p), s = stats(items), k = allP.findIndex(q => q[1] === p);
@@ -1872,7 +1887,8 @@ function sparkSVG(x){
 }
 function whyTxt(x){
   const p = x.p || {};
-  if (p.status === "review") return "بيانات المؤشر متعارضة مع المستهدف، ويحتاج مراجعة قبل التصنيف.";
+  if (p.status === "dev") return p.reason + "، فلا يدخل في نسب الأداء.";
+  if (p.status === "review") return p.reason || "بيانات المؤشر قيد التحقق قبل التصنيف.";
   if (p.achieved) return "حقق المستهدف بآخر قراءة.";
   if (!CLASSIFIED.has(x.cat)) return "لا يكفي ما لديه من قراءات أو مستهدف لحساب التقدم.";
   if (p.actual != null && isFinite(p.actual) && p.required != null && isFinite(p.required)) return `المطلوب ${rateTxt(x, p.required)}، والمتحقق ${rateTxt(x, p.actual)}.`;
