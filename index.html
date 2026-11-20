@@ -254,6 +254,38 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .ovtot .rest span{display:inline-flex;align-items:center;gap:5px}
 .ovtot .rest b{color:var(--ink);font-size:14px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
+/* release calendar */
+.relhd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px}
+.relhd h3{margin:0;font-size:14px}
+.relstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--rc);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.rcard .hd{display:flex;align-items:baseline;gap:8px}
+.rcard .hd b{font-family:var(--f-display);font-size:26px;line-height:1;color:var(--rc)}
+.rcard .hd span{font-size:12.5px;font-weight:600}
+.rcard .ls{display:flex;flex-direction:column;gap:2px}
+.rcard .ls a{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--ink);text-decoration:none;padding:3px 0;border-top:1px dashed var(--line)}
+.rcard .ls a:hover .nm{color:var(--accent)}
+.rcard .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.rcard .dt{color:var(--muted);white-space:nowrap;font-size:11.5px}
+.rcard .more{justify-content:flex-start!important;color:var(--accent)!important;border-top:0!important}
+.r-recent{--rc:var(--k-on)} .r-soon{--rc:var(--accent)} .r-late{--rc:var(--k-back)} .r-stop{--rc:var(--k-na)}
+.rst{display:inline-flex;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.rst.soon{color:var(--accent);background:var(--accent-soft)} .rst.planned{color:var(--k-dev);background:var(--k-dev-bg)}
+.rst.late{color:var(--k-back);border:1.5px dashed var(--k-back)} .rst.stop{color:var(--k-na);background:var(--k-na-bg)}
+.rst.open,.rst.none{color:var(--muted);background:var(--bg)} .rst.recent{color:var(--k-on);background:var(--k-on-bg)}
+.calbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.caltbl{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:auto}
+.caltbl table{width:100%;border-collapse:collapse;font-size:13px}
+.caltbl th,.caltbl td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+.caltbl th{font-size:12px;color:var(--muted);font-weight:600;background:var(--bg);position:sticky;top:0}
+.caltbl tr.mon td{background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px}
+.caltbl tr.grp td{background:var(--bg);font-weight:700;font-size:13px}
+.caltbl a.ind{color:var(--ink);font-weight:600;text-decoration:none} .caltbl a.ind:hover{color:var(--accent)}
+.caltbl .tag{display:inline-block;font-size:11px;color:var(--muted);margin-inline-start:6px}
+.caltbl .nt{font-size:11.5px;color:var(--sand);margin-top:3px}
+.calbar select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13px}
+@media (max-width:860px){ .relstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .caltbl .hide-m{display:none} .caltbl th,.caltbl td{padding:7px 6px} .caltbl .nt{display:none} .caltbl td:first-child{width:52%} .rst{white-space:normal} }
+@media (max-width:560px){ .relstrip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px} .relstrip .rcard{flex:0 0 84%;scroll-snap-align:start} }
 .ovgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .pcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--axc);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:9px}
 .pcard .ax{font-size:11px;font-weight:600;color:var(--axc)}
@@ -847,7 +879,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <span class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="4" y="13" width="3.5" height="7" rx="1" fill="#fff"/><rect x="10.25" y="9" width="3.5" height="11" rx="1" fill="#fff"/><rect x="16.5" y="6" width="3.5" height="14" rx="1" fill="#fff"/><circle cx="18.25" cy="3" r="1.6" fill="#e0b25e"/></svg></span>
       <div><h1>مؤشرات الرؤية</h1><p id="sub"></p></div>
     </div>
-    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">الرئيسية</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
+    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">الرئيسية</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="#calendar" data-nav="cal">تقويم الإصدارات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
     <label class="search" for="q">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="ابحث باسم المؤشر أو رمزه" aria-label="ابحث عن مؤشر" autocomplete="off">
@@ -873,6 +905,8 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 
   <main id="v-overview" hidden>
     <div class="crumb"><h2>الوضع العام</h2><span class="small muted" id="ov-meta"></span></div>
+    <div class="relhd"><h3>مستجدات إصدارات المؤشرات</h3><a class="btn" href="#calendar">تقويم الإصدارات ←</a></div>
+    <section class="relstrip" id="ov-rel" aria-label="مستجدات إصدارات المؤشرات"></section>
     <div class="ovtot" id="ov-tot"></div>
     <div class="ovgrid" id="ov-cards"></div>
   </main>
@@ -922,6 +956,18 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     </div>
     <section class="grid" id="grid" aria-live="polite"></section>
     <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>R%</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
+  </main>
+
+  <main id="v-cal" hidden>
+    <div class="crumb"><h2>تقويم الإصدارات</h2><span class="small muted" id="cal-meta"></span></div>
+    <section class="relstrip" id="cal-rel" aria-label="ملخص الإصدارات"></section>
+    <div class="calbar">
+      <div class="seg" role="group" aria-label="المجموعة" id="cal-set"><button data-calset="" aria-pressed="true">كل المؤشرات</button><button data-calset="updated" aria-pressed="false">مؤشرات الرؤية</button><button data-calset="original" aria-pressed="false">المؤشرات المساندة</button></div>
+      <select id="cal-type" aria-label="نوع المؤشر"><option value="">دولي ووطني</option><option value="intl">دولي</option><option value="nat">وطني</option></select>
+      <select id="cal-st" aria-label="الحالة"><option value="">كل الحالات</option><option value="soon">يصدر قريباً</option><option value="planned">مجدول</option><option value="late">تجاوز الموعد</option><option value="open">موعد غير محدد</option><option value="stop">متوقف</option><option value="none">لم تُسجَّل بيانات الإصدار</option></select>
+    </div>
+    <div class="caltbl"><table><thead><tr><th>المؤشر</th><th class="hide-m">الجهة المصدرة</th><th class="hide-m">آخر إصدار</th><th>الإصدار القادم</th><th>الحالة</th></tr></thead><tbody id="cal-body"></tbody></table></div>
+    <p class="small muted">مواعيد الإصدار القادم تقديرية ما لم تعلنها الجهة المصدرة. المؤشرات الوطنية تُعبَّأ مواعيدها تدريجياً من تقويم المركز الوطني للإحصاء والمعلومات.</p>
   </main>
 
   <main id="v-admin" hidden>
@@ -1004,7 +1050,7 @@ const SITE = true;
 // وضع الإدارة في نسخة الموقع: رمز يُتحقق منه ببصمة SHA-256 (الرمز نفسه لا يُحفظ في الكود)
 const ADMIN_HASH = "7c80f504a337677160a527056091384498f08c42cf7fc9276f212b6057bdcae0";
 async function sha256(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(v => v.toString(16).padStart(2, "0")).join(""); }
-const BUILD = "ov-share-90f4ba";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-cal-c45d88";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1022,7 +1068,7 @@ const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓
 const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)", dev:"var(--k-dev)"};
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
 
-const ST = { fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
+const ST = { cal:{set:"", type:"", st:""}, fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
   assess:{}, db:null, user:null, me:null, admin:false, siteAdmin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
 try { const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
 try { ST.siteAdmin = localStorage.getItem("ovd-admin-key") === ADMIN_HASH; localStorage.removeItem("ovd-admin"); } catch(e){}
@@ -1063,7 +1109,7 @@ function buildModel(ds){
       series: Object.values(S).sort((a,b) => a.y - b.y),
       parent: i.parent || null, grade: i.grade || null, subject: i.subject || null,
       stage: i.stage === "قيد التطوير" ? "dev" : i.stage === "قيد التحقق" ? "verify" : null, stageNote: i.stage_note || null,
-      rel: {last: i.rel_last || null, next: i.rel_next || null, due: i.rel_due || null, note: i.rel_note || null, src: i.rel_src || null},
+      rel: {last: i.rel_last || null, date: i.rel_date || null, next: i.rel_next || null, due: i.rel_due || null, note: i.rel_note || null, src: i.rel_src || null},
     };
     // «قيد التطوير»: المستهدف لم يُعتمد بعد، فلا يُعرض ولا يُحسب (القيم تبقى محفوظة في ملف البيانات)
     if (o.stage === "dev") { o.t30n = null; o.range = null; o.t30r = null; o.t40 = null; o.t30text = "يُحدَّد لاحقاً"; o.series = o.series.map(r => ({...r, p: null})).filter(r => r.v != null || r.r != null); }
@@ -1128,13 +1174,67 @@ function releaseHTML(x){
   const last = x.kids ? x.kids.map(k => k.curAll).filter(Boolean).sort((a, b) => b.y - a.y)[0] : x.curAll;
   const d = relDate(r.due), now = new Date();
   let st = "";
-  if (d) st = d > now ? `<span class="cat c-on_track">في موعده</span>` : `<span class="cat c-review">تجاوز الموعد المتوقع — تحقق من صدوره</span>`;
+  if (relStop(x)) st = `<span class="rst stop">متوقف</span>`; else if (d) st = d > now ? `<span class="cat c-on_track">في موعده</span>` : `<span class="cat c-review">تجاوز الموعد المتوقع — تحقق من صدوره</span>`;
   const tile = (t, v) => `<div class="tile"><small>${t}</small><b style="font-size:14px;line-height:1.5">${v}</b></div>`;
   if (!r.last && !r.next) return `<div class="sec"><div class="hd"><h3>موعد الإصدار القادم</h3></div><div class="tiles">${tile("الدورية", fq)}${tile("آخر قراءة في اللوحة", last ? last.y : "—")}</div><div class="small muted">لم يُحدَّد موعد الإصدار القادم لهذا المؤشر بعد.</div></div>`;
   return `<div class="sec"><div class="hd"><h3>موعد الإصدار القادم</h3>${st}</div>
     <div class="tiles">${tile("الدورية", fq)}${tile("آخر قراءة في اللوحة", last ? last.y : "—")}${tile("آخر إصدار من الجهة", esc(r.last || "—"))}${tile("الإصدار القادم", esc(r.next || "—") + (d ? `<div class="small muted">${AR_M[d.getMonth()]} ${d.getFullYear()}</div>` : ""))}</div>
     ${r.note ? `<div class="msg warn">${esc(r.note)}</div>` : ""}
     ${r.src ? `<div class="small muted">المصدر: <a href="${esc(r.src)}" target="_blank" rel="noopener">${esc(r.src.replace(/^https?:\/\//, "").split("/")[0])}</a></div>` : ""}</div>`;
+}
+/* ================= release calendar ================= */
+const relStop = x => /^متوقف/.test((x.rel && x.rel.next) || "");
+const relDay = s => { const m = String(s || "").match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const REL_ST = {soon:"يصدر قريباً", planned:"مجدول", late:"تجاوز الموعد — تحقق من صدوره", open:"موعد غير محدد", stop:"متوقف", none:"لم تُسجَّل بيانات الإصدار"};
+const REL_RECENT_DAYS = 90, REL_SOON_MONTHS = 3;
+function relStatus(x){
+  const r = x.rel || {};
+  if (relStop(x)) return "stop";
+  const d = relDate(r.due), now = new Date();
+  if (!d) return r.last || r.next ? "open" : "none";
+  if (d < now) return "late";
+  const mo = (d.getFullYear() - now.getFullYear()) * 12 + d.getMonth() - now.getMonth();
+  return mo <= REL_SOON_MONTHS ? "soon" : "planned";
+}
+const fmtDay = d => `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()}`;
+const fmtMon = s => { const d = relDate(s); return d ? `${AR_M[d.getMonth()]} ${d.getFullYear()}` : "—"; };
+function relList(){
+  const now = new Date();
+  return RAW.map(x => { const d = relDay(x.rel.date); return {x, st: relStatus(x), d, recent: !!(d && d <= now && (now - d) / 864e5 <= REL_RECENT_DAYS)}; });
+}
+function relCardsHTML(L){
+  const byDue = (a, b) => (relDate(a.x.rel.due) || 0) - (relDate(b.x.rel.due) || 0);
+  const recent = L.filter(o => o.recent).sort((a, b) => b.d - a.d), soon = L.filter(o => o.st === "soon").sort(byDue),
+        late = L.filter(o => o.st === "late").sort(byDue), stop = L.filter(o => o.st === "stop");
+  const item = (o, t) => `<a href="#i-${o.x.id}" title="${esc(o.x.name)}"><span class="nm">${esc(o.x.name)}</span><span class="dt">${t}</span></a>`;
+  const card = (cls, title, list, fmt, empty) => `<article class="rcard ${cls}"><div class="hd"><b class="num">${list.length}</b><span>${title}</span></div>${list.length ? `<div class="ls">${list.slice(0, 4).map(o => item(o, fmt(o))).join("")}${list.length > 4 ? `<a class="more" href="#calendar">+ ${list.length - 4} أخرى في التقويم</a>` : ""}</div>` : `<div class="small muted">${empty}</div>`}</article>`;
+  return card("r-recent", `صدر حديثاً (آخر ${REL_RECENT_DAYS} يوماً)`, recent, o => fmtDay(o.d), "لا إصدارات جديدة خلال الفترة") +
+    card("r-soon", `يصدر قريباً (${REL_SOON_MONTHS} أشهر)`, soon, o => fmtMon(o.x.rel.due), "لا إصدارات متوقعة قريباً") +
+    card("r-late", "تجاوز موعده المتوقع", late, o => fmtMon(o.x.rel.due), "لا يوجد") +
+    card("r-stop", "مؤشرات توقف إصدارها", stop, () => "يحتاج قرار", "لا يوجد");
+}
+function renderRelStrip(){ $("#ov-rel").innerHTML = relCardsHTML(relList()); }
+function renderCal(){
+  const all = relList(), f = ST.cal || (ST.cal = {set:"", type:"", st:""});
+  document.querySelectorAll("#cal-set button").forEach(b => b.setAttribute("aria-pressed", b.dataset.calset === f.set));
+  $("#cal-type").value = f.type; $("#cal-st").value = f.st;
+  const L = all.filter(o => (!f.set || o.x.set === f.set) && (!f.type || (f.type === "intl" ? o.x.intl : !o.x.intl)) && (!f.st || o.st === f.st));
+  $("#cal-rel").innerHTML = relCardsHTML(L);
+  const withInfo = all.filter(o => o.st !== "none").length;
+  $("#cal-meta").textContent = `${L.length} مؤشراً معروضاً · بيانات الإصدار مسجلة لـ ${withInfo} من ${all.length}`;
+  const row = o => { const x = o.x, r = x.rel;
+    return `<tr><td><a class="ind" href="#i-${x.id}">${esc(x.name)}</a><span class="tag">${x.id} · ${x.set === "updated" ? "مؤشرات الرؤية" : "مساند"} · ${x.intl ? "دولي" : "وطني"}</span>${r.note ? `<div class="nt">${esc(r.note)}</div>` : ""}</td>
+      <td class="hide-m small">${esc(x.issuer || x.src || "—")}${r.src ? `<div><a href="${esc(r.src)}" target="_blank" rel="noopener">${esc(r.src.replace(/^https?:\/\//, "").split("/")[0])}</a></div>` : ""}</td>
+      <td class="small hide-m">${esc(r.last || "—")}${o.d ? `<div class="muted">${fmtDay(o.d)}</div>` : ""}</td>
+      <td class="small">${esc(r.next || "—")}${r.due && !relStop(x) ? `<div class="muted">${fmtMon(r.due)}</div>` : ""}</td>
+      <td>${o.recent ? `<span class="rst recent">صدر حديثاً</span> ` : ""}<span class="rst ${o.st}">${REL_ST[o.st]}</span></td></tr>`; };
+  const dated = L.filter(o => ["soon", "planned", "late"].includes(o.st)).sort((a, b) => relDate(a.x.rel.due) - relDate(b.x.rel.due));
+  let html = "", cur = "";
+  dated.forEach(o => { const m = fmtMon(o.x.rel.due); if (m !== cur){ cur = m; html += `<tr class="mon"><td colspan="5">${m}</td></tr>`; } html += row(o); });
+  [["open", "موعد الإصدار القادم غير محدد"], ["stop", "مؤشرات توقف إصدارها — تحتاج قراراً من الفريق"], ["none", "لم تُسجَّل بيانات الإصدار بعد"]].forEach(([k, t]) => {
+    const g = L.filter(o => o.st === k); if (g.length) html += `<tr class="grp"><td colspan="5">${t} (${g.length})</td></tr>` + g.map(row).join("");
+  });
+  $("#cal-body").innerHTML = html || `<tr><td colspan="5" class="small muted">لا توجد مؤشرات بهذه التصفية.</td></tr>`;
 }
 function kidsHTML(x){
   const g = {}; x.kids.forEach(k => (g[k.grade || ""] = g[k.grade || ""] || []).push(k));
@@ -1502,7 +1602,7 @@ function exportResults(){
 }
 
 /* ================= excel: export template ================= */
-const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["dup","مقابله في مؤشرات الرؤية"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],["stage","مرحلة المؤشر (قيد التطوير / قيد التحقق)"],["stage_note","سبب المرحلة"],
+const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["dup","مقابله في مؤشرات الرؤية"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_date","تاريخ آخر إصدار (سنة-شهر-يوم)"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],["stage","مرحلة المؤشر (قيد التطوير / قيد التحقق)"],["stage_note","سبب المرحلة"],
   ["calc","طريقة حساب التقدم"],["agg","نوع التجميع"],["cap","سقف أهلية التحليل"],["approval","حالة الاعتماد المنهجي"],["challenges","التحديات"],["explain","ملاحظات تفسيرية"],["initiatives","المبادرات المرتبطة"],["factors","العوامل المؤثرة (البطاقة)"],["supporting","المؤشرات المساندة (البطاقة)"],["risk","تقدير عدم التحقق (البطاقة)"]];
 const NUM_KEYS = new Set(["base","t30","t30hi","t30rank","t40"]);
 const RD_COLS = ["الرمز","اسم المؤشر (للعرض فقط)","السنة","القيمة","الترتيب","المصدر","نوع القراءة","انقطاع السلسلة (تغيير التعريف)","موثوقية المصدر","ملاحظة"];
@@ -1804,6 +1904,7 @@ document.addEventListener("click", e => { if (e.target.closest && e.target.close
 // كل الأولويات المعروفة (من كل المجموعات) حتى تظهر الأولوية التي لا مؤشرات لها في المجموعة المختارة
 function knownPriorities(){ const m = new Map(); RAW.forEach(x => { if (!m.has(x.priority)) m.set(x.priority, x.axis); }); return AXES.flatMap(a => [...m].filter(([, ax]) => ax === a).map(([p]) => [a, p])); }
 function renderOverview(){
+  renderRelStrip();
   const list = RAW.filter(inSet), tot = stats(list), c = tot.counts;
   $("#ov-meta").textContent = `${ST.set === "updated" ? "مؤشرات الرؤية" : "المؤشرات المساندة"} · مستهدف ${ST.ty}`;
   $("#ov-tot").innerHTML = `<div class="k"><b class="num">${list.length}</b><span>مؤشراً</span></div>
@@ -1992,6 +2093,7 @@ function go(){ const h = stateHash(); if (location.hash !== h) history.replaceSt
 function readHash(){
   const h = location.hash.slice(1);
   if (h === "" || h === "overview"){ ST.page = "overview"; closeDrawer(); render(); return; }
+  if (h === "calendar"){ ST.page = "cal"; closeDrawer(); render(); window.scrollTo(0, 0); return; }
   if (h.startsWith("focus")){
     ST.page = "focus"; closeDrawer();
     const m = h.match(/^focus-(a|p|i)-(.+)$/);
@@ -2017,7 +2119,7 @@ function setSeg(){
 function render(){
   compute(); setSeg(); renderTree(); renderControls();
   const pg = ST.page;
-  ["overview","dash","focus","admin","ind"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
+  ["overview","dash","focus","admin","ind","cal"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
   document.body.classList.toggle("noside", pg !== "dash");
   document.body.dataset.pg = pg;
   document.querySelectorAll(".navtabs a").forEach(a => a.setAttribute("aria-current", a.dataset.nav === pg ? "page" : "false"));
@@ -2025,7 +2127,7 @@ function render(){
   document.querySelectorAll(".navtabs a").forEach(a => { if (pg === "ind" && a.dataset.nav === "focus") a.setAttribute("aria-current", "page"); });
   $("#ctl-sum").textContent = `مستهدف ${ST.ty} · ${ST.from}–${ST.to}${ST.calcLinked ? "" : " · الحساب: كل السنوات"}`;
   applyRole();
-  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else renderDash();
+  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else if (pg === "cal") renderCal(); else renderDash();
   const d = $("#drawer");
   if (!d.hidden){ if (d.dataset.mode === "cmp") openCompare(); else if (d.dataset.id) openDrawer(d.dataset.id); }
 }
@@ -2112,6 +2214,8 @@ document.addEventListener("click", async e => {
     if (d.gocenter){ location.hash = "#all"; return; }
     if (d.ovcat){ ST.cat = ["all","rest"].includes(d.ovcat) ? null : d.ovcat; ST.axis = ST.pri = null; location.hash = "#all"; setTimeout(() => renderDash(), 0); return; }
   }
+  const cs = e.target.closest("[data-calset]");
+  if (cs){ ST.cal.set = cs.dataset.calset; renderCal(); return; }
   const el = e.target.closest("[data-open],[data-set],[data-axis],[data-pri],[data-ev],[data-cat],[data-close],[data-sharecopy],[data-sharepdf],[data-setev],[data-view],[data-ty],[data-asub],[data-cmpmode],#reset,#publish,#cancel,#preview-apply,#export-pending");
   if (!el) return; const d = el.dataset;
   if (d.open){ closeDrawer(); location.hash = "#i-" + d.open; return; }
@@ -2159,6 +2263,7 @@ document.addEventListener("change", e => {
   if (id === "fm-pri"){ ST.fPri = e.target.value; ST.fInd = null; renderFocus(); go(); }
   if (id === "fd-axis"){ ST.fAxis = +e.target.value; ST.fPri = null; ST.fInd = null; renderFocus(); go(); }
   if (id === "fd-pri"){ ST.fPri = e.target.value; ST.fInd = null; renderFocus(); go(); }
+  if (id === "cal-type" || id === "cal-st"){ ST.cal = ST.cal || {set:"", type:"", st:""}; ST.cal[id === "cal-type" ? "type" : "st"] = e.target.value; renderCal(); }
   if (id === "fd-ind"){ ST.fInd = e.target.value; renderFocus(); go(); window.scrollTo && window.scrollTo(0, 0); }
 });
 document.addEventListener("click", e => {
