@@ -962,7 +962,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-c42a719658";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-55c902a390";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
