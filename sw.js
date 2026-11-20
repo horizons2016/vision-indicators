@@ -1,6 +1,6 @@
 // مؤشرات الرؤية: يعمل بدون إنترنت ويتحدث تلقائياً.
 // الصفحة والبيانات: من الشبكة أولاً متجاوزاً كل ذاكرة مؤقتة، ومن النسخة المحفوظة عند انقطاع الاتصال فقط.
-const VERSION = "ov-bc470c0b1d";
+const VERSION = "ov-c42a719658";
 const SHELL = ["./", "index.html", "data/dataset.json", "version.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const fresh = url => fetch(new Request(url, {cache: "no-store", credentials: "same-origin"}));
 
