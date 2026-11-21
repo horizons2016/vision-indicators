@@ -931,18 +931,18 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     </div>
     <div class="crumb"><h2 id="title">كل المؤشرات</h2><span class="small muted" id="count"></span></div>
     <div class="kpis k5" id="kpis" hidden></div>
-    <div class="kpihead"><span>تصنيف المسار الإحصائي · Progress Ratio نحو مستهدف <span id="tylbl">2030</span></span></div>
+    <div class="kpihead"><span>تصنيف المسار الإحصائي · نسبة التقدّم نحو مستهدف <span id="tylbl">2030</span></span></div>
     <div class="kpis k6" id="kpis2"></div>
     <div class="filters">
       <select id="f-type" aria-label="نوع المؤشر"><option value="">كل الأنواع</option><option value="intl">دولي</option><option value="nat">وطني</option></select>
       <select id="f-fresh" aria-label="عمر البيانات"><option value="">كل أعمار البيانات</option><option value="fresh">حديثة (سنة أو أقل)</option><option value="late">متأخرة (سنتان)</option><option value="old">متقادمة (3 سنوات فأكثر)</option><option value="none">بلا قراءة</option></select>
       <select id="f-elig" aria-label="الأهلية"><option value="">كل مستويات الأهلية</option><option value="0">غير قابل للقياس</option><option value="1">قياس التقدم</option><option value="2">التنبؤ</option><option value="3">المحاكاة الاحتمالية</option></select>
-      <select id="f-sort" aria-label="الترتيب"><option value="tree">ترتيب الأولويات</option><option value="name">الاسم</option><option value="r">Progress Ratio</option><option value="age">الأقدم بيانات</option><option value="eval">التقييم</option></select>
+      <select id="f-sort" aria-label="الترتيب"><option value="tree">ترتيب الأولويات</option><option value="name">الاسم</option><option value="r">نسبة التقدّم</option><option value="age">الأقدم بيانات</option><option value="eval">التقييم</option></select>
       <div class="seg" role="group" aria-label="طريقة العرض" id="viewseg"><button data-view="cards" aria-pressed="true">بطاقات</button><button data-view="table" aria-pressed="false">جدول</button></div>
       <button class="btn" id="reset" hidden>إلغاء التصفية</button>
     </div>
     <section class="grid" id="grid" aria-live="polite"></section>
-    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>R%</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
+    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>نسبة التقدّم</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
   </main>
 
   <main id="v-cal" hidden>
@@ -1033,12 +1033,14 @@ const E = window.OVEngine;
 const NOW = new Date().getFullYear();
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// نص مصدر مختلط (عربي + روابط/اختصارات لاتينية): يعزل الروابط والنطاقات باتجاه LTR حتى لا تنقلب الأقواس أو تتبعثر عند التفاف السطر
+const escB = (s, short) => esc(s).replace(/(?:https?:\/\/)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:\/[^\s؛،()<]*)?/g, m => `<bdi dir="ltr">${short ? m.replace(/^https?:\/\//, "").split("/")[0] : m}</bdi>`);
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
 // وضع الإدارة في نسخة الموقع: رمز يُتحقق منه ببصمة SHA-256 (الرمز نفسه لا يُحفظ في الكود)
 const ADMIN_HASH = "7c80f504a337677160a527056091384498f08c42cf7fc9276f212b6057bdcae0";
 async function sha256(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(v => v.toString(16).padStart(2, "0")).join(""); }
-const BUILD = "ov-nodm-ab6a04";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+const BUILD = "ov-ar-11211019";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
@@ -1263,20 +1265,21 @@ function targetTxt(x, ty){ ty = ty || ST.ty;
 const rTxt = x => x.p && x.p.R != null && isFinite(x.p.R) ? fmtN(x.p.R * 100, 1) + "%" : (x.p && x.p.achieved ? "حقق المستهدف" : "—");
 const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ قيد التحقق</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
 function ruleTxt(p){
-  if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا يُحسب R)";
+  if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا تُحسب نسبة التقدّم)";
   if (p.status === "review") return "لم يُصنَّف: " + p.reason;
   if (!isFinite(p.R)) return p.reason || "لا يمكن الحساب";
   const r = fmtN(p.R * 100, 1) + "%";
-  if (p.moved < 0) return `التغيّر الفعلي في الاتجاه المعاكس للمستهدف ← يتراجع (R% = ${r})`;
+  if (p.moved < 0) return `التغيّر الفعلي في الاتجاه المعاكس للمستهدف ← يتراجع (نسبة التقدّم ${r})`;
   if (p.moved === 0) return "لا تغيّر بين أول قراءة وآخرها ← ثابت بلا تقدم (منفصل عن التراجع)";
-  if (p.cat === "on_track") return `R% = ${r} أكبر من 90% ← على المسار`;
-  if (p.cat === "needs") return `R% = ${r} بين 50% و90% ← يحتاج تحسيناً`;
-  return `R% = ${r} أقل من 50% مع تقدم في الاتجاه المطلوب ← متأخر عن المسار`;
+  if (p.cat === "on_track") return `نسبة التقدّم ${r} أكبر من 90% ← على المسار`;
+  if (p.cat === "needs") return `نسبة التقدّم ${r} بين 50% و90% ← يحتاج تحسيناً`;
+  return `نسبة التقدّم ${r} أقل من 50% مع تقدم في الاتجاه المطلوب ← متأخر عن المسار`;
 }
 function gapTxt(x){ const p = x.p; if (p.achieved) return "0"; if (p.T == null || !p.latest) return "—"; return p.field === "r" ? fmtN(Math.abs(p.T - p.latest.val), 0) + " مرتبة" : x.pct ? fmtN(Math.abs(p.T - p.latest.val)*100, 2) + " نقطة مئوية" : fmtN(Math.abs(p.T - p.latest.val)); }
 const ageCls = a => a == null ? "" : a <= 1 ? "" : a === 2 ? "warn" : "bad";
 const ageTxt = a => a == null ? "بلا قراءة" : a <= 0 ? "هذا العام" : a === 1 ? "قبل سنة" : a === 2 ? "قبل سنتين" : `قبل ${a} سنوات`;
 const badge = x => `<span class="badge ${EVAL[x.ev].cls}">${EVAL[x.ev].label}</span>`;
+const methTxt = m => m === "CAGR" ? "نمو سنوي مركّب (CAGR)" : "خطي";
 const rateTxt = (x, v) => v == null || !isFinite(v) ? "—" : x.p.method === "CAGR" ? fmtN(v*100, 2) + "% سنوياً" : x.p.field === "r" ? fmtN(v, 2) + " مرتبة سنوياً" : x.pct ? fmtN(v*100, 3) + " نقطة مئوية سنوياً" : fmtN(v, 3) + " سنوياً";
 
 /* ================= filtering ================= */
@@ -1341,7 +1344,7 @@ function cardHTML(x){
     <span class="vals"><span><span class="big num">${N(curTxt(x))}</span> ${est}<br><span class="yr">${x.cur ? "آخر قراءة " + x.cur.y : "لا قراءة في الفترة"}</span></span>
       <span class="tg">مستهدف ${ST.ty}<b>${N(targetTxt(x))}</b></span></span>
     ${spark(x)}
-    <span class="rline"><span>${catChip(x)}</span><span>R% <b>${N(rTxt(x))}</b></span></span>
+    <span class="rline"><span>${catChip(x)}</span><span>التقدّم <b>${N(rTxt(x))}</b></span></span>
     <span class="foot"><span></span><span style="display:flex;gap:6px;align-items:center">${x.age!=null&&x.age>=2?`<span class="age ${(x.relOk ? "" : ageCls(x.age))}">${ageTxt(x.age)}</span>`:""}<span class="code">${x.id}</span></span></span>
   </div>`;
 }
@@ -1356,7 +1359,7 @@ function renderDash(){
   $("#count").textContent = `${list.length} مؤشر` + (ST.set === "updated" ? " · مؤشرات الرؤية" : " · المؤشرات المساندة");
   $("#kpis").innerHTML = `<button class="kpi" data-ev="" aria-pressed="${!ST.ev}" style="--c:var(--ink)"><b class="num">${base.length}</b><span>كل المؤشرات</span></button>` +
     EV_ORDER.map(k => `<button class="kpi" data-ev="${k}" aria-pressed="${ST.ev===k}" style="--c:${EVAL[k].c}"><b class="num">${base.filter(x=>x.ev===k).length}</b><span>${EVAL[k].label}</span></button>`).join("");
-  $("#kpis2").innerHTML = CATS.map(k => `<button class="kpi" data-cat="${k}" aria-pressed="${ST.cat===k}" style="--c:${CAT_C[k]}"><b class="num">${base.filter(x=>x.cat===k).length}</b><span>${E.CAT[k].ar} · ${E.CAT[k].en}</span></button>`).join("");
+  $("#kpis2").innerHTML = CATS.map(k => `<button class="kpi" data-cat="${k}" aria-pressed="${ST.cat===k}" style="--c:${CAT_C[k]}" title="${E.CAT[k].en}"><b class="num">${base.filter(x=>x.cat===k).length}</b><span>${E.CAT[k].ar}</span></button>`).join("");
   const s = $("#f-sort").value;
   const order = s === "name" ? (a,b) => a.name.localeCompare(b.name,"ar")
     : s === "r" ? (a,b) => (isFinite(b.p.R) ? b.p.R : (b.p.achieved ? 99 : -99)) - (isFinite(a.p.R) ? a.p.R : (a.p.achieved ? 99 : -99))
@@ -1423,25 +1426,25 @@ function tipFor(x, y){
 function calcDetails(x){
   if (x.kids) return `<div class="small muted">تفاصيل الحساب لكل مكوّن تظهر في بطاقته ضمن «الملخص».</div>`;
   const p = x.p, f = p.field, cr = calcRange();
-  const used = p.used.map(u => `${u.y}: ${fvf(x, u.val, f)}`).join("، ") || "—";
+  const used = p.used.map(u => f === "r" ? `${u.y}: ${esc(fvf(x, u.val, f))}` : `<bdi dir="ltr">${u.y}: ${esc(fvf(x, u.val, f))}</bdi>`).join("، ") || "—";
   const exc = p.excluded.map(e => `${e.y} (${e.reason})`).join("، ");
-  let body = `<div><b>فترة الحساب:</b> ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات المتاحة"} · <b>الطريقة:</b> ${p.method} · <b>سنة المستهدف:</b> ${ST.ty}</div>
+  let body = `<div><b>فترة الحساب:</b> ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات المتاحة"} · <b>الطريقة:</b> ${methTxt(p.method)} · <b>سنة المستهدف:</b> ${ST.ty}</div>
     <div><b>القراءات المستخدمة:</b> ${used}</div>${exc ? `<div><b>غير مستخدمة:</b> ${esc(exc)}</div>` : ""}`;
   if (p.status === "dev") return body + `<div class="msg"><b>قيد التطوير:</b> ${esc(p.reason)}. تُعرض القراءات واتجاهها للاطلاع، ولا يدخل المؤشر في نسب الأداء حتى يُعتمد مستهدفه.</div>`;
-  if (p.status === "review") return body + `<div class="msg warn"><b>قيد التحقق:</b> ${esc(p.reason)}. لا يُصنَّف أداؤه حتى تُؤكَّد بياناته.</div>${isFinite(p.previewR) ? `<div class="small muted">للاطلاع فقط (غير معتمد): R% بالبيانات الحالية = ${fmtN(p.previewR*100,1)}%.</div>` : ""}`;
+  if (p.status === "review") return body + `<div class="msg warn"><b>قيد التحقق:</b> ${esc(p.reason)}. لا يُصنَّف أداؤه حتى تُؤكَّد بياناته.</div>${isFinite(p.previewR) ? `<div class="small muted">للاطلاع فقط (غير معتمد): نسبة التقدّم بالبيانات الحالية = ${fmtN(p.previewR*100,1)}%.</div>` : ""}`;
   if (p.status !== "ok" && !p.achieved) return body + `<div><b>النتيجة:</b> ${esc(p.reason || "لا يمكن الحساب")}</div>`;
-  if (p.achieved && p.R == null) return body + `<div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div><div><b>النتيجة:</b> آخر قراءة (${fvf(x, p.latest.val, f)} في ${p.latest.y}) بلغت المستهدف${p.T != null ? " (" + fvf(x, p.T, f) + ")" : ""}، فالتصنيف «على المسار» دون حساب R.</div>`;
+  if (p.achieved && p.R == null) return body + `<div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div><div><b>النتيجة:</b> آخر قراءة (${fvf(x, p.latest.val, f)} في ${p.latest.y}) بلغت المستهدف${p.T != null ? " (" + fvf(x, p.T, f) + ")" : ""}، فالتصنيف «على المسار» دون حساب نسبة التقدّم.</div>`;
   const F = p.first, L = p.latest, raw = v => f === "r" ? fmtN(v,0) : x.pct ? fmtN(v*100,3) + "%" : fmtN(v,4);
   if (p.method === "CAGR"){
-    body += `<div>Actual CAGR = <code>(${raw(L.val)} ÷ ${raw(F.val)})^(1/${p.hy}) − 1 = ${fmtN(p.actual*100,3)}%</code></div>
-      <div>Required CAGR = <code>(${raw(p.T)} ÷ ${raw(L.val)})^(1/${p.ry}) − 1 = ${fmtN(p.required*100,3)}%</code></div>`;
+    body += `<div>معدل النمو المركّب الفعلي: <code>(${raw(L.val)} ÷ ${raw(F.val)})^(1/${p.hy}) − 1 = ${fmtN(p.actual*100,3)}%</code></div>
+      <div>معدل النمو المركّب المطلوب: <code>(${raw(p.T)} ÷ ${raw(L.val)})^(1/${p.ry}) − 1 = ${fmtN(p.required*100,3)}%</code></div>`;
   } else {
-    body += `<div>Actual Rate = <code>(${raw(L.val)} − ${raw(F.val)}) ÷ (${L.y} − ${F.y}) = ${raw(p.actual)}</code></div>
-      <div>Required Rate = <code>(${raw(p.T)} − ${raw(L.val)}) ÷ (${p.TY} − ${L.y}) = ${raw(p.required)}</code></div>`;
+    body += `<div>المعدل السنوي الفعلي: <code>(${raw(L.val)} − ${raw(F.val)}) ÷ (${L.y} − ${F.y}) = ${raw(p.actual)}</code></div>
+      <div>المعدل السنوي المطلوب: <code>(${raw(p.T)} − ${raw(L.val)}) ÷ (${p.TY} − ${L.y}) = ${raw(p.required)}</code></div>`;
   }
-  body += `<div>R = <code>${fmtN(p.actual,6)} ÷ ${fmtN(p.required,6)} = ${fmtN(p.R,4)}</code> · R% = <code>${fmtN(p.R*100,2)}%</code></div>
+  body += `<div>نسبة التقدّم = المعدل الفعلي ÷ المعدل المطلوب: <code>${fmtN(p.actual,6)} ÷ ${fmtN(p.required,6)} = ${fmtN(p.R*100,2)}%</code></div>
     <div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div>
-    <div class="small muted">القواعد: تحقق المستهدف أو R% &gt; 90% على المسار · 50%–90% يحتاج تحسيناً · أقل من 50% مع تقدم متأخر عن المسار · تغيّر عكسي يتراجع · لا تغيّر ثابت. R لا يُقص عند 100%.</div>`;
+    <div class="small muted">القواعد: تحقّق المستهدف أو نسبة تقدّم أكثر من 90% ← على المسار · من 50% إلى 90% ← يحتاج تحسيناً · أقل من 50% مع تقدّم ← متأخر عن المسار · تغيّر عكسي ← يتراجع · لا تغيّر ← ثابت. لا تُقيَّد النسبة بسقف 100%.</div>`;
   return body;
 }
 function periodHTML(x){
@@ -1461,8 +1464,8 @@ function forecastHTML(x){
   if (!x.showFc) return "";
   const fc = x.el.forecast, f = x.p.field, fx = v => fvf(x, v, f);
   let h = `<div class="sec forecast"><div class="hd"><h3>توقع ${fc.y} · تقديري</h3><span class="pill2">${esc(x.approval === "معتمد" ? "معتمد منهجياً" : "نتيجة آلية · قيد المراجعة المنهجية")}</span></div>
-    <div class="dtiles"><div class="tile"><small>التوقع النقطي</small><b class="num">${N(fx(fc.point))}</b></div><div class="tile"><small>نطاق عدم اليقين 80%</small><b class="num" style="font-size:15px">من ${N(fx(fc.lo))} إلى ${N(fx(fc.hi))}</b></div><div class="tile"><small>النموذج</small><b style="font-size:13px">${esc(fc.method)}</b><div class="sub">MASE ${fmtN(x.el.backtest.mase,2)} · ${x.el.n} قراءة</div></div></div>`;
-  if (x.showP){ const m = x.el.mc; h += `<div class="dtiles"><div class="tile"><small>احتمال تحقيق المستهدف</small><b class="num">${N(fmtN(m.p*100,0)+"%")}</b></div><div class="tile"><small>نطاق المحاكاة (10%–90%)</small><b class="num" style="font-size:15px">من ${N(fx(m.p10))} إلى ${N(fx(m.p90))}</b></div><div class="tile"><small>المحاكاة</small><b style="font-size:13px">Bootstrap للبواقي</b><div class="sub">${m.B} تكرار</div></div></div>`; }
+    <div class="dtiles"><div class="tile"><small>التوقع النقطي</small><b class="num">${N(fx(fc.point))}</b></div><div class="tile"><small>نطاق عدم اليقين 80%</small><b class="num" style="font-size:15px">من ${N(fx(fc.lo))} إلى ${N(fx(fc.hi))}</b></div><div class="tile"><small>النموذج</small><b style="font-size:13px">${esc(fc.method)}</b><div class="sub">خطأ الاختبار (MASE) ${fmtN(x.el.backtest.mase,2)} · ${x.el.n} قراءة</div></div></div>`;
+  if (x.showP){ const m = x.el.mc; h += `<div class="dtiles"><div class="tile"><small>احتمال تحقيق المستهدف</small><b class="num">${N(fmtN(m.p*100,0)+"%")}</b></div><div class="tile"><small>نطاق المحاكاة (10%–90%)</small><b class="num" style="font-size:15px">من ${N(fx(m.p10))} إلى ${N(fx(m.p90))}</b></div><div class="tile"><small>المحاكاة</small><b style="font-size:13px">إعادة المعاينة للبواقي (Bootstrap)</b><div class="sub">${m.B} تكرار</div></div></div>`; }
   return h + `<div class="small muted">التوقع امتداد إحصائي للاتجاه، وليس قراءة فعلية.</div></div>`;
 }
 function textBlocks(x){
@@ -1480,7 +1483,7 @@ function openDrawer(id, target){
   const rows = x.series.filter(r => r.y >= ST.from && ((r.y <= Math.min(ST.to, NOW) && (r.v != null || r.r != null)) || (r.p != null && r.y <= Math.max(ST.to, ST.ty)))).map(r => {
     const isAct = r.y <= NOW && (r.v != null || r.r != null);
     const use = !isAct ? "" : usedYears.has(r.y) ? `<span style="color:var(--good)">مستخدمة</span>` : excl[r.y] ? `<span class="small muted">${esc(excl[r.y])}</span>` : `<span class="small muted">خارج الحساب</span>`;
-    return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?esc(r.src||"—")+(r.note?`<div class="small" style="color:#b8862f;margin-top:2px">${esc(r.note)}</div>`:""):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
+    return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?escB(r.src||"—")+(r.note?`<div class="small" style="color:#b8862f;margin-top:2px">${esc(r.note)}</div>`:""):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
   const evalCtl = ST.admin ? `<div class="evalopts" role="group" aria-label="تقييم المؤشر">${EV_ORDER.map(k => `<button type="button" class="${EVAL[k].cls}" data-setev="${k}" aria-pressed="${x.ev===k}">${EVAL[k].label}</button>`).join("")}</div>` : `<div>${badge(x)}</div>`;
   const lastOut = x.curAll && x.curAll.y > (isFinite(cr.calcTo) ? cr.calcTo : 9999) ? `<div class="msg warn">قراءة ${x.curAll.y} (${N(x.curAll.v != null ? fv(x, x.curAll.v) : "الترتيب " + x.curAll.r)}) خارج فترة الحساب ولم تدخل المعادلة.</div>` : "";
   const html = `
@@ -1493,14 +1496,14 @@ function openDrawer(id, target){
       ${x.kids ? kidsHTML(x) : `
       <div class="tiles">
         <div class="tile"><small>خط الأساس</small><b class="num">${x.base!=null?N(fv(x,x.base)):"—"}</b></div>
-        <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + esc(x.cur.src) : "") + (x.cur.note ? `<div style="color:#b8862f;margin-top:2px">${esc(x.cur.note)}</div>` : ""):""}</div></div>
+        <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + escB(x.cur.src, 1) : "") + (x.cur.note ? `<div style="color:#b8862f;margin-top:2px">${esc(x.cur.note)}</div>` : ""):""}</div></div>
         <div class="tile"><small>مستهدف 2030</small><b class="num">${N(targetTxt(x, 2030))}</b></div>
         <div class="tile"><small>مستهدف 2040</small><b class="num">${N(targetTxt(x, 2040))}</b></div>
       </div>
       ${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}
       ${lastOut}
-      <div class="sec"><div class="hd"><h3>التقدم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
-        <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
+      <div class="sec"><div class="hd"><h3>التقدّم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
+        <div class="dtiles"><div class="tile"><small>نسبة التقدّم نحو المستهدف</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${methTxt(p.method)}</b></div>
           <div class="tile"><small>المعدل الفعلي</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.actual))}</b></div><div class="tile"><small>المعدل المطلوب</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.required))}</b></div><div class="tile"><small>الأهلية</small><b style="font-size:14px"><span class="lv lv${x.el.level}">${x.el.level}</span> ${LV_LABEL[x.el.level]}</b></div></div>
       </div>
       `}
@@ -1518,9 +1521,9 @@ function openDrawer(id, target){
       <div data-tabp="3" ${(ST.indTab||0) !== 3 ? "hidden" : ""}>
       <dl class="facts">
         <dt>الجهة المالكة</dt><dd>${esc(x.owner||"—")}</dd><dt>جهة الإصدار</dt><dd>${esc(x.issuer||"—")}</dd>
-        <dt>مصدر البيانات</dt><dd>${esc(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
+        <dt>مصدر البيانات</dt><dd>${escB(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
         <dt>طريقة الحساب</dt><dd>${esc(x.methodText||"—")}</dd><dt>الوحدة · الاتجاه</dt><dd>${esc(x.unit)} · ${x.dir==="down"?"الانخفاض أفضل":"الارتفاع أفضل"}</dd>
-        <dt>طريقة حساب التقدم</dt><dd>${x.method}</dd><dt>نوع التجميع</dt><dd>${esc(x.aggLabel||"غير محدد")}</dd>
+        <dt>طريقة حساب التقدّم</dt><dd>${methTxt(x.method)}</dd><dt>نوع التجميع</dt><dd>${esc(x.aggLabel||"غير محدد")}</dd>
       </dl>
       ${textBlocks(x)}
       </div>
@@ -1577,7 +1580,7 @@ function openCompare(){
       ${svg}
       <div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.x.id} ${esc(s.x.name.slice(0,40))}${s.note?` · <span style="color:var(--bad)">${esc(s.note)}</span>`:""}</span>`).join("")}</div>
       <div class="tablewrap"><table><thead><tr><th>المؤشر</th><th>الوحدة</th><th>آخر قراءة</th><th>مستهدف ${ST.ty}</th><th>R</th><th>التصنيف</th><th>الفجوة</th></tr></thead><tbody>${xs.map(x=>`<tr data-open="${x.id}" style="cursor:pointer"><td>${x.id} ${esc(x.name)}</td><td>${esc(x.p.field==="r"?"ترتيب":x.unit)}</td><td class="n">${N(curTxt(x))} <span class="small muted">${x.cur?x.cur.y:""}</span></td><td class="n">${N(targetTxt(x))}</td><td class="n">${N(rTxt(x))}</td><td>${catChip(x)}</td><td class="n">${N(gapTxt(x))}</td></tr>`).join("")}</tbody></table></div>
-      <div class="small muted">R والتصنيف قابلان للمقارنة بين الوحدات المختلفة لأنهما نسبة بلا وحدة.</div>
+      <div class="small muted">نسبة التقدّم والتصنيف قابلان للمقارنة بين الوحدات المختلفة لأنهما نسبة بلا وحدة.</div>
     </div>`;
   $("#drawer").dataset.mode = "cmp"; $("#drawer").dataset.cmpmode = eff;
   $("#drawer").hidden = false; $("#scrim").hidden = false;
@@ -1875,11 +1878,11 @@ function renderFocus(){
   const s = stats(items);
   $("#f-title").textContent = ST.fPri === "all" ? ax : ST.fPri; $("#f-title").style.color = AXC[ST.fAxis];
   document.querySelector("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]); document.querySelector("#v-focus").style.setProperty("--axb", AXB[ST.fAxis]);
-  $("#f-meta").textContent = `${items.length} مؤشر · على المسار ${shareTxt(s)} · الوسيط R% ${medTxt(s)} · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
+  $("#f-meta").textContent = `${items.length} مؤشر · على المسار ${shareTxt(s)} · وسيط نسبة التقدّم ${medTxt(s)} · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
   if (!items.some(x => x.id === ST.fInd)) ST.fInd = items.length ? items[0].id : null;
   $("#f-list").innerHTML = items.map(x => `<button class="frow" data-fsel="${x.id}" aria-pressed="${x.id === ST.fInd}" style="--c:${x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat]}">
       <span class="t">${esc(x.name)}</span>
-      <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>R% <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
+      <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>التقدّم <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
       <span class="r">${catChip(x)}<span class="code">${x.id}</span></span></button>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   $("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]);
   $("#fd-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
@@ -1898,9 +1901,9 @@ function focusCardHTML(x){
     <div class="meta">${catChip(x)}<span class="code">${x.id}</span><span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span>${x._pos ? `<span class="fpos" style="margin-inline-start:auto">${x._pos}</span>` : ""}</div>
     <div class="chart">${isMobile() ? (sparkSVG(x) || `<p class="small muted" style="margin:0;padding:18px;text-align:center">لا توجد قراءات كافية للرسم</p>`) : chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}</div>
     <div class="q4">
-      <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + esc(x.cur.src) : "") : ""}</div></div>
+      <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + escB(x.cur.src, 1) : "") : ""}</div></div>
       <div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div>
-      <div><small>Progress Ratio</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>
+      <div><small title="نسبة التقدّم نحو المستهدف">نسبة التقدّم</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>
       <div><small>${pace ? "المتحقق سنوياً" : "الفجوة المتبقية"}</small><b class="num">${pace ? N(rateTxt(x, p.actual).split(" ")[0]) : N(gapTxt(x))}</b>${pace ? `<div class="sub">المطلوب ${N(rateTxt(x, p.required).split(" ")[0])}</div>` : ""}</div>
     </div>
     <p class="why">${esc(whyTxt(x))}</p>
@@ -1949,7 +1952,7 @@ function whyTxt(x){
 function renderFocusMobile(ax, pris, items, s){
   $("#fm-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
   $("#fm-pri").innerHTML = `<option value="all" ${ST.fPri === "all" ? "selected" : ""}>كل الأولويات</option>` + pris.map(([, p, n]) => `<option value="${esc(p)}" ${ST.fPri === p ? "selected" : ""}>${esc(p)} (${n})</option>`).join("");
-  $("#fm-sum").innerHTML = `<div class="row"><span><b>${items.length}</b> مؤشر · على المسار <b>${N(shareTxt(s))}</b> · الوسيط R% <b>${N(medTxt(s))}</b></span>
+  $("#fm-sum").innerHTML = `<div class="row"><span><b>${items.length}</b> مؤشر · على المسار <b>${N(shareTxt(s))}</b> · وسيط نسبة التقدّم <b>${N(medTxt(s))}</b></span>
     <select class="fsort" id="fm-sort" aria-label="الترتيب"><option value="cat">حسب التصنيف</option><option value="near">الأقرب أولاً</option><option value="far">الأبعد أولاً</option></select></div>${stackBar(items)}`;
   $("#fm-sort").value = ST.fSort;
   const col = x => x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
@@ -1958,7 +1961,7 @@ function renderFocusMobile(ax, pris, items, s){
       <h3>${esc(x.name)}</h3>
       ${sparkSVG(x)}
       <div class="big"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
-      <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
+      <div class="rr"><span class="small muted" title="نسبة التقدّم نحو المستهدف">نسبة التقدّم</span><b class="num">${N(rTxt(x))}</b></div>
       <p class="why">${esc(whyTxt(x))}</p>
       <div style="display:flex;gap:8px;align-items:center"><a class="more" href="#i-${x.id}" style="flex:1;text-align:center;text-decoration:none">كل التفاصيل والمنهجية ←</a>${shareBtns(x.id)}</div></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   const cnt = id => { const k = items.findIndex(x => x.id === id); $("#fm-count").textContent = k >= 0 ? `المؤشر ${k + 1} من ${items.length}` : ""; };
@@ -2219,7 +2222,7 @@ function shareText(x){
     L.push(`آخر قراءة: ${c ? lt(curTxt({...x, cur:c})) + " (" + c.y + (c.kind && c.kind !== "فعلية" ? "، " + c.kind : "") + ")" : "لا توجد قراءة"}`);
     if (x.base != null) L.push(`خط الأساس: ${lt(fv(x, x.base))}`);
     L.push(`مستهدف 2030: ${lt(targetTxt(x, 2030))} · مستهدف 2040: ${lt(targetTxt(x, 2040))}`);
-    L.push(`التصنيف: ${catTxt(x)}` + (x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدم: ${lt(rTxt(x))}` : ""));
+    L.push(`التصنيف: ${catTxt(x)}` + (x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدّم: ${lt(rTxt(x))}` : ""));
     const s = srcOf(x, c); if (s) L.push(`المصدر: ${s}`);
   }
   L.push("", `لوحة مؤشرات رؤية عُمان 2040 · ${today()}`);
@@ -2240,9 +2243,9 @@ function sharePDF(id){
     : `${tiles(x)}${chartSVG(x)}${table(x)}`;
   ps.innerHTML = `<div class="ph"><div><b>لوحة مؤشرات رؤية عُمان 2040</b><div class="path">${esc(today())}</div></div>${logo ? `<img src="${logo.src}" alt="">` : ""}</div>
     <div class="path">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h1>${esc(x.name)}</h1>
-    <div class="path">${x.id} · التصنيف: <b>${esc(catTxt(x))}</b>${!x.kids && x.p.R != null && isFinite(x.p.R) ? " · نسبة التقدم نحو مستهدف " + ST.ty + ": " + N(rTxt(x)) : ""}</div>
+    <div class="path">${x.id} · التصنيف: <b>${esc(catTxt(x))}</b>${!x.kids && x.p.R != null && isFinite(x.p.R) ? " · نسبة التقدّم نحو مستهدف " + ST.ty + ": " + N(rTxt(x)) : ""}</div>
     ${body}
-    <div class="path" style="margin-top:8px">مصدر البيانات: ${esc(x.src || x.issuer || "—")}${x.freq ? " · الدورية: " + esc(x.freq) : ""}</div>
+    <div class="path" style="margin-top:8px">مصدر البيانات: ${escB(x.src || x.issuer || "—")}${x.freq ? " · الدورية: " + esc(x.freq) : ""}</div>
     <div class="pf"><span>لوحة مؤشرات رؤية عُمان 2040</span><span>${esc(today())}</span></div>`;
   const t0 = document.title; document.title = "مؤشر " + x.id + " - " + x.name;
   document.body.classList.add("printing");
@@ -2312,7 +2315,7 @@ function drawCard(c, x){
   c.fillStyle = EXP.accent; c.fillRect(M, y, CW, 2.5); y += 14;
   txt(`${x.axis} ‹ ${x.priority}`, 13, {color:EXP.muted});
   txt(x.name, 24, {w:700, disp:1, lh:1.45});
-  const R = !x.kids && x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدم نحو مستهدف ${ST.ty}: ${clean(rTxt(x))}` : "";
+  const R = !x.kids && x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدّم نحو مستهدف ${ST.ty}: ${clean(rTxt(x))}` : "";
   txt(`${x.id} · التصنيف: ${catTxt(x)}${R}`, 14, {color:EXP.muted}); y += 10;
   const block = k => {
     /* tiles */
