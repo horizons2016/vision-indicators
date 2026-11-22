@@ -192,7 +192,6 @@ for k, i in enumerate(rows):
     refs = []
     if rev_dup.get(code): refs.append('يقابل المؤشر الأصلي: ' + '، '.join(rev_dup[code]))
     if i.get('parent'): refs.append(f'مكوّن من {i["parent"]} — {i.get("grade") or ""} {i.get("subject") or ""}'.strip())
-    if old_map.get(code): refs.append('المعرف في النسخة السابقة: ' + '، '.join(str(o) for o in sorted(old_map[code])))
     t30text = 'يُحدَّد لاحقاً' if dev else (i.get('t30text') or (fmt(i['t30']) + unit_sfx if i['t30'] is not None else None))
     if not dev and i.get('t30hi') is not None:
         t30text = f'نطاق: {fmt(i["t30"])}–{fmt(i["t30hi"])}{unit_sfx}'
@@ -217,11 +216,11 @@ for k, i in enumerate(rows):
         17: second, 18: old_field(code, 17), 19: i.get('method') or old_field(code, 18),
         20: i.get('factors') or old_field(code, 19), 21: analysis,
         22: i.get('stage'), 23: w or None,
-        24: old_field(code, 23), 25: old_field(code, 24), 26: old_field(code, 25),
+        24: None, 25: None, 26: None,
     }
     for ci, v in vals.items(): reg.cell(rr, ci).value = v
-reg['B4'] = 'المجموعة'; reg['C4'] = 'المرجع (المقابل / المعرف السابق)'; reg['V4'] = 'مرحلة المؤشر (التطبيق)'
-reg['A2'] = ('A–W مدخلات (من تطبيق المؤشرات — تحديث 20-11-2026) · X–Z مستوردة من ملف كفاية التقدم السابق · AA–BE محسوبة بالمعادلات — لا تُعدّل · '
+reg['B4'] = 'المجموعة'; reg['C4'] = 'المرجع (المقابل في المؤشرات الأصلية)'; reg['V4'] = 'مرحلة المؤشر (التطبيق)'
+reg['A2'] = ('A–W من بيانات تطبيق المؤشرات (كل قراءة مُراجعة من مصدرها الأصلي) · AA–BF محسوبة بالمعادلات — لا تُعدّل · '
              'المجموعة: 38 مؤشر رؤية (U) + 4 مكوّنات TIMSS + 57 مؤشراً مسانداً (O) + 2 ملغاة؛ المؤشرات الأصلية التي لها مقابل في مؤشرات الرؤية (17) لا تتكرر')
 
 # ---------- 5. القوائم ----------
@@ -305,9 +304,9 @@ hdr_fill = PatternFill('solid', fgColor='1F3A5F'); hfont = Font(name='Arial', bo
 thin = Side(style='thin', color='D0D5DD'); bd = Border(left=thin, right=thin, top=thin, bottom=thin)
 T['A1'] = 'تصنيف المؤشرات — مطابق لتطبيق المؤشرات (تحديث 20-11-2026)'; T['A1'].font = Font(name='Arial', bold=True, size=14, color='1F3A5F')
 T['A2'] = ('كل سجلات التطبيق (118): مؤشرات الرؤية للمرحلة المحدثة هي المجموعة الرئيسية، و«المؤشرات المساندة» هي المؤشرات الأصلية (68) غير الموجودة ضمن الـ 38؛ '
-           'المؤشر الأصلي الذي له مقابل في مؤشرات الرؤية لا يتكرر في الملف ويظهر هنا فقط مع رمز مقابله.')
+           'المؤشر الأصلي الذي له مقابل في مؤشرات الرؤية لا يتكرر في الملف ويظهر هنا فقط مع رمز مقابله. القراءات مُراجعة من مصادرها الأصلية.')
 T['A2'].font = Font(name='Arial', size=10, color='555555'); T['A2'].alignment = Alignment(wrap_text=True, vertical='top')
-T.merge_cells('A2:J2'); T.row_dimensions[2].height = 32
+T.merge_cells('A2:I2'); T.row_dimensions[2].height = 32
 summ = [('المجموعة', 'العدد', 'في الملف'), ('مؤشرات الرؤية', None, 'نعم'), ('مكوّنات مؤشرات الرؤية', None, 'نعم'),
         ('المؤشرات المساندة', None, 'نعم'), ('مؤشرات ملغاة', None, 'نعم'), ('مكرر (له مقابل في مؤشرات الرؤية)', None, 'لا — يظهر عبر مقابله')]
 for k, (a, b, c) in enumerate(summ):
@@ -317,7 +316,7 @@ for k, (a, b, c) in enumerate(summ):
     for ci in (1, 2, 3):
         T.cell(rr, ci).border = bd; T.cell(rr, ci).font = hfont if k == 0 else Font(name='Arial', size=10)
         if k == 0: T.cell(rr, ci).fill = hdr_fill
-cols = ['الرمز', 'المجموعة', 'المحور', 'الأولوية', 'اسم المؤشر', 'النوع', 'مرحلة المؤشر', 'مقابله في مؤشرات الرؤية', 'المعرف في النسخة السابقة', 'في الملف']
+cols = ['الرمز', 'المجموعة', 'المحور', 'الأولوية', 'اسم المؤشر', 'النوع', 'مرحلة المؤشر', 'مقابله في مؤشرات الرؤية', 'في الملف']
 for ci, h in enumerate(cols, start=1):
     c = T.cell(11, ci, h); c.fill = hdr_fill; c.font = hfont; c.border = bd; c.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
 order = rows[:] + [i for i in inds if group(i).startswith('مكرر')]
@@ -325,13 +324,12 @@ GF = {'مؤشرات الرؤية': 'E8F0FB', 'مكوّنات مؤشرات الر
 for k, i in enumerate(order):
     rr = 12 + k; g = group(i)
     vals = [i['code'], g, i['axis'], pri_of(i), i['name'], i['type'], i.get('stage') or '', i.get('dup') or '',
-            '، '.join(str(o) for o in sorted(old_map.get(i['code'], []))) if not i.get('dup') else '',
             'لا' if g.startswith('مكرر') else 'نعم']
     for ci, v in enumerate(vals, start=1):
         c = T.cell(rr, ci, v); c.border = bd; c.font = Font(name='Arial', size=10)
         c.fill = PatternFill('solid', fgColor=GF[g]); c.alignment = Alignment(vertical='top', wrap_text=(ci == 5))
-for col, w in zip('ABCDEFGHIJ', (9, 30, 18, 34, 60, 8, 13, 14, 16, 9)): T.column_dimensions[col].width = w
-T.freeze_panes = 'C12'; T.auto_filter.ref = f'A11:J{11 + len(order)}'
+for col, w in zip('ABCDEFGHI', (9, 30, 18, 34, 60, 8, 13, 14, 9)): T.column_dimensions[col].width = w
+T.freeze_panes = 'C12'; T.auto_filter.ref = f'A11:I{11 + len(order)}'
 
 # ---------- 11. دليل الاستخدام ----------
 G = wb['دليل الاستخدام']
@@ -357,7 +355,7 @@ PW = os.environ.get('EXCEL_PASSWORD') or 'Vision2040'
 LG = wb.create_sheet('سجل التحديثات', index=4)
 LG.sheet_view.rightToLeft = True
 LG['A1'] = 'سجل تحديثات البيانات'; LG['A1'].font = Font(name='Arial', bold=True, size=14, color='1F3A5F')
-LG['A2'] = ('يُملأ تلقائياً: عند كل تحديث لبيانات التطبيق تُقارن النسخة الجديدة بالسابقة، ويُسجَّل هنا كل تغيير (قراءة جديدة، تصحيح، مستهدف) مع مصدره وتاريخه. '
+LG['A2'] = ('يُملأ تلقائياً: يُسجَّل هنا كل تغيير في بيانات التطبيق (قراءة جديدة، تصحيح، مستهدف) مع مصدره وتاريخه. '
             'منه يُحسب «آخر تحديث مسجل» لكل مؤشر في «سجل المؤشرات» وفي «عرض المؤشر»، و«آخر تحديث للبيانات» في لوحة القيادة. '
             'المعرف «الكل» = تحديث شامل لكل المؤشرات.')
 LG['A2'].font = Font(name='Arial', size=10, color='555555'); LG['A2'].alignment = Alignment(wrap_text=True, vertical='top')
@@ -433,6 +431,82 @@ G.append(['الحماية والتحديث'])
 G.append(['الحماية', 'كل الأوراق محمية وهيكل المصنف مقفل. المفتوح للجميع: فلاتر لوحة القيادة، قائمة اختيار المؤشر، وأعمدة المتابعة (M–Q) في «متابعة البيانات الناقصة».'])
 G.append(['خطوات التحديث', 'الملف لا يُحدَّث يدوياً: حدّث البيانات من صفحة إدارة التطبيق وارفع dataset.json إلى GitHub، فيُبنى هذا الملف من جديد خلال دقائق ويُسجَّل كل تغيير في «سجل التحديثات». الدوريات (PowerPoint) تُبنى من البيانات نفسها.'])
 G.append(['معرفة التحديث', '«آخر تحديث مسجل» يظهر لكل مؤشر في العمود BF من «سجل المؤشرات» وفي «عرض المؤشر»، وآخر تحديث للملف في أعلى لوحة القيادة.'])
+
+# ---------- 13. إزالة كل مقارنة بالملف السابق (المراجعة تمت من المصادر الأصلية) ----------
+if 'كفاية التقدم (الملف السابق)' in wb.sheetnames: del wb['كفاية التقدم (الملف السابق)']
+for col in ('X', 'Y', 'Z', 'AV'):
+    reg[col + '3'] = None; reg[col + '4'] = None; reg.column_dimensions[col].hidden = True
+    for rr in range(5, 205): reg[f'{col}{rr}'].value = None
+for rr in range(33, 154): D[f'AF{rr}'].value = None
+V['E8'] = ('="الحالة: "&IF(مساعد_الرسم!$B$4="","",INDEX(\'سجل المؤشرات\'!$AL$5:$AL$204,مساعد_الرسم!$B$4))'
+           '&" · عدم التحقق: "&IF(مساعد_الرسم!$B$4="","",INDEX(\'سجل المؤشرات\'!$AX$5:$AX$204,مساعد_الرسم!$B$4))')
+V['B39'] = 'مرحلة المؤشر ونقاط المراجعة'
+V['B43'] = 'مصدر القراءات'
+V['B44'] = ('=IF(مساعد_الرسم!$B$4="","",IFERROR(IF(INDEX(\'بيانات المصدر\'!$AR$5:$AR$704,MATCH(INDEX(\'سجل المؤشرات\'!$A$5:$A$204,مساعد_الرسم!$B$4)&"|فعلي",\'بيانات المصدر\'!$C$5:$C$704,0))="","—",'
+            'INDEX(\'بيانات المصدر\'!$AR$5:$AR$704,MATCH(INDEX(\'سجل المؤشرات\'!$A$5:$A$204,مساعد_الرسم!$B$4)&"|فعلي",\'بيانات المصدر\'!$C$5:$C$704,0))),"—"))')
+
+D['B7'] = D['B7'].value.replace(' · تغيرت حالة "&COUNTIFS(\'سجل المؤشرات\'!$AY$5:$AY$204,1,\'سجل المؤشرات\'!$AV$5:$AV$204,"تغيرت*")&" مؤشرًا عن الملف السابق', '')
+D['B155'] = D['B155'].value.replace(' · الحالة بلون بنفسجي في العمود الأخير = تغيّرت عن الملف السابق.', '.')
+from openpyxl.formatting.formatting import ConditionalFormattingList as _CFL
+_cf = _CFL()
+for _r in D.conditional_formatting:
+    if 'AF' in str(_r.sqref) and all(str(x).startswith('AF') for x in str(_r.sqref).split()):
+        continue
+    for _rule in _r.rules: _cf.add(str(_r.sqref), _rule)
+D.conditional_formatting = _cf
+# دليل الاستخدام: إعادة كتابة كاملة متسقة مع المنظومة
+st_title = copy.copy(G['A2']._style); st_sec = copy.copy(G['B4']._style); st_lab = copy.copy(G['B5']._style); st_txt = copy.copy(G['C5']._style)
+keep = {G.cell(r, 2).value: G.cell(r, 3).value for r in range(5, G.max_row + 1) if G.cell(r, 2).value}
+for m in list(G.merged_cells.ranges):
+    if m.min_row >= 2: G.unmerge_cells(str(m))
+for row in G.iter_rows(min_row=2, max_row=max(G.max_row, 60)):
+    for c in row: c.value = None; c._style = copy.copy(G['A3']._style)
+GUIDE = [
+ ('title', 'لوحة تفاعلية تُبنى تلقائياً من بيانات تطبيق مؤشرات الرؤية — مصدر واحد للبيانات، وكل قراءة مُراجعة من مصدرها الأصلي.'),
+ None,
+ ('sec', 'الأوراق'),
+ ('لوحة القيادة', keep.get('لوحة القيادة')),
+ ('عرض المؤشر', keep.get('عرض المؤشر')),
+ ('سجل المؤشرات', 'صف لكل مؤشر: A–W من بيانات التطبيق (الأولوية، الاسم، الجهة، الدورية، الاتجاه، خط الأساس، المستهدفات، الوصف، طريقة الاحتساب، التحليل)، والأعمدة بعدها محسوبة بالمعادلات.'),
+ ('تصنيف المؤشرات', 'كل سجلات التطبيق ومجموعة كل مؤشر: مؤشرات الرؤية (38)، المؤشرات المساندة (57)، مكوّنات TIMSS، والملغاة؛ والمؤشر الأصلي الذي له مقابل في مؤشرات الرؤية لا يتكرر.'),
+ ('سجل التحديثات', 'يُملأ تلقائياً عند كل تحديث لبيانات التطبيق: القراءات الجديدة والمصححة وتغيّر المستهدفات، مع المصدر والتاريخ.'),
+ ('متابعة البيانات الناقصة', 'المؤشرات التي تنقصها قراءات أو تحتاج متابعة مع الجهات.'),
+ ('السلاسل الزمنية', keep.get('السلاسل الزمنية')),
+ ('بيانات المصدر', 'القراءات والمسار المخطط والترتيب لكل مؤشر، ومصدر القراءات في عمود الملاحظات. تُبنى من التطبيق ولا تُعدَّل هنا.'),
+ None,
+ ('sec', 'مصادر البيانات واعتمادها'),
+ ('المصدر الوحيد', 'بيانات تطبيق المؤشرات (dataset.json). الملف يُبنى منها تلقائياً بعد كل تحديث، فلا يختلف عن التطبيق ولا عن الدوريات.'),
+ ('المراجعة', 'كل قراءة مُراجعة من مصدرها الأصلي: الجهة المُصدِرة للمؤشرات الدولية (الإصدار الحالي)، والمركز الوطني للإحصاء والمعلومات للمؤشرات الوطنية ثم تقرير الرؤية.'),
+ ('نقاط تحتاج اعتماداً', 'المؤشرات «قيد التحقق» أو «قيد التطوير» تظهر في عمود «مرحلة المؤشر» وفي ملاحظات البيانات، وتُحال إلى الفريق المختص لاعتمادها لاحقاً، ولا تدخل في حساب الأداء حتى تُعتمد.'),
+ None,
+ ('sec', 'منطق الحساب'),
+ ('الحالة', keep.get('الحالة')),
+ ('تصنيف الكفاية', keep.get('تصنيف الكفاية')),
+ ('قطع المسافة', keep.get('قطع المسافة')),
+ ('الوضع مقابل المسار', keep.get('الوضع مقابل المسار')),
+ ('المستهدف للحساب', 'مستهدف 2030 من بيانات التطبيق؛ المستهدف على شكل نطاق أو غير المعتمد لا يدخل الحساب ويظهر نصاً.'),
+ ('الاتجاه', 'من بيانات التطبيق: «ارتفاع» عندما يكون الارتفاع أفضل، و«انخفاض» عندما يكون الانخفاض أفضل.'),
+ ('الوحدات', 'النسب مخزنة كسوراً عشرية (3.3% = 0.033)، والترتيب الدولي في «المقياس الثاني».'),
+ None,
+ ('sec', 'الحماية والتحديث'),
+ ('الحماية', 'كل الأوراق محمية وهيكل المصنف مقفل. المفتوح للجميع: فلاتر لوحة القيادة، قائمة اختيار المؤشر، وأعمدة المتابعة (M–Q) في «متابعة البيانات الناقصة».'),
+ ('خطوات التحديث', 'الملف لا يُحدَّث يدوياً: تُحدَّث البيانات من صفحة إدارة التطبيق، فيُبنى هذا الملف من جديد خلال دقائق ويُسجَّل كل تغيير في «سجل التحديثات». الدوريات (PowerPoint) تُبنى من البيانات نفسها.'),
+ ('معرفة التحديث', '«آخر تحديث مسجل» يظهر لكل مؤشر في العمود BF من «سجل المؤشرات» وفي «عرض المؤشر»، وآخر تحديث للملف أعلى لوحة القيادة.'),
+ None,
+ ('sec', 'تنبيه'),
+ ('', 'نسخة تحليلية للمتابعة وليست تقريراً معتمداً. نسبة الكفاية وصفية وليست احتمالاً إحصائياً.'),
+]
+r_ = 2
+for item in GUIDE:
+    if item is None: r_ += 1; continue
+    a, b = item
+    if a == 'title':
+        G.cell(r_, 1, b)._style = copy.copy(st_title); G.merge_cells(f'A{r_}:C{r_}')
+    elif a == 'sec':
+        G.cell(r_, 2, b)._style = copy.copy(st_sec); G.cell(r_, 3)._style = copy.copy(st_sec); G.merge_cells(f'B{r_}:C{r_}')
+    else:
+        G.cell(r_, 2, a or None)._style = copy.copy(st_lab); G.cell(r_, 3, b)._style = copy.copy(st_txt)
+    r_ += 1
 
 wb.calculation.fullCalcOnLoad = True
 wb.active = 0
