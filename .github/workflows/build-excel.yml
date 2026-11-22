@@ -1,0 +1,49 @@
+# يبني ملف الإكسل المحمي تلقائياً من data/dataset.json عند كل تحديث للبيانات،
+# ويسجّل الفروق بين النسخة السابقة والجديدة في excel/changelog.json (سجل التحديثات داخل الملف).
+name: بناء ملف الإكسل
+on:
+  push:
+    branches: [main]
+    paths: ["data/dataset.json", "tools/build_excel.py", "excel/template.xlsx"]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: build-excel
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openpyxl==3.1.5
+      - name: النسخة السابقة من البيانات
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE:data/dataset.json" 2>/dev/null; then
+            git show "$BEFORE:data/dataset.json" > /tmp/prev.json
+          fi
+      - name: بناء الملف
+        env:
+          EXCEL_PASSWORD: ${{ secrets.EXCEL_PASSWORD }}
+        run: |
+          python tools/build_excel.py \
+            --dataset data/dataset.json \
+            --template excel/template.xlsx \
+            --changelog excel/changelog.json \
+            --prev /tmp/prev.json \
+            --date "$(git log -1 --format=%cs -- data/dataset.json)" \
+            --by "$(git log -1 --format=%an -- data/dataset.json)" \
+            --out excel/vision2040-indicators.xlsx
+      - name: حفظ الملف في المستودع
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add excel/vision2040-indicators.xlsx excel/changelog.json
+          git diff --cached --quiet || git commit -m "تحديث ملف الإكسل من بيانات التطبيق"
+          git push
