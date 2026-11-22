@@ -1038,7 +1038,7 @@ const escB = (s, short) => esc(s).replace(/(?:https?:\/\/)?[A-Za-z0-9-]+(?:\.[A-
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
 // وضع الإدارة في نسخة الموقع: رمز يُتحقق منه ببصمة SHA-256 (الرمز نفسه لا يُحفظ في الكود)
-const ADMIN_HASH = "7c80f504a337677160a527056091384498f08c42cf7fc9276f212b6057bdcae0";
+const ADMIN_HASH = "49fd08f9c7fa7b13e2d9c5b670eb0c90910516782625006b027d6a0e3b8efaac";
 async function sha256(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(v => v.toString(16).padStart(2, "0")).join(""); }
 const BUILD = "ov-ar-11211019";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
