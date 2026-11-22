@@ -1,0 +1,75 @@
+# اعتماد طلب تحديث بتعليق «/اعتماد» من صاحب صلاحية: يحدّث data/dataset.json،
+# ويعيد بناء ملف الإكسل المحمي ويسجّل التغيير، ثم يرد على الطلب ويغلقه.
+name: اعتماد طلب تحديث
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: apply-${{ github.event.issue.number }}
+  cancel-in-progress: false
+jobs:
+  apply:
+    if: >-
+      !github.event.issue.pull_request &&
+      (startsWith(github.event.comment.body, '/اعتماد') || startsWith(github.event.comment.body, '/approve')) &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openpyxl==3.1.5
+      - name: تطبيق الاعتماد على البيانات
+        id: apply
+        run: |
+          cp data/dataset.json /tmp/prev.json
+          python tools/apply_request.py
+          echo "ok=$(python -c "import json;print(str(json.load(open('/tmp/apply_result.json'))['ok']).lower())")" >> "$GITHUB_OUTPUT"
+      - name: بناء ملف الإكسل
+        if: steps.apply.outputs.ok == 'true'
+        env:
+          EXCEL_PASSWORD: ${{ secrets.EXCEL_PASSWORD }}
+        run: |
+          python tools/build_excel.py --dataset data/dataset.json --template excel/template.xlsx \
+            --changelog excel/changelog.json --prev /tmp/prev.json \
+            --date "$(date -u +%F)" --by "${{ github.event.comment.user.login }} (طلب #${{ github.event.issue.number }})" \
+            --out excel/vision2040-indicators.xlsx
+          python -c "import json,datetime;json.dump({'build':'ov-req-'+datetime.datetime.utcnow().strftime('%m%d%H%M')},open('version.json','w'))"
+      - name: حفظ ونشر
+        if: steps.apply.outputs.ok == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/dataset.json excel/ version.json
+          git commit -m "اعتماد طلب التحديث #${{ github.event.issue.number }}"
+          git pull --rebase --autostash && git push
+      - name: الرد على الطلب
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          python - <<'PY' > /tmp/reply.md
+          import json
+          try: r = json.load(open('/tmp/apply_result.json'))
+          except Exception: r = {'ok': False, 'error': 'تعذر التنفيذ؛ راجع سجل التشغيل في Actions.'}
+          if not r['ok']:
+              print('⚠️ لم يُعتمد شيء: ' + r['error'])
+          else:
+              u = lambda d, v: '—' if v is None else (f'{v:g}' + ('%' if d.get('unit') == '%' else ''))
+              print('✅ اعتُمد وأُضيف إلى بيانات التطبيق:\n')
+              print('| الرمز | المؤشر | السنة | السابق | الجديد |\n|---|---|---|---|---|')
+              for d in r['done']: print(f"| {d['code']} | {d['name']} | {d['year']} | {u(d, d['old'])} | **{u(d, d['new'])}** |")
+              print('\nيظهر التحديث في التطبيق والدوريات خلال دقائق، وأُعيد بناء ملف الإكسل المحمي وسُجّل التغيير في «سجل التحديثات».')
+          PY
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/reply.md
+          if [ "${{ steps.apply.outputs.ok }}" = "true" ]; then
+            gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label "معتمد" || true
+            gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY"
+          fi

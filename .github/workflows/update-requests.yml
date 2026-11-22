@@ -1,0 +1,32 @@
+# يقارن بيانات التطبيق بإصدارات المركز الوطني للإحصاء (من «مستودع البيانات والتقارير»)
+# وبيانات البنك الدولي وتقويم الإصدارات، ويفتح «طلب تحديث» أو «تنبيه إصدار» لكل جديد.
+name: طلبات تحديث المؤشرات
+on:
+  schedule:
+    - cron: "41 4-14/2 * * 0-4"   # كل ساعتين خلال الدوام (08:41–18:41 بتوقيت مسقط، الأحد–الخميس)
+    - cron: "17 6 * * 5,6"          # مرة يومياً في عطلة نهاية الأسبوع
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: update-requests
+  cancel-in-progress: false
+jobs:
+  requests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: توليد الطلبات
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/update_requests.py
+      - name: حفظ حالة الرصد
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add requests/state.json
+          git diff --cached --quiet || { git commit -m "رصد طلبات التحديث" && git pull --rebase --autostash && git push; }
