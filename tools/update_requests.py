@@ -133,7 +133,9 @@ def worldbank_requests(cfg, data, state, fetch=wb_series):
                 "لاعتماد سنة واحدة فقط: `/اعتماد " + code + " السنة القيمة`. للرفض: أغلق الطلب.\n\n"
                 + marker('worldbank', key, {'src': src, 'url': url, 'codes': [code],
                                             'proposals': [{'code': code, 'year': p['year'], 'v': p['v']} for p in props]}))
-        out.append({'title': f"طلب تحديث: {code} {i['name']} ({', '.join(str(p['year']) for p in props)})",
+        yrs = [p['year'] for p in props]
+        ytxt = ', '.join(map(str, yrs)) if len(yrs) <= 4 else f'{yrs[0]}–{yrs[-1]}، {len(yrs)} سنة'
+        out.append({'title': f"طلب تحديث: {code} {i['name']} ({ytxt})",
                     'body': body, 'labels': [LABEL_REQ], 'key': key})
     state['wb_done'] = sorted(done)
     return out
