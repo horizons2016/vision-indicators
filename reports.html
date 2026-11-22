@@ -129,7 +129,7 @@
   function repo(){
     const h = location.hostname;
     if (h.endsWith(".github.io")) return { o: h.split(".")[0], r: location.pathname.split("/").filter(Boolean)[0] || h };
-    return { o: "horizons2016", r: "vision-indicators" };
+    return { o: "ov2040", r: "vision-indicators" };
   }
   async function snapshotAt(date){
     const { o, r } = repo();
