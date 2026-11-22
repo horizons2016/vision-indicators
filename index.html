@@ -116,7 +116,7 @@ main{padding:16px 18px 40px;display:flex;flex-direction:column;gap:14px;min-widt
 .dh{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;z-index:1}
 .db{padding:16px 18px 30px;display:flex;flex-direction:column;gap:16px}
 .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.tile{background:var(--bg);border-radius:10px;padding:9px 11px;min-width:0}
+.tile{background:var(--bg);border-radius:10px;padding:9px 11px;min-width:0;overflow-wrap:anywhere}
 .tile small{display:block;font-size:11px;color:var(--muted)}
 .tile b{font-family:var(--f-display);font-size:19px;font-weight:600;overflow-wrap:anywhere}
 .tile.cur b{color:var(--accent)}
@@ -206,12 +206,12 @@ aside.side{top:101px;height:calc(100vh - 101px)}
 :root{--ax0:#b64e9d;--ax1:#1fa9b4;--ax2:#546cb0;--ax3:#69479c;--ax0-bg:#f6e7f2;--ax1-bg:#e1f5f6;--ax2-bg:#e7ebf6;--ax3-bg:#ede7f5}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ax0:#d97cc1;--ax1:#4fd0da;--ax2:#8ea2e0;--ax3:#a585d6;--ax0-bg:#3a1f33;--ax1-bg:#14363a;--ax2-bg:#1f2840;--ax3-bg:#2a2140}}
 :root[data-theme="dark"]{--ax0:#d97cc1;--ax1:#4fd0da;--ax2:#8ea2e0;--ax3:#a585d6;--ax0-bg:#3a1f33;--ax1-bg:#14363a;--ax2-bg:#1f2840;--ax3-bg:#2a2140}
-:root{--k-on:#1b7139;--k-on-bg:#e4f3e8;--k-needs:#8a6d00;--k-needs-bg:#fbf3cf;--k-break:#b35a00;--k-break-bg:#fde6d2;--k-back:#b23a32;--k-back-bg:#fbe7e5;--k-stall:#4f5b66;--k-stall-bg:#e3e7ea;--k-na:#7b807e;--k-na-bg:#eceeed}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29}}
-:root[data-theme="dark"]{--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29}
+:root{--k-on:#1b7139;--k-on-bg:#e4f3e8;--k-needs:#8a6d00;--k-needs-bg:#fbf3cf;--k-break:#b35a00;--k-break-bg:#fde6d2;--k-back:#b23a32;--k-back-bg:#fbe7e5;--k-stall:#4f5b66;--k-stall-bg:#e3e7ea;--k-na:#7b807e;--k-na-bg:#eceeed;--k-dev:#4a5f86;--k-dev-bg:#e6ebf4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29;--k-dev:#9fb2d6;--k-dev-bg:#1e2533}}
+:root[data-theme="dark"]{--k-on:#6fd08f;--k-on-bg:#16301f;--k-needs:#e6c84f;--k-needs-bg:#332c0d;--k-break:#f0a560;--k-break-bg:#3a2412;--k-back:#f08a80;--k-back-bg:#3a1c1a;--k-stall:#a9b6c2;--k-stall-bg:#232a30;--k-na:#9aa09e;--k-na-bg:#232b29;--k-dev:#9fb2d6;--k-dev-bg:#1e2533}
 .c-on_track{color:var(--k-on);background:var(--k-on-bg)} .c-needs{color:var(--k-needs);background:var(--k-needs-bg)}
 .c-breakthrough{color:var(--k-break);background:var(--k-break-bg)} .c-backwards{color:var(--k-back);background:var(--k-back-bg)}
-.c-stalled{color:var(--k-stall);background:var(--k-stall-bg)} .c-na{color:var(--k-na);background:var(--k-na-bg)}
+.c-stalled{color:var(--k-stall);background:var(--k-stall-bg)} .c-na{color:var(--k-na);background:var(--k-na-bg)} .c-dev{color:var(--k-dev);background:var(--k-dev-bg)}
 .c-review{color:var(--k-back);background:transparent;border:1.5px dashed var(--k-back)}
 .rline{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .rline b{color:var(--ink);font-variant-numeric:tabular-nums}
@@ -242,8 +242,6 @@ details summary{cursor:pointer;font-size:13px;color:var(--accent)}
 /* v5: overview & focus */
 body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .ov{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,1fr);gap:16px;align-items:start}
-.diamond{width:100%;height:auto;display:block;max-width:min(980px, calc(100vh - 150px));margin:0 auto}
-.dmwrap{position:relative}
 .ovtot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
 .ovtot .k{display:flex;flex-direction:column}
 .ovtot .k+.k{border-inline-start:1px solid var(--line);padding-inline-start:14px}
@@ -254,6 +252,51 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .ovtot .rest span{display:inline-flex;align-items:center;gap:5px}
 .ovtot .rest b{color:var(--ink);font-size:14px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%}
+/* release calendar */
+.relhd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px}
+.relhd h3{margin:0;font-size:14px}
+.relstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--rc);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.rcard .hd{display:flex;align-items:baseline;gap:8px}
+.rcard .hd b{font-family:var(--f-display);font-size:26px;line-height:1;color:var(--rc)}
+.rcard .hd span{font-size:12.5px;font-weight:600}
+.rcard .ls{display:flex;flex-direction:column;gap:2px}
+.rcard .ls a{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--ink);text-decoration:none;padding:3px 0;border-top:1px dashed var(--line)}
+.rcard .ls a:hover .nm{color:var(--accent)}
+.rcard .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.rcard .dt{color:var(--muted);white-space:nowrap;font-size:11.5px}
+.rcard .more{justify-content:flex-start!important;color:var(--accent)!important;border-top:0!important}
+.r-recent{--rc:var(--k-on)} .r-soon{--rc:var(--accent)} .r-late{--rc:var(--k-back)} .r-stop{--rc:var(--k-na)}
+.rst{display:inline-flex;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.rst.soon{color:var(--accent);background:var(--accent-soft)} .rst.planned{color:var(--k-dev);background:var(--k-dev-bg)}
+.rst.late{color:var(--k-back);border:1.5px dashed var(--k-back)} .rst.stop{color:var(--k-na);background:var(--k-na-bg)}
+.rst.open,.rst.none{color:var(--muted);background:var(--bg)} .rst.recent{color:var(--k-on);background:var(--k-on-bg)}
+.calbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.caltbl{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:auto}
+.caltbl table{width:100%;border-collapse:collapse;font-size:13px}
+.caltbl th,.caltbl td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+.caltbl th{font-size:12px;color:var(--muted);font-weight:600;background:var(--bg);position:sticky;top:0}
+.caltbl tr.mon td{background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px}
+.caltbl tr.grp td{background:var(--bg);font-weight:700;font-size:13px}
+.caltbl a.ind{color:var(--ink);font-weight:600;text-decoration:none} .caltbl a.ind:hover{color:var(--accent)}
+.caltbl .tag{display:inline-block;font-size:11px;color:var(--muted);margin-inline-start:6px}
+.caltbl .nt{font-size:11.5px;color:var(--sand);margin-top:3px}
+.calchips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.calchips button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.calchips button b{font-weight:700;color:var(--muted)}
+.calchips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.calchips button[aria-pressed="true"] b{color:#fff}
+.calchips button:disabled{opacity:.45;cursor:default}
+.calq{flex:1;min-width:200px;max-width:340px}
+.calq input{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 10px;font:inherit;font-size:13px}
+.rcard .rhd{all:unset;cursor:pointer;display:flex;align-items:baseline;gap:8px;border-radius:6px}
+.rcard .rhd:focus-visible{outline:2px solid var(--rc);outline-offset:2px}
+.rcard .rhd b{font-family:var(--f-display);font-size:26px;line-height:1;color:var(--rc)} .rcard .rhd span{font-size:12.5px;font-weight:600}
+.rcard .rhd:hover span{text-decoration:underline}
+.rcard[aria-current="true"]{box-shadow:0 0 0 2px var(--rc)}
+.calbar select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 10px;font-size:13px}
+@media (max-width:860px){ .relstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .caltbl .hide-m{display:none} .caltbl th,.caltbl td{padding:7px 6px} .caltbl .nt{display:none} .caltbl td:first-child{width:52%} .rst{white-space:normal} }
+@media (max-width:560px){ .relstrip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px} .relstrip .rcard{flex:0 0 84%;scroll-snap-align:start} }
 .ovgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
 .pcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--axc);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:9px}
 .pcard .ax{font-size:11px;font-weight:600;color:var(--axc)}
@@ -265,31 +308,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 .pcard .go{display:block;text-align:center;background:var(--axc);color:#fff;border-radius:10px;padding:9px 4px;font-size:13px;font-weight:600;text-decoration:none;margin-top:auto}
 .pcard.ghost{background:transparent;border:1.5px dashed var(--line);border-top:4px dashed var(--axc);color:var(--muted)}
 @media (max-width:860px){ .ovgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px} .pcard{padding:10px} .pcard h3{font-size:13px;min-height:38px} .pcard .m3 b{font-size:16px} .pcard .m3 small{font-size:9.5px;letter-spacing:-.2px} .pcard .go{font-size:12px} .ovtot .k b{font-size:26px} }
-.diamond .dmg{transition:opacity .15s}
-.diamond.sel .dmg{opacity:.12} .diamond.sel .dmg.sib{opacity:.5} .diamond.sel .dmg.hl{opacity:1}
-.diamond.sel line.hl,.diamond.sel path.hl{stroke:var(--accent);stroke-width:2.6}
-.diamond .hit{fill:transparent;cursor:pointer}
-.diamond .dm-ind.cur{stroke:var(--ink);stroke-width:3}
-.dmpop{position:absolute;z-index:4;width:min(330px, calc(100% - 24px));background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c, var(--accent));border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px 14px;display:flex;flex-direction:column;gap:9px}
-.dmpop .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.dmpop h3{margin:0;font-size:15px;line-height:1.5}
-.dmpop .path{font-size:11.5px;color:var(--muted)}
-.dmpop .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.dmpop .two div{background:var(--bg);border-radius:9px;padding:6px 9px}
-.dmpop .two small{display:block;font-size:11px;color:var(--muted)}
-.dmpop .two b{font-family:var(--f-display);font-size:17px}
-.dmpop .rr{display:flex;justify-content:space-between;align-items:baseline}
-.dmpop .rr b{font-family:var(--f-display);font-size:22px;color:var(--c)}
-.dmpop .why{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
-.dmpop .acts{display:flex;gap:6px}
-.dmpop .acts>*{flex:1;text-align:center;text-decoration:none}
-.dmpop .x{border:0;background:none;font-size:16px;color:var(--muted);padding:2px 6px}
 @media (max-width:860px){ .dmpop{position:fixed;inset-inline:10px;width:auto;bottom:calc(72px + env(safe-area-inset-bottom));top:auto!important;left:10px!important;right:10px!important;z-index:8} }
-.diamond text{font-family:var(--f-body);fill:var(--ink)}
-.diamond .dm-ind{cursor:pointer;transition:r .12s}
-.diamond .dm-ind:hover{stroke:var(--ink);stroke-width:2.5}
-.diamond .dm-pri,.diamond .dm-hub,.diamond .dm-center{cursor:pointer}
-.diamond .dm-pri:hover circle.bg,.diamond .dm-hub:hover circle.bg{stroke:var(--accent);stroke-width:3}
 .stackbar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--grey-bg);gap:1px}
 .stackbar i{display:block;height:100%}
 .axcard{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);text-align:start;width:100%}
@@ -360,7 +379,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 @media (max-width:860px){
   body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   header.bar{padding:8px 12px;gap:8px}
-  header.bar .navtabs, #role, #share{display:none}
+  header.bar .navtabs, #role{display:none}
   header.bar .search{order:5;flex:1 1 100%}
   body:not([data-pg="dash"]) header.bar .search{display:none}
   .ov .panel > div > .small.muted{display:none}
@@ -423,6 +442,40 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 @media (max-width:1100px){ .ov{grid-template-columns:1fr} }
 @media (max-width:860px){ .fgrid{grid-template-columns:1fr} .fsum{grid-template-columns:1fr 1fr} .flist{max-height:none} }
 @media (max-width:860px){ .controls{position:static} .kpis.k5,.kpis.k6{grid-template-columns:repeat(3,1fr)} aside.side{top:0} }
+/* ===== مشاركة: نسخ / PDF — بلا روابط ===== */
+.shr{display:inline-flex;gap:6px}
+.lockbox{max-width:460px}
+.lockbox form{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.lockbox input{height:38px;border:1px solid var(--line);border-radius:9px;padding:0 10px;font-size:14px;background:var(--surface);color:var(--ink);min-width:220px}
+#printsheet{display:none}
+@media print{
+  @page{size:A4;margin:14mm}
+  body.printing{background:#fff!important;padding:0!important}
+  body.printing > *:not(#printsheet){display:none!important}
+  body.printing #printsheet{display:block!important}
+}
+#printsheet{
+  --bg:#f2f4f3; --surface:#ffffff; --ink:#15211e; --muted:#5d6b67; --line:#dde3e1;
+  --accent:#0d6b5a; --accent-soft:#e2f1ec; --sand:#b8862f;
+  --good:#1f7a3f; --good-bg:#e4f3e8; --info:#2b5f9e; --info-bg:#e5eef9;
+  --bad:#b23a32; --bad-bg:#fbe7e5; --grey:#6b716f; --grey-bg:#eceeed;
+  color:#15211e;background:#fff;font-family:var(--f-body);font-size:12.5px;line-height:1.6;direction:rtl;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+#printsheet .ph{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0d6b5a;padding-bottom:8px;margin-bottom:12px}
+#printsheet .ph img{height:52px;width:auto}
+#printsheet .ph b{font-family:var(--f-display);font-size:15px;color:#0d6b5a}
+#printsheet h1{font-family:var(--f-display);font-size:19px;margin:2px 0 4px}
+#printsheet .path{color:#5d6b67;font-size:12px}
+#printsheet .ptiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+#printsheet .ptiles div{border:1px solid #dde3e1;border-radius:8px;padding:6px 8px}
+#printsheet .ptiles small{display:block;color:#5d6b67;font-size:11px}
+#printsheet .ptiles b{font-family:var(--f-display);font-size:16px}
+#printsheet .chart{width:100%;height:auto;max-height:260px}
+#printsheet table{width:100%;border-collapse:collapse;margin-top:8px;font-size:11.5px}
+#printsheet th,#printsheet td{border-bottom:1px solid #dde3e1;padding:4px 6px;text-align:start}
+#printsheet th{background:#f2f4f3}
+#printsheet .kid{border-top:1px solid #dde3e1;padding-top:8px;margin-top:8px;break-inside:avoid}
+#printsheet .pf{margin-top:14px;padding-top:6px;border-top:1px solid #dde3e1;color:#5d6b67;font-size:10.5px;display:flex;justify-content:space-between}
 </style>
 <script>/* محرك الحسابات الإحصائية للوحة مؤشرات الرؤية.
  * دوال خالصة (بلا واجهة) تُستخدم في المتصفح وفي الاختبارات (Node).
@@ -459,6 +512,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     backwards:    { ar: "يتراجع", en: "Off Track – Going Backwards" },
     stalled:      { ar: "ثابت · بلا تقدم", en: "No change (stalled)" },
     na:           { ar: "لا يُصنَّف", en: "Not classified" },
+    dev:          { ar: "قيد التطوير", en: "In development" },
   };
 
   const AGG = {
@@ -812,14 +866,13 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
       <span class="logo" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="4" y="13" width="3.5" height="7" rx="1" fill="#fff"/><rect x="10.25" y="9" width="3.5" height="11" rx="1" fill="#fff"/><rect x="16.5" y="6" width="3.5" height="14" rx="1" fill="#fff"/><circle cx="18.25" cy="3" r="1.6" fill="#e0b25e"/></svg></span>
       <div><h1>مؤشرات الرؤية</h1><p id="sub"></p></div>
     </div>
-    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">الرئيسية</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="reports.html">الدوريات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
+    <nav class="navtabs" aria-label="الأقسام"><a href="#overview" data-nav="overview">الرئيسية</a><a href="#focus" data-nav="focus">التركيز</a><a href="#all" data-nav="dash">كل المؤشرات</a><a href="#calendar" data-nav="cal">تقويم الإصدارات</a><a href="reports.html">الدوريات</a><a href="#admin" data-nav="admin" id="nav-admin" hidden>إدارة البيانات</a></nav>
     <label class="search" for="q">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="ابحث باسم المؤشر أو رمزه" aria-label="ابحث عن مؤشر" autocomplete="off">
     </label>
     <div class="seg" role="group" aria-label="مجموعة المؤشرات" id="setseg"></div>
     <span class="role" id="role">اطلاع</span>
-    <button class="btn" id="share">نسخ رابط العرض</button>
     <img class="vlogo" src="data:image/png;base64,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" alt="رؤية عُمان 2040" width="64" height="57">
   </header>
 
@@ -832,13 +885,15 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     <span style="display:inline-flex;gap:6px;align-items:center;color:var(--muted)">سنة المستهدف <span class="seg" id="tyseg"><button data-ty="2030" aria-pressed="true">2030</button><button data-ty="2040" aria-pressed="false">2040</button></span></span>
     <span class="note" id="calcnote"></span>
     <span style="flex:1"></span>
-    <button class="btn" id="export">تصدير النتائج (CSV)</button>
+    <button class="btn" id="export" hidden>تصدير النتائج (CSV)</button>
   </div>
 
   <aside class="side" aria-label="المحاور والأولويات"><nav class="tree" id="tree"></nav></aside>
 
   <main id="v-overview" hidden>
     <div class="crumb"><h2>الوضع العام</h2><span class="small muted" id="ov-meta"></span></div>
+    <div class="relhd"><h3>مستجدات إصدارات المؤشرات</h3><a class="btn" href="#calendar">تقويم الإصدارات ←</a></div>
+    <section class="relstrip" id="ov-rel" aria-label="مستجدات إصدارات المؤشرات"></section>
     <div class="ovtot" id="ov-tot"></div>
     <div class="ovgrid" id="ov-cards"></div>
   </main>
@@ -876,27 +931,45 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
     </div>
     <div class="crumb"><h2 id="title">كل المؤشرات</h2><span class="small muted" id="count"></span></div>
     <div class="kpis k5" id="kpis" hidden></div>
-    <div class="kpihead"><span>تصنيف المسار الإحصائي · Progress Ratio نحو مستهدف <span id="tylbl">2030</span></span></div>
+    <div class="kpihead"><span>تصنيف المسار الإحصائي · نسبة التقدّم نحو مستهدف <span id="tylbl">2030</span></span></div>
     <div class="kpis k6" id="kpis2"></div>
     <div class="filters">
       <select id="f-type" aria-label="نوع المؤشر"><option value="">كل الأنواع</option><option value="intl">دولي</option><option value="nat">وطني</option></select>
       <select id="f-fresh" aria-label="عمر البيانات"><option value="">كل أعمار البيانات</option><option value="fresh">حديثة (سنة أو أقل)</option><option value="late">متأخرة (سنتان)</option><option value="old">متقادمة (3 سنوات فأكثر)</option><option value="none">بلا قراءة</option></select>
       <select id="f-elig" aria-label="الأهلية"><option value="">كل مستويات الأهلية</option><option value="0">غير قابل للقياس</option><option value="1">قياس التقدم</option><option value="2">التنبؤ</option><option value="3">المحاكاة الاحتمالية</option></select>
-      <select id="f-sort" aria-label="الترتيب"><option value="tree">ترتيب الأولويات</option><option value="name">الاسم</option><option value="r">Progress Ratio</option><option value="age">الأقدم بيانات</option><option value="eval">التقييم</option></select>
+      <select id="f-sort" aria-label="الترتيب"><option value="tree">ترتيب الأولويات</option><option value="name">الاسم</option><option value="r">نسبة التقدّم</option><option value="age">الأقدم بيانات</option><option value="eval">التقييم</option></select>
       <div class="seg" role="group" aria-label="طريقة العرض" id="viewseg"><button data-view="cards" aria-pressed="true">بطاقات</button><button data-view="table" aria-pressed="false">جدول</button></div>
       <button class="btn" id="reset" hidden>إلغاء التصفية</button>
     </div>
     <section class="grid" id="grid" aria-live="polite"></section>
-    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>R%</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
+    <section class="tbl" id="tblwrap" hidden><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>الأولوية</th><th>آخر قراءة</th><th id="th-t">مستهدف 2030</th><th>نسبة التقدّم</th><th>التصنيف</th><th>الفجوة المتبقية</th><th>الأهلية</th></tr></thead><tbody id="tbody"></tbody></table></section>
+  </main>
+
+  <main id="v-cal" hidden>
+    <div class="crumb"><h2>تقويم الإصدارات</h2><span class="small muted" id="cal-meta"></span></div>
+    <section class="relstrip" id="cal-rel" aria-label="ملخص الإصدارات"></section>
+    <div class="calbar">
+      <div class="seg" role="group" aria-label="المجموعة" id="cal-set"><button data-calset="">كل المؤشرات</button><button data-calset="updated">مؤشرات الرؤية</button><button data-calset="original">المؤشرات المساندة</button></div>
+      <div class="seg" role="group" aria-label="نوع المؤشر" id="cal-type"><button data-caltype="">دولي ووطني</button><button data-caltype="intl">دولي</button><button data-caltype="nat">وطني</button></div>
+      <label class="calq" for="cal-q"><input id="cal-q" type="search" placeholder="ابحث باسم المؤشر أو رمزه أو الجهة" autocomplete="off" aria-label="بحث في التقويم"></label>
+    </div>
+    <div class="calchips" id="cal-st" role="group" aria-label="تصفية حسب حالة الإصدار"></div>
+    <div class="caltbl"><table><thead><tr><th>المؤشر</th><th class="hide-m">الجهة المصدرة</th><th class="hide-m">آخر إصدار</th><th>الإصدار القادم</th><th>الحالة</th></tr></thead><tbody id="cal-body"></tbody></table></div>
+    <p class="small muted">مواعيد الإصدار القادم تقديرية ما لم تعلنها الجهة المصدرة. المؤشرات الوطنية تُعبَّأ مواعيدها تدريجياً من تقويم المركز الوطني للإحصاء والمعلومات.</p>
   </main>
 
   <main id="v-admin" hidden>
     <div class="admin">
-      <div class="crumb"><h2 id="admin-title">إدارة البيانات</h2><span class="small muted" id="ds-state"></span></div>
+      <div class="crumb"><h2 id="admin-title">إدارة البيانات</h2><span class="small muted" id="ds-state"></span><span style="flex:1"></span><button class="btn" id="admin-out" hidden>خروج من وضع الإدارة</button></div>
+      <section class="panel lockbox" id="admin-lock" hidden>
+        <h2>دخول الإدارة</h2>
+        <p class="small muted" style="margin:0">تصدير البيانات وتحديثها متاحان للمسؤولين فقط. المستخدمون يطّلعون على المؤشرات ويشاركون أي مؤشر نصاً أو صورة أو PDF من بطاقته.</p>
+        <form id="admin-unlock"><label class="small">رمز الإدارة<br><input type="password" id="admin-pass" autocomplete="current-password" required></label><button class="btn primary" type="submit">دخول</button></form>
+      </section>
       <div class="msg warn" id="local-note" hidden>هذه نسخة خارج Claude: الفحص والمعاينة والتصدير تعمل على جهازك فقط، ولا يُنشر شيء من هنا. لنشر التحديث ارفع ملف <code>data/dataset.json</code> المُصدَّر إلى مستودع GitHub، فالصلاحية هناك لأعضاء المستودع.</div>
-      <div class="subnav" id="asub"><button data-asub="upload" aria-pressed="true">تحديث البيانات</button><button data-asub="elig" aria-pressed="false">الأهلية الإحصائية</button><button data-asub="valid" aria-pressed="false">صلاحية البيانات</button><button data-asub="pub" aria-pressed="false">النشر والسجل</button></div>
+      <div class="subnav" id="asub" data-adm><button data-asub="upload" aria-pressed="true">تحديث البيانات</button><button data-asub="elig" aria-pressed="false">الأهلية الإحصائية</button><button data-asub="valid" aria-pressed="false">صلاحية البيانات</button><button data-asub="pub" aria-pressed="false">النشر والسجل</button></div>
 
-      <section data-apanel="upload" class="admin" style="max-width:none">
+      <section data-adm data-apanel="upload" class="admin" style="max-width:none">
         <div class="panel">
           <h2>تحديث البيانات بملف Excel</h2>
           <div class="steps">
@@ -910,7 +983,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
         </div>
       </section>
 
-      <section data-apanel="elig" class="admin" style="max-width:none" hidden>
+      <section data-adm data-apanel="elig" class="admin" style="max-width:none" hidden>
         <div class="panel">
           <h2>محرك الأهلية الإحصائية</h2>
           <p class="small muted" style="margin:0">المستوى 1 قياس التقدم · 2 التنبؤ · 3 المحاكاة الاحتمالية (Monte Carlo). الأهلية تُبنى على خصائص السلسلة ونتائج اختبار النموذج، لا على عدد السنوات وحده. «سقف أهلية التحليل» في Excel يقيّد المستوى ولا يرفعه.</p>
@@ -919,7 +992,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
         </div>
       </section>
 
-      <section data-apanel="valid" class="admin" style="max-width:none" hidden>
+      <section data-adm data-apanel="valid" class="admin" style="max-width:none" hidden>
         <div class="panel">
           <h2>صلاحية البيانات</h2>
           <p class="small muted" style="margin:0">لا تُحذف أي قراءة آلياً؛ تُحدد صلاحيتها لكل نوع تحليل. الأرقام لمجموعة المؤشرات المختارة في الأعلى.</p>
@@ -929,7 +1002,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
         </div>
       </section>
 
-      <section data-apanel="pub" class="admin" style="max-width:none" hidden>
+      <section data-adm data-apanel="pub" class="admin" style="max-width:none" hidden>
         <div class="panel">
           <h2>نسخة جاهزة للنشر</h2>
           <p class="small muted" style="margin:0">ملف <code>dataset.json</code> هو كل ما تحتاجه الواجهة العامة. على GitHub Pages ضعه في <code>data/dataset.json</code> بجانب <code>index.html</code>، فتقرأه الواجهة تلقائياً.</p>
@@ -942,7 +1015,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 </div>
 
 <nav class="bnav" aria-label="التنقل">
-  <button data-bnav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 21 12 12 21 3 12Z"/><circle cx="12" cy="12" r="2.2"/></svg>الرئيسية</button>
+  <button data-bnav="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/></svg>الرئيسية</button>
   <button data-bnav="focus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg>التركيز</button>
   <button data-bnav="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>كل المؤشرات</button>
   <button data-bnav="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>بحث</button>
@@ -952,6 +1025,7 @@ body.noside .app{grid-template-columns:1fr} body.noside aside.side{display:none}
 <div class="cmpbar" id="cmpbar" hidden><span id="cmpn"></span><button class="btn" id="cmpgo">قارن</button><button class="btn" id="cmpclr">مسح</button></div>
 <div class="tip" id="tip"></div>
 <div class="toast" id="toast" role="status"></div>
+<div id="printsheet" aria-hidden="true"></div>
 
 <script>
 const SEED = {"indicators": [], "readings": [], "path": [], "notes": [], "meta": {}};
@@ -959,29 +1033,42 @@ const E = window.OVEngine;
 const NOW = new Date().getFullYear();
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// نص مصدر مختلط (عربي + روابط/اختصارات لاتينية): يعزل الروابط والنطاقات باتجاه LTR حتى لا تنقلب الأقواس أو تتبعثر عند التفاف السطر
+const escB = (s, short) => esc(s).replace(/(?:https?:\/\/)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:\/[^\s؛،()<]*)?/g, m => `<bdi dir="ltr">${short ? m.replace(/^https?:\/\//, "").split("/")[0] : m}</bdi>`);
 const IN_CLAUDE = !!(window.claude && window.claude.use);
 const SITE = true;
-const BUILD = "ov-835cae40fd";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
+// وضع الإدارة في نسخة الموقع: رمز يُتحقق منه ببصمة SHA-256 (الرمز نفسه لا يُحفظ في الكود)
+const ADMIN_HASH = "7c80f504a337677160a527056091384498f08c42cf7fc9276f212b6057bdcae0";
+async function sha256(t){ const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(v => v.toString(16).padStart(2, "0")).join(""); }
+const BUILD = "ov-ar-11211019";   // يُستبدل عند البناء برقم النسخة   // true في نسخة GitHub Pages: البيانات تُقرأ من data/dataset.json
 const MQ = window.matchMedia ? window.matchMedia("(max-width:860px)") : {matches:false};
 const isMobile = () => !!MQ.matches;
 
 const AXES = ["الإنسان والمجتمع","الاقتصاد والتنمية","الحوكمة والأداء المؤسسي","البيئة المستدامة"];
 const EVAL = { done:{label:"منجز", cls:"e-done", c:"var(--good)"}, track:{label:"على المسار", cls:"e-track", c:"var(--info)"}, not:{label:"غير منجز", cls:"e-not", c:"var(--bad)"}, none:{label:"لم يُقيَّم", cls:"e-none", c:"var(--grey)"} };
 const EV_ORDER = ["done","track","not","none"];
-const CATS = ["on_track","needs","breakthrough","backwards","stalled","na"];
+const CATS = ["on_track","needs","breakthrough","backwards","stalled","na","dev"];
 // ألوان المحاور الرسمية من عجلة «أولوياتنا الوطنية» في وثيقة الرؤية: للهيكل فقط (أين أنا؟)
 const AXC = ["var(--ax0)","var(--ax1)","var(--ax2)","var(--ax3)"], AXB = ["var(--ax0-bg)","var(--ax1-bg)","var(--ax2-bg)","var(--ax3-bg)"];
 const axC = a => AXC[AXES.indexOf(a)] || "var(--accent)";
 // رمز مع كل حالة حتى لا يعتمد الفهم على اللون وحده
-// اسم الأولوية الرسمي كما في وثيقة الرؤية؛ ملف المؤشرات المحدثة يكتبها باسم مختلف (للعرض والتجميع فقط، والبيانات كما هي)
+// اسم الأولوية الرسمي كما في وثيقة الرؤية؛ ملف مؤشرات الرؤية (المحدثة) يكتبها باسم مختلف (للعرض والتجميع فقط، والبيانات كما هي)
 const PRI_ALIAS = {"المواطنة والهوية والثقافة والقيم": "المواطنة والهوية والتراث والثقافة الوطنية"};
-const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓", stalled:"=", na:"–"};
-const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)"};
+const CAT_SYM = {on_track:"↑", needs:"↗", breakthrough:"→", backwards:"↓", stalled:"=", na:"–", dev:"◌"};
+const CAT_C = {on_track:"var(--k-on)", needs:"var(--k-needs)", breakthrough:"var(--k-break)", backwards:"var(--k-back)", stalled:"var(--k-stall)", na:"var(--k-na)", dev:"var(--k-dev)"};
 const LV_LABEL = ["غير قابل للقياس","قياس التقدم","التنبؤ","المحاكاة الاحتمالية"];
 
-const ST = { fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
-  assess:{}, db:null, user:null, me:null, admin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
-try { const s = localStorage.getItem("ovd-set"); if (s) ST.set = s; const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
+const ST = { cal:{set:"", type:"", st:"", q:""}, fAxis:null, fPri:null, fInd:null, fSort:"cat", ds: SEED, dsSource:"seed", set:"updated", axis:null, pri:null, ev:null, cat:null, q:"", view:"cards", ty:2030, from:null, to:null, calcLinked:true,
+  assess:{}, db:null, user:null, me:null, admin:false, siteAdmin:false, names:{}, uploads:[], pending:null, cmp:new Set(), page:"dash", asub:"upload" };
+try { const v = localStorage.getItem("ovd-view"); if (v) ST.view = v; } catch(e){}
+try { ST.siteAdmin = localStorage.getItem("ovd-admin-key") === ADMIN_HASH; localStorage.removeItem("ovd-admin"); } catch(e){}
+// صلاحية الإدارة: داخل Claude من صلاحية التحرير، وفي الموقع من رمز الإدارة
+const isAdmin = () => IN_CLAUDE ? !!ST.admin : !!ST.siteAdmin;
+function applyRole(){
+  const a = isAdmin();
+  $("#nav-admin").hidden = !a; $("#export").hidden = !a;
+  $("#role").textContent = a ? "مدير" : "اطلاع"; $("#role").classList.toggle("admin", a);
+}
 let RAW = [], BY = {}, YMIN = 2010, KIDS = {};
 
 const num = v => { if (v == null || v === "") return null; if (typeof v === "number") return isFinite(v) ? v : null;
@@ -1000,7 +1087,7 @@ function buildModel(ds){
     const S = {};
     (rd[i.code] || []).forEach(r => { S[r.y] = {...(S[r.y]||{y:r.y}), ...r, v: sc(r.v)}; });
     (pt[i.code] || []).forEach(p => { S[p.y] = {...(S[p.y]||{y:p.y}), p: sc(p.p)}; });
-    return {
+    const o = {
       id:i.code, set: i.set === "محدث" ? "updated" : "original", axis:i.axis, priority:PRI_ALIAS[i.priority] || i.priority, priorityRaw:i.priority, name:i.name, unit:i.unit,
       pct, intl: i.type === "دولي", dir: String(i.dir||"").includes("الانخفاض") ? "down" : "up",
       base: sc(i.base), t30n: i.t30hi != null ? null : sc(i.t30), range: i.t30hi != null && i.t30 != null ? [sc(i.t30), sc(i.t30hi)] : null,
@@ -1011,10 +1098,15 @@ function buildModel(ds){
       notes: (nt[i.code] || []).sort((a,b) => a.y - b.y),
       series: Object.values(S).sort((a,b) => a.y - b.y),
       parent: i.parent || null, grade: i.grade || null, subject: i.subject || null,
-      rel: {last: i.rel_last || null, next: i.rel_next || null, due: i.rel_due || null, note: i.rel_note || null, src: i.rel_src || null},
+      stage: i.stage === "قيد التطوير" ? "dev" : i.stage === "قيد التحقق" ? "verify" : null, stageNote: i.stage_note || null,
+      rel: {last: i.rel_last || null, date: i.rel_date || null, next: i.rel_next || null, due: i.rel_due || null, note: i.rel_note || null, src: i.rel_src || null},
     };
+    // «قيد التطوير»: المستهدف لم يُعتمد بعد، فلا يُعرض ولا يُحسب (القيم تبقى محفوظة في ملف البيانات)
+    if (o.stage === "dev") { o.t30n = null; o.range = null; o.t30r = null; o.t40 = null; o.t30text = "يُحدَّد لاحقاً"; o.series = o.series.map(r => ({...r, p: null})).filter(r => r.v != null || r.r != null); }
+    return o;
   };
-  const act = ds.indicators.filter(i => i.active !== "لا");
+  // المؤشر الأصلي الذي له مقابل في مؤشرات الرؤية (حقل dup) لا يُعرض، حتى لا تتكرر المعلومة
+  const act = ds.indicators.filter(i => i.active !== "لا" && !i.dup);
   KIDS = {}; act.filter(i => i.parent).map(mk).forEach(k => (KIDS[k.parent] = KIDS[k.parent] || []).push(k));
   RAW = act.filter(i => !i.parent).map(mk);
   RAW.forEach(x => { if (KIDS[x.id]) x.kids = KIDS[x.id]; });
@@ -1040,6 +1132,7 @@ function compute(){
     x.el = E.eligibility(x, {targetYear:ST.ty, now:NOW, ...cr});
     x.p = x.el.progress;
     x.cat = x.p.cat;
+    applyStage(x);
     x.ev = (ST.assess[x.id] && EVAL[ST.assess[x.id].s]) ? ST.assess[x.id].s : "none";
     x.showFc = x.el.showForecast && x.approval !== "مرفوض";
     x.showP = x.el.showProbability && x.approval !== "مرفوض";
@@ -1048,13 +1141,21 @@ function compute(){
   const SEV = ["backwards", "breakthrough", "stalled", "needs", "on_track"];
   RAW.forEach(x => {
     if (!x.kids) return;
-    const cs = x.kids.filter(k => k.p.status !== "review").map(k => k.cat).filter(c => c !== "na");
+    if (x.stage) return;
+    const cs = x.kids.filter(k => k.p.status !== "review").map(k => k.cat).filter(c => c !== "na" && c !== "dev");
     const c = SEV.find(v => cs.includes(v)) || "na";
     x.cat = c;
     x.p = {...x.p, cat: c, status: cs.length ? "ok" : x.p.status, achieved: cs.length > 0 && x.kids.every(k => k.p.achieved), R: null, reason: "تصنيف مركّب من المكونات"};
     const last = x.kids.map(k => k.curAll).filter(Boolean).sort((a, b) => b.y - a.y)[0];
     if (last) { x.age = NOW - last.y; }
   });
+}
+/* المسارات الثلاثة: مكتمل (يُصنَّف) · قيد التطوير (مستهدف لم يُعتمد أو مؤشر بلا بيانات) · قيد التحقق (بيانات فيها إشكال لدى الفريق) */
+function applyStage(x){
+  const noData = !x.kids && !x.series.some(s => s.v != null || s.r != null);
+  const st = x.stage || (!x.kids && (x.p.status === "no_target" || noData) ? "dev" : null);
+  if (st === "dev") { x.p = {...x.p, status: "dev", cat: "dev", achieved: false, R: null, reason: x.stageNote || (noData ? "مؤشر قيد التطوير: لم تصدر له بيانات بعد" : "مؤشر قيد التطوير: المستهدف لم يُعتمد بعد")}; x.cat = "dev"; }
+  else if (st === "verify") { x.p = {...x.p, status: "review", cat: "na", achieved: false, R: null, reason: x.stageNote || "بيانات المؤشر قيد التحقق لدى الفريق المختص"}; x.cat = "na"; }
 }
 const relDate = s => { const m = String(s || "").match(/^(\d{4})-(\d{1,2})/); return m ? new Date(+m[1], +m[2], 0) : null; };
 const AR_M = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
@@ -1063,13 +1164,82 @@ function releaseHTML(x){
   const last = x.kids ? x.kids.map(k => k.curAll).filter(Boolean).sort((a, b) => b.y - a.y)[0] : x.curAll;
   const d = relDate(r.due), now = new Date();
   let st = "";
-  if (d) st = d > now ? `<span class="cat c-on_track">في موعده</span>` : `<span class="cat c-review">تجاوز الموعد المتوقع — تحقق من صدوره</span>`;
+  if (relStop(x)) st = `<span class="rst stop">متوقف</span>`; else if (d) st = d > now ? `<span class="cat c-on_track">في موعده</span>` : `<span class="cat c-review">تجاوز الموعد المتوقع — تحقق من صدوره</span>`;
   const tile = (t, v) => `<div class="tile"><small>${t}</small><b style="font-size:14px;line-height:1.5">${v}</b></div>`;
   if (!r.last && !r.next) return `<div class="sec"><div class="hd"><h3>موعد الإصدار القادم</h3></div><div class="tiles">${tile("الدورية", fq)}${tile("آخر قراءة في اللوحة", last ? last.y : "—")}</div><div class="small muted">لم يُحدَّد موعد الإصدار القادم لهذا المؤشر بعد.</div></div>`;
   return `<div class="sec"><div class="hd"><h3>موعد الإصدار القادم</h3>${st}</div>
     <div class="tiles">${tile("الدورية", fq)}${tile("آخر قراءة في اللوحة", last ? last.y : "—")}${tile("آخر إصدار من الجهة", esc(r.last || "—"))}${tile("الإصدار القادم", esc(r.next || "—") + (d ? `<div class="small muted">${AR_M[d.getMonth()]} ${d.getFullYear()}</div>` : ""))}</div>
     ${r.note ? `<div class="msg warn">${esc(r.note)}</div>` : ""}
     ${r.src ? `<div class="small muted">المصدر: <a href="${esc(r.src)}" target="_blank" rel="noopener">${esc(r.src.replace(/^https?:\/\//, "").split("/")[0])}</a></div>` : ""}</div>`;
+}
+/* ================= release calendar ================= */
+const relStop = x => /^متوقف/.test((x.rel && x.rel.next) || "");
+const relDay = s => { const m = String(s || "").match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+const REL_ST = {soon:"يصدر قريباً", planned:"مجدول لاحقاً", late:"تجاوز الموعد — تحقق من صدوره", open:"موعد غير محدد", stop:"متوقف", none:"بلا بيانات إصدار"};
+const REL_CHIPS = [["", "الكل"], ["recent", "صدر حديثاً"], ["soon", "يصدر قريباً"], ["planned", "مجدول لاحقاً"], ["late", "تجاوز الموعد"], ["open", "موعد غير محدد"], ["stop", "متوقف"], ["none", "بلا بيانات إصدار"]];
+const REL_RECENT_DAYS = 90, REL_SOON_MONTHS = 3;
+function relStatus(x){
+  const r = x.rel || {};
+  if (relStop(x)) return "stop";
+  const d = relDate(r.due), now = new Date();
+  if (!d) return r.last || r.next ? "open" : "none";
+  if (d < now) return "late";
+  const mo = (d.getFullYear() - now.getFullYear()) * 12 + d.getMonth() - now.getMonth();
+  return mo <= REL_SOON_MONTHS ? "soon" : "planned";
+}
+const fmtDay = d => `${d.getDate()} ${AR_M[d.getMonth()]} ${d.getFullYear()}`;
+const fmtMon = s => { const d = relDate(s); return d ? `${AR_M[d.getMonth()]} ${d.getFullYear()}` : "—"; };
+function relList(){
+  const now = new Date();
+  return RAW.map(x => { const d = relDay(x.rel.date); return {x, st: relStatus(x), d, recent: !!(d && d <= now && (now - d) / 864e5 <= REL_RECENT_DAYS)}; });
+}
+function relCardsHTML(L){
+  const byDue = (a, b) => (relDate(a.x.rel.due) || 0) - (relDate(b.x.rel.due) || 0);
+  const recent = L.filter(o => o.recent).sort((a, b) => b.d - a.d), soon = L.filter(o => o.st === "soon").sort(byDue),
+        late = L.filter(o => o.st === "late").sort(byDue), stop = L.filter(o => o.st === "stop");
+  const item = (o, t) => `<a href="#i-${o.x.id}" title="${esc(o.x.name)}"><span class="nm">${esc(o.x.name)}</span><span class="dt">${t}</span></a>`;
+  const cur = ST.page === "cal" ? ST.cal.st : null;
+  const card = (cls, title, list, fmt, empty) => { const key = cls.slice(2);
+    return `<article class="rcard ${cls}" aria-current="${cur === key}"><button class="rhd" data-calgo="${key}" title="اعرض هذه المؤشرات في التقويم"><b class="num">${list.length}</b><span>${title}</span></button>${list.length ? `<div class="ls">${list.slice(0, 4).map(o => item(o, fmt(o))).join("")}${list.length > 4 ? `<a class="more" href="#calendar" data-calgo="${key}">+ ${list.length - 4} أخرى في التقويم</a>` : ""}</div>` : `<div class="small muted">${empty}</div>`}</article>`; };
+  return card("r-recent", `صدر حديثاً (آخر ${REL_RECENT_DAYS} يوماً)`, recent, o => fmtDay(o.d), "لا إصدارات جديدة خلال الفترة") +
+    card("r-soon", `يصدر قريباً (${REL_SOON_MONTHS} أشهر)`, soon, o => fmtMon(o.x.rel.due), "لا إصدارات متوقعة قريباً") +
+    card("r-late", "تجاوز موعده المتوقع", late, o => fmtMon(o.x.rel.due), "لا يوجد") +
+    card("r-stop", "مؤشرات توقف إصدارها", stop, () => "يحتاج قرار", "لا يوجد");
+}
+function renderRelStrip(){ $("#ov-rel").innerHTML = relCardsHTML(relList()); }
+function renderCal(){
+  const all = relList(), f = ST.cal;
+  document.querySelectorAll("#cal-set button").forEach(b => b.setAttribute("aria-pressed", b.dataset.calset === f.set));
+  document.querySelectorAll("#cal-type button").forEach(b => b.setAttribute("aria-pressed", b.dataset.caltype === f.type));
+  if ($("#cal-q").value !== f.q) $("#cal-q").value = f.q;
+  const qq = norm(f.q);
+  const base = all.filter(o => (!f.set || o.x.set === f.set) && (!f.type || (f.type === "intl" ? o.x.intl : !o.x.intl))
+    && (!qq || norm([o.x.name, o.x.id, o.x.issuer, o.x.src].join(" ")).includes(qq)));
+  const hit = (o, k) => !k || (k === "recent" ? o.recent : o.st === k);
+  $("#cal-st").innerHTML = REL_CHIPS.map(([k, t]) => { const n = base.filter(o => hit(o, k)).length;
+    return `<button data-calst="${k}" aria-pressed="${f.st === k}"${n || f.st === k ? "" : " disabled"}>${t} <b class="num">${n}</b></button>`; }).join("");
+  const L = base.filter(o => hit(o, f.st));
+  $("#cal-rel").innerHTML = relCardsHTML(base);
+  $("#cal-meta").textContent = `${L.length} من ${all.length} مؤشراً · بيانات الإصدار مسجلة لـ ${all.filter(o => o.st !== "none").length}`;
+  const row = o => { const x = o.x, r = x.rel;
+    return `<tr><td><a class="ind" href="#i-${x.id}">${esc(x.name)}</a><span class="tag">${x.id} · ${x.set === "updated" ? "مؤشرات الرؤية" : "مساند"} · ${x.intl ? "دولي" : "وطني"}</span>${r.note ? `<div class="nt">${esc(r.note)}</div>` : ""}</td>
+      <td class="hide-m small">${esc(x.issuer || x.src || "—")}${r.src ? `<div><a href="${esc(r.src)}" target="_blank" rel="noopener">${esc(r.src.replace(/^https?:\/\//, "").split("/")[0])}</a></div>` : ""}</td>
+      <td class="small hide-m">${esc(r.last || "—")}${o.d ? `<div class="muted">${fmtDay(o.d)}</div>` : ""}</td>
+      <td class="small">${esc(r.next || "—")}${r.due && !relStop(x) ? `<div class="muted">${fmtMon(r.due)}</div>` : ""}</td>
+      <td>${o.recent ? `<span class="rst recent">صدر حديثاً</span> ` : ""}<span class="rst ${o.st}">${REL_ST[o.st]}</span></td></tr>`; };
+  let html = "";
+  if (f.st === "recent"){
+    const g = L.slice().sort((a, b) => b.d - a.d);
+    if (g.length) html = `<tr class="grp"><td colspan="5">صدر خلال آخر ${REL_RECENT_DAYS} يوماً — الأحدث أولاً</td></tr>` + g.map(row).join("");
+  } else {
+    const dated = L.filter(o => ["soon", "planned", "late"].includes(o.st)).sort((a, b) => relDate(a.x.rel.due) - relDate(b.x.rel.due));
+    let cur = "";
+    dated.forEach(o => { const m = fmtMon(o.x.rel.due); if (m !== cur){ cur = m; html += `<tr class="mon"><td colspan="5">${m}</td></tr>`; } html += row(o); });
+    [["open", "موعد الإصدار القادم غير محدد"], ["stop", "مؤشرات توقف إصدارها — تحتاج قراراً من الفريق"], ["none", "بلا بيانات إصدار بعد"]].forEach(([k, t]) => {
+      const g = L.filter(o => o.st === k); if (g.length) html += `<tr class="grp"><td colspan="5">${t} (${g.length})</td></tr>` + g.map(row).join("");
+    });
+  }
+  $("#cal-body").innerHTML = html || `<tr><td colspan="5" class="small muted">لا توجد مؤشرات بهذه التصفية. <button class="btn" data-calreset="1">إلغاء التصفية</button></td></tr>`;
 }
 function kidsHTML(x){
   const g = {}; x.kids.forEach(k => (g[k.grade || ""] = g[k.grade || ""] || []).push(k));
@@ -1090,31 +1260,32 @@ const fvf = (x, v, field) => field === "r" ? "الترتيب " + fmtN(v, 0) : fv
 const N = s => /^[-−+]?\d/.test(String(s)) ? `<bdi dir="ltr">${esc(s)}</bdi>` : esc(s);
 const curTxt = x => !x.cur ? "—" : x.cur.v != null ? fv(x, x.cur.v) : "الترتيب " + fmtN(x.cur.r, 0);
 function targetTxt(x, ty){ ty = ty || ST.ty;
-  if (ty === 2040) return x.t40 != null ? fv(x, x.t40) : "—";
+  if (ty === 2040) return x.t40 != null ? fv(x, x.t40) : x.stage === "dev" ? "يُحدَّد لاحقاً" : "—";
   if (x.range) return fv(x, x.range[0]) + " – " + fv(x, x.range[1]); if (x.t30n != null) return fv(x, x.t30n); if (x.t30r != null) return "أفضل " + fmtN(x.t30r, 0); return x.t30text || "—"; }
 const rTxt = x => x.p && x.p.R != null && isFinite(x.p.R) ? fmtN(x.p.R * 100, 1) + "%" : (x.p && x.p.achieved ? "حقق المستهدف" : "—");
-const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ يحتاج مراجعة البيانات</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
+const catChip = x => x.p.status === "review" ? `<span class="cat c-review" title="${esc(x.p.reason)}">؟ قيد التحقق</span>` : `<span class="cat c-${x.cat}"><b aria-hidden="true">${CAT_SYM[x.cat]}</b> ${E.CAT[x.cat].ar}${x.p.achieved ? " · حقق المستهدف" : ""}</span>`;
 function ruleTxt(p){
-  if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا يُحسب R)";
+  if (p.achieved) return "آخر قراءة بلغت المستهدف أو تجاوزته ← على المسار (لا تُحسب نسبة التقدّم)";
   if (p.status === "review") return "لم يُصنَّف: " + p.reason;
   if (!isFinite(p.R)) return p.reason || "لا يمكن الحساب";
   const r = fmtN(p.R * 100, 1) + "%";
-  if (p.moved < 0) return `التغيّر الفعلي في الاتجاه المعاكس للمستهدف ← يتراجع (R% = ${r})`;
+  if (p.moved < 0) return `التغيّر الفعلي في الاتجاه المعاكس للمستهدف ← يتراجع (نسبة التقدّم ${r})`;
   if (p.moved === 0) return "لا تغيّر بين أول قراءة وآخرها ← ثابت بلا تقدم (منفصل عن التراجع)";
-  if (p.cat === "on_track") return `R% = ${r} أكبر من 90% ← على المسار`;
-  if (p.cat === "needs") return `R% = ${r} بين 50% و90% ← يحتاج تحسيناً`;
-  return `R% = ${r} أقل من 50% مع تقدم في الاتجاه المطلوب ← متأخر عن المسار`;
+  if (p.cat === "on_track") return `نسبة التقدّم ${r} أكبر من 90% ← على المسار`;
+  if (p.cat === "needs") return `نسبة التقدّم ${r} بين 50% و90% ← يحتاج تحسيناً`;
+  return `نسبة التقدّم ${r} أقل من 50% مع تقدم في الاتجاه المطلوب ← متأخر عن المسار`;
 }
 function gapTxt(x){ const p = x.p; if (p.achieved) return "0"; if (p.T == null || !p.latest) return "—"; return p.field === "r" ? fmtN(Math.abs(p.T - p.latest.val), 0) + " مرتبة" : x.pct ? fmtN(Math.abs(p.T - p.latest.val)*100, 2) + " نقطة مئوية" : fmtN(Math.abs(p.T - p.latest.val)); }
 const ageCls = a => a == null ? "" : a <= 1 ? "" : a === 2 ? "warn" : "bad";
 const ageTxt = a => a == null ? "بلا قراءة" : a <= 0 ? "هذا العام" : a === 1 ? "قبل سنة" : a === 2 ? "قبل سنتين" : `قبل ${a} سنوات`;
 const badge = x => `<span class="badge ${EVAL[x.ev].cls}">${EVAL[x.ev].label}</span>`;
+const methTxt = m => m === "CAGR" ? "نمو سنوي مركّب (CAGR)" : "خطي";
 const rateTxt = (x, v) => v == null || !isFinite(v) ? "—" : x.p.method === "CAGR" ? fmtN(v*100, 2) + "% سنوياً" : x.p.field === "r" ? fmtN(v, 2) + " مرتبة سنوياً" : x.pct ? fmtN(v*100, 3) + " نقطة مئوية سنوياً" : fmtN(v, 3) + " سنوياً";
 
 /* ================= filtering ================= */
 const norm = s => String(s||"").toLowerCase().replace(/[ً-ٰٟـ]/g,"").replace(/[إأآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/ؤ/g,"و").replace(/ئ/g,"ي").replace(/[^\p{L}\p{N}\s\-]/gu," ").replace(/\s+/g," ").trim();
 const stripAl = w => w.length > 4 && w.startsWith("ال") ? w.slice(2) : w;
-const inSet = x => ST.set === "all" || x.set === ST.set;
+const inSet = x => x.set === ST.set;
 const matchQ = x => !ST.q || norm(ST.q).split(" ").filter(Boolean).map(stripAl).every(t => x._k.includes(t));
 const baseList = () => RAW.filter(x => inSet(x) && (!ST.axis || x.axis === ST.axis) && (!ST.pri || x.priority === ST.pri) && matchQ(x));
 function filtered(){
@@ -1173,7 +1344,7 @@ function cardHTML(x){
     <span class="vals"><span><span class="big num">${N(curTxt(x))}</span> ${est}<br><span class="yr">${x.cur ? "آخر قراءة " + x.cur.y : "لا قراءة في الفترة"}</span></span>
       <span class="tg">مستهدف ${ST.ty}<b>${N(targetTxt(x))}</b></span></span>
     ${spark(x)}
-    <span class="rline"><span>${catChip(x)}</span><span>R% <b>${N(rTxt(x))}</b></span></span>
+    <span class="rline"><span>${catChip(x)}</span><span>التقدّم <b>${N(rTxt(x))}</b></span></span>
     <span class="foot"><span></span><span style="display:flex;gap:6px;align-items:center">${x.age!=null&&x.age>=2?`<span class="age ${(x.relOk ? "" : ageCls(x.age))}">${ageTxt(x.age)}</span>`:""}<span class="code">${x.id}</span></span></span>
   </div>`;
 }
@@ -1185,10 +1356,10 @@ function rowHTML(x){
 function renderDash(){
   const base = baseList(), list = filtered();
   $("#title").textContent = ST.pri || ST.axis || "كل المؤشرات";
-  $("#count").textContent = `${list.length} مؤشر` + (ST.set === "updated" ? " · المحدثة" : ST.set === "original" ? " · الأصلية" : "");
+  $("#count").textContent = `${list.length} مؤشر` + (ST.set === "updated" ? " · مؤشرات الرؤية" : " · المؤشرات المساندة");
   $("#kpis").innerHTML = `<button class="kpi" data-ev="" aria-pressed="${!ST.ev}" style="--c:var(--ink)"><b class="num">${base.length}</b><span>كل المؤشرات</span></button>` +
     EV_ORDER.map(k => `<button class="kpi" data-ev="${k}" aria-pressed="${ST.ev===k}" style="--c:${EVAL[k].c}"><b class="num">${base.filter(x=>x.ev===k).length}</b><span>${EVAL[k].label}</span></button>`).join("");
-  $("#kpis2").innerHTML = CATS.map(k => `<button class="kpi" data-cat="${k}" aria-pressed="${ST.cat===k}" style="--c:${CAT_C[k]}"><b class="num">${base.filter(x=>x.cat===k).length}</b><span>${E.CAT[k].ar} · ${E.CAT[k].en}</span></button>`).join("");
+  $("#kpis2").innerHTML = CATS.map(k => `<button class="kpi" data-cat="${k}" aria-pressed="${ST.cat===k}" style="--c:${CAT_C[k]}" title="${E.CAT[k].en}"><b class="num">${base.filter(x=>x.cat===k).length}</b><span>${E.CAT[k].ar}</span></button>`).join("");
   const s = $("#f-sort").value;
   const order = s === "name" ? (a,b) => a.name.localeCompare(b.name,"ar")
     : s === "r" ? (a,b) => (isFinite(b.p.R) ? b.p.R : (b.p.achieved ? 99 : -99)) - (isFinite(a.p.R) ? a.p.R : (a.p.achieved ? 99 : -99))
@@ -1255,24 +1426,25 @@ function tipFor(x, y){
 function calcDetails(x){
   if (x.kids) return `<div class="small muted">تفاصيل الحساب لكل مكوّن تظهر في بطاقته ضمن «الملخص».</div>`;
   const p = x.p, f = p.field, cr = calcRange();
-  const used = p.used.map(u => `${u.y}: ${fvf(x, u.val, f)}`).join("، ") || "—";
+  const used = p.used.map(u => f === "r" ? `${u.y}: ${esc(fvf(x, u.val, f))}` : `<bdi dir="ltr">${u.y}: ${esc(fvf(x, u.val, f))}</bdi>`).join("، ") || "—";
   const exc = p.excluded.map(e => `${e.y} (${e.reason})`).join("، ");
-  let body = `<div><b>فترة الحساب:</b> ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات المتاحة"} · <b>الطريقة:</b> ${p.method} · <b>سنة المستهدف:</b> ${ST.ty}</div>
+  let body = `<div><b>فترة الحساب:</b> ${isFinite(cr.calcFrom) ? cr.calcFrom + "–" + cr.calcTo : "كل السنوات المتاحة"} · <b>الطريقة:</b> ${methTxt(p.method)} · <b>سنة المستهدف:</b> ${ST.ty}</div>
     <div><b>القراءات المستخدمة:</b> ${used}</div>${exc ? `<div><b>غير مستخدمة:</b> ${esc(exc)}</div>` : ""}`;
-  if (p.status === "review") return body + `<div class="msg warn"><b>لم يُصنَّف:</b> ${esc(p.reason)}. يلزم تصحيح اتجاه الأفضلية أو المستهدف في ملف البيانات.</div>${isFinite(p.previewR) ? `<div class="small muted">للاطلاع فقط (غير معتمد): R% بالبيانات الحالية = ${fmtN(p.previewR*100,1)}%.</div>` : ""}`;
+  if (p.status === "dev") return body + `<div class="msg"><b>قيد التطوير:</b> ${esc(p.reason)}. تُعرض القراءات واتجاهها للاطلاع، ولا يدخل المؤشر في نسب الأداء حتى يُعتمد مستهدفه.</div>`;
+  if (p.status === "review") return body + `<div class="msg warn"><b>قيد التحقق:</b> ${esc(p.reason)}. لا يُصنَّف أداؤه حتى تُؤكَّد بياناته.</div>${isFinite(p.previewR) ? `<div class="small muted">للاطلاع فقط (غير معتمد): نسبة التقدّم بالبيانات الحالية = ${fmtN(p.previewR*100,1)}%.</div>` : ""}`;
   if (p.status !== "ok" && !p.achieved) return body + `<div><b>النتيجة:</b> ${esc(p.reason || "لا يمكن الحساب")}</div>`;
-  if (p.achieved && p.R == null) return body + `<div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div><div><b>النتيجة:</b> آخر قراءة (${fvf(x, p.latest.val, f)} في ${p.latest.y}) بلغت المستهدف${p.T != null ? " (" + fvf(x, p.T, f) + ")" : ""}، فالتصنيف «على المسار» دون حساب R.</div>`;
+  if (p.achieved && p.R == null) return body + `<div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div><div><b>النتيجة:</b> آخر قراءة (${fvf(x, p.latest.val, f)} في ${p.latest.y}) بلغت المستهدف${p.T != null ? " (" + fvf(x, p.T, f) + ")" : ""}، فالتصنيف «على المسار» دون حساب نسبة التقدّم.</div>`;
   const F = p.first, L = p.latest, raw = v => f === "r" ? fmtN(v,0) : x.pct ? fmtN(v*100,3) + "%" : fmtN(v,4);
   if (p.method === "CAGR"){
-    body += `<div>Actual CAGR = <code>(${raw(L.val)} ÷ ${raw(F.val)})^(1/${p.hy}) − 1 = ${fmtN(p.actual*100,3)}%</code></div>
-      <div>Required CAGR = <code>(${raw(p.T)} ÷ ${raw(L.val)})^(1/${p.ry}) − 1 = ${fmtN(p.required*100,3)}%</code></div>`;
+    body += `<div>معدل النمو المركّب الفعلي: <code>(${raw(L.val)} ÷ ${raw(F.val)})^(1/${p.hy}) − 1 = ${fmtN(p.actual*100,3)}%</code></div>
+      <div>معدل النمو المركّب المطلوب: <code>(${raw(p.T)} ÷ ${raw(L.val)})^(1/${p.ry}) − 1 = ${fmtN(p.required*100,3)}%</code></div>`;
   } else {
-    body += `<div>Actual Rate = <code>(${raw(L.val)} − ${raw(F.val)}) ÷ (${L.y} − ${F.y}) = ${raw(p.actual)}</code></div>
-      <div>Required Rate = <code>(${raw(p.T)} − ${raw(L.val)}) ÷ (${p.TY} − ${L.y}) = ${raw(p.required)}</code></div>`;
+    body += `<div>المعدل السنوي الفعلي: <code>(${raw(L.val)} − ${raw(F.val)}) ÷ (${L.y} − ${F.y}) = ${raw(p.actual)}</code></div>
+      <div>المعدل السنوي المطلوب: <code>(${raw(p.T)} − ${raw(L.val)}) ÷ (${p.TY} − ${L.y}) = ${raw(p.required)}</code></div>`;
   }
-  body += `<div>R = <code>${fmtN(p.actual,6)} ÷ ${fmtN(p.required,6)} = ${fmtN(p.R,4)}</code> · R% = <code>${fmtN(p.R*100,2)}%</code></div>
+  body += `<div>نسبة التقدّم = المعدل الفعلي ÷ المعدل المطلوب: <code>${fmtN(p.actual,6)} ÷ ${fmtN(p.required,6)} = ${fmtN(p.R*100,2)}%</code></div>
     <div><b>القاعدة المطبّقة:</b> ${esc(ruleTxt(p))}</div>
-    <div class="small muted">القواعد: تحقق المستهدف أو R% &gt; 90% على المسار · 50%–90% يحتاج تحسيناً · أقل من 50% مع تقدم متأخر عن المسار · تغيّر عكسي يتراجع · لا تغيّر ثابت. R لا يُقص عند 100%.</div>`;
+    <div class="small muted">القواعد: تحقّق المستهدف أو نسبة تقدّم أكثر من 90% ← على المسار · من 50% إلى 90% ← يحتاج تحسيناً · أقل من 50% مع تقدّم ← متأخر عن المسار · تغيّر عكسي ← يتراجع · لا تغيّر ← ثابت. لا تُقيَّد النسبة بسقف 100%.</div>`;
   return body;
 }
 function periodHTML(x){
@@ -1292,8 +1464,8 @@ function forecastHTML(x){
   if (!x.showFc) return "";
   const fc = x.el.forecast, f = x.p.field, fx = v => fvf(x, v, f);
   let h = `<div class="sec forecast"><div class="hd"><h3>توقع ${fc.y} · تقديري</h3><span class="pill2">${esc(x.approval === "معتمد" ? "معتمد منهجياً" : "نتيجة آلية · قيد المراجعة المنهجية")}</span></div>
-    <div class="dtiles"><div class="tile"><small>التوقع النقطي</small><b class="num">${N(fx(fc.point))}</b></div><div class="tile"><small>نطاق عدم اليقين 80%</small><b class="num" style="font-size:15px">من ${N(fx(fc.lo))} إلى ${N(fx(fc.hi))}</b></div><div class="tile"><small>النموذج</small><b style="font-size:13px">${esc(fc.method)}</b><div class="sub">MASE ${fmtN(x.el.backtest.mase,2)} · ${x.el.n} قراءة</div></div></div>`;
-  if (x.showP){ const m = x.el.mc; h += `<div class="dtiles"><div class="tile"><small>احتمال تحقيق المستهدف</small><b class="num">${N(fmtN(m.p*100,0)+"%")}</b></div><div class="tile"><small>نطاق المحاكاة (10%–90%)</small><b class="num" style="font-size:15px">من ${N(fx(m.p10))} إلى ${N(fx(m.p90))}</b></div><div class="tile"><small>المحاكاة</small><b style="font-size:13px">Bootstrap للبواقي</b><div class="sub">${m.B} تكرار</div></div></div>`; }
+    <div class="dtiles"><div class="tile"><small>التوقع النقطي</small><b class="num">${N(fx(fc.point))}</b></div><div class="tile"><small>نطاق عدم اليقين 80%</small><b class="num" style="font-size:15px">من ${N(fx(fc.lo))} إلى ${N(fx(fc.hi))}</b></div><div class="tile"><small>النموذج</small><b style="font-size:13px">${esc(fc.method)}</b><div class="sub">خطأ الاختبار (MASE) ${fmtN(x.el.backtest.mase,2)} · ${x.el.n} قراءة</div></div></div>`;
+  if (x.showP){ const m = x.el.mc; h += `<div class="dtiles"><div class="tile"><small>احتمال تحقيق المستهدف</small><b class="num">${N(fmtN(m.p*100,0)+"%")}</b></div><div class="tile"><small>نطاق المحاكاة (10%–90%)</small><b class="num" style="font-size:15px">من ${N(fx(m.p10))} إلى ${N(fx(m.p90))}</b></div><div class="tile"><small>المحاكاة</small><b style="font-size:13px">إعادة المعاينة للبواقي (Bootstrap)</b><div class="sub">${m.B} تكرار</div></div></div>`; }
   return h + `<div class="small muted">التوقع امتداد إحصائي للاتجاه، وليس قراءة فعلية.</div></div>`;
 }
 function textBlocks(x){
@@ -1311,12 +1483,12 @@ function openDrawer(id, target){
   const rows = x.series.filter(r => r.y >= ST.from && ((r.y <= Math.min(ST.to, NOW) && (r.v != null || r.r != null)) || (r.p != null && r.y <= Math.max(ST.to, ST.ty)))).map(r => {
     const isAct = r.y <= NOW && (r.v != null || r.r != null);
     const use = !isAct ? "" : usedYears.has(r.y) ? `<span style="color:var(--good)">مستخدمة</span>` : excl[r.y] ? `<span class="small muted">${esc(excl[r.y])}</span>` : `<span class="small muted">خارج الحساب</span>`;
-    return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?esc(r.src||"—"):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
+    return `<tr><td class="n">${r.y}${r.brk?` <span class="pill2" style="color:var(--bad)">تغيّر التعريف</span>`:""}</td><td class="n">${isAct&&r.v!=null?N(fv(x,r.v)):"—"}</td><td class="n">${isAct&&r.r!=null?fmtN(r.r,0):"—"}</td><td class="n">${r.p!=null?N(fv(x,r.p)):"—"}</td><td class="small">${isAct?esc(r.kind||"فعلية"):""}</td><td class="small">${isAct?escB(r.src||"—")+(r.note?`<div class="small" style="color:#b8862f;margin-top:2px">${esc(r.note)}</div>`:""):""}</td><td class="small">${isAct?esc(r.rel||""):""}</td><td>${use}</td></tr>`; }).join("");
   const evalCtl = ST.admin ? `<div class="evalopts" role="group" aria-label="تقييم المؤشر">${EV_ORDER.map(k => `<button type="button" class="${EVAL[k].cls}" data-setev="${k}" aria-pressed="${x.ev===k}">${EVAL[k].label}</button>`).join("")}</div>` : `<div>${badge(x)}</div>`;
   const lastOut = x.curAll && x.curAll.y > (isFinite(cr.calcTo) ? cr.calcTo : 9999) ? `<div class="msg warn">قراءة ${x.curAll.y} (${N(x.curAll.v != null ? fv(x, x.curAll.v) : "الترتيب " + x.curAll.r)}) خارج فترة الحساب ولم تدخل المعادلة.</div>` : "";
   const html = `
-    <div class="dh"><div><div class="small muted">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h2 style="font-size:18px">${esc(x.name)}</h2><div class="small muted"><span class="code">${x.id}</span> · ${x.set==="updated"?"المؤشرات المحدثة":"المؤشرات الأصلية"}${x.intl?" · دولي":""} · <span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span></div></div>
-      <div style="display:flex;gap:6px"><button class="btn" data-copylink="${x.id}">نسخ الرابط</button><button class="btn" data-close aria-label="إغلاق">✕</button></div></div>
+    <div class="dh"><div><div class="small muted">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h2 style="font-size:18px">${esc(x.name)}</h2><div class="small muted"><span class="code">${x.id}</span> · ${x.set==="updated"?"مؤشرات الرؤية":"المؤشرات المساندة"}${x.intl?" · دولي":""} · <span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span></div></div>
+      <div style="display:flex;gap:6px">${shareBtns(x.id)}<button class="btn" data-close aria-label="إغلاق">✕</button></div></div>
     <div class="db">
       <div class="itabs" role="tablist">${["الملخص","القراءات","المنهجية","المصدر"].map((n, i) => `<button role="tab" data-itab="${i}" aria-selected="${(ST.indTab||0) === i}">${n}</button>`).join("")}</div>
       <div data-tabp="0" ${(ST.indTab||0) !== 0 ? "hidden" : ""}>
@@ -1324,14 +1496,14 @@ function openDrawer(id, target){
       ${x.kids ? kidsHTML(x) : `
       <div class="tiles">
         <div class="tile"><small>خط الأساس</small><b class="num">${x.base!=null?N(fv(x,x.base)):"—"}</b></div>
-        <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + esc(x.cur.src) : ""):""}</div></div>
+        <div class="tile cur"><small>آخر قراءة في الفترة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur?x.cur.y + " · " + esc(x.cur.kind||"فعلية") + (x.cur.src ? " · " + escB(x.cur.src, 1) : "") + (x.cur.note ? `<div style="color:#b8862f;margin-top:2px">${esc(x.cur.note)}</div>` : ""):""}</div></div>
         <div class="tile"><small>مستهدف 2030</small><b class="num">${N(targetTxt(x, 2030))}</b></div>
         <div class="tile"><small>مستهدف 2040</small><b class="num">${N(targetTxt(x, 2040))}</b></div>
       </div>
       ${chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}
       ${lastOut}
-      <div class="sec"><div class="hd"><h3>التقدم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
-        <div class="dtiles"><div class="tile"><small>Progress Ratio · R%</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${p.method}</b></div>
+      <div class="sec"><div class="hd"><h3>التقدّم نحو مستهدف ${ST.ty}</h3>${catChip(x)}</div>
+        <div class="dtiles"><div class="tile"><small>نسبة التقدّم نحو المستهدف</small><b class="num">${N(rTxt(x))}</b></div><div class="tile"><small>الفجوة المتبقية</small><b class="num" style="font-size:16px">${N(gapTxt(x))}</b></div><div class="tile"><small>الطريقة</small><b style="font-size:15px">${methTxt(p.method)}</b></div>
           <div class="tile"><small>المعدل الفعلي</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.actual))}</b></div><div class="tile"><small>المعدل المطلوب</small><b class="num" style="font-size:14px">${N(rateTxt(x, p.required))}</b></div><div class="tile"><small>الأهلية</small><b style="font-size:14px"><span class="lv lv${x.el.level}">${x.el.level}</span> ${LV_LABEL[x.el.level]}</b></div></div>
       </div>
       `}
@@ -1349,9 +1521,9 @@ function openDrawer(id, target){
       <div data-tabp="3" ${(ST.indTab||0) !== 3 ? "hidden" : ""}>
       <dl class="facts">
         <dt>الجهة المالكة</dt><dd>${esc(x.owner||"—")}</dd><dt>جهة الإصدار</dt><dd>${esc(x.issuer||"—")}</dd>
-        <dt>مصدر البيانات</dt><dd>${esc(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
+        <dt>مصدر البيانات</dt><dd>${escB(x.src||"—")}</dd><dt>دورية التحديث</dt><dd>${esc(x.freq||"—")}</dd>
         <dt>طريقة الحساب</dt><dd>${esc(x.methodText||"—")}</dd><dt>الوحدة · الاتجاه</dt><dd>${esc(x.unit)} · ${x.dir==="down"?"الانخفاض أفضل":"الارتفاع أفضل"}</dd>
-        <dt>طريقة حساب التقدم</dt><dd>${x.method}</dd><dt>نوع التجميع</dt><dd>${esc(x.aggLabel||"غير محدد")}</dd>
+        <dt>طريقة حساب التقدّم</dt><dd>${methTxt(x.method)}</dd><dt>نوع التجميع</dt><dd>${esc(x.aggLabel||"غير محدد")}</dd>
       </dl>
       ${textBlocks(x)}
       </div>
@@ -1408,7 +1580,7 @@ function openCompare(){
       ${svg}
       <div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.x.id} ${esc(s.x.name.slice(0,40))}${s.note?` · <span style="color:var(--bad)">${esc(s.note)}</span>`:""}</span>`).join("")}</div>
       <div class="tablewrap"><table><thead><tr><th>المؤشر</th><th>الوحدة</th><th>آخر قراءة</th><th>مستهدف ${ST.ty}</th><th>R</th><th>التصنيف</th><th>الفجوة</th></tr></thead><tbody>${xs.map(x=>`<tr data-open="${x.id}" style="cursor:pointer"><td>${x.id} ${esc(x.name)}</td><td>${esc(x.p.field==="r"?"ترتيب":x.unit)}</td><td class="n">${N(curTxt(x))} <span class="small muted">${x.cur?x.cur.y:""}</span></td><td class="n">${N(targetTxt(x))}</td><td class="n">${N(rTxt(x))}</td><td>${catChip(x)}</td><td class="n">${N(gapTxt(x))}</td></tr>`).join("")}</tbody></table></div>
-      <div class="small muted">R والتصنيف قابلان للمقارنة بين الوحدات المختلفة لأنهما نسبة بلا وحدة.</div>
+      <div class="small muted">نسبة التقدّم والتصنيف قابلان للمقارنة بين الوحدات المختلفة لأنهما نسبة بلا وحدة.</div>
     </div>`;
   $("#drawer").dataset.mode = "cmp"; $("#drawer").dataset.cmpmode = eff;
   $("#drawer").hidden = false; $("#scrim").hidden = false;
@@ -1420,11 +1592,12 @@ function saveFile(name, data){
   const u = URL.createObjectURL(data instanceof Blob ? data : new Blob([data])); const a = document.createElement("a"); a.href = u; a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 500);
 }
 function exportResults(){
+  if (!isAdmin()){ toast("تصدير البيانات متاح للمسؤول فقط"); return; }
   const cr = calcRange();
   const H = ["الرمز","المجموعة","المحور","الأولوية","المؤشر","الوحدة","سنة آخر قراءة","آخر قراءة","نوع القراءة","مصدر القراءة","سنة المستهدف","المستهدف","طريقة الحساب","أول قراءة مستخدمة (سنة)","أول قراءة مستخدمة","آخر قراءة مستخدمة (سنة)","آخر قراءة مستخدمة","المعدل الفعلي","المعدل المطلوب","R","R%","التصنيف الإحصائي","القاعدة المطبّقة","حقق المستهدف","الفجوة المتبقية","مستوى الأهلية","التوقع (تقديري)","حد أدنى 80%","حد أعلى 80%","احتمال تحقيق المستهدف","فترة العرض","فترة الحساب"];
   const val = (x, v, f) => v == null ? "" : f === "r" ? v : x.pct ? +(v*100).toFixed(4) : +v.toFixed(6);
   const rows = filtered().map(x => { const p = x.p, f = p.field;
-    return [x.id, x.set==="updated"?"محدث":"أصلي", x.axis, x.priority, x.name, x.unit, x.cur?x.cur.y:"", x.cur?(x.cur.v!=null?val(x,x.cur.v,"v"):x.cur.r):"", x.cur?(x.cur.kind||"فعلية"):"", x.cur?(x.cur.src||""):"",
+    return [x.id, x.set==="updated"?"مؤشرات الرؤية":"المؤشرات المساندة", x.axis, x.priority, x.name, x.unit, x.cur?x.cur.y:"", x.cur?(x.cur.v!=null?val(x,x.cur.v,"v"):x.cur.r):"", x.cur?(x.cur.kind||"فعلية"):"", x.cur?(x.cur.src||""):"",
       ST.ty, targetTxt(x), p.method, p.first?p.first.y:"", p.first?val(x,p.first.val,f):"", p.latest?p.latest.y:"", p.latest?val(x,p.latest.val,f):"",
       p.actual!=null&&isFinite(p.actual)?+p.actual.toFixed(8):"", p.required!=null&&isFinite(p.required)?+p.required.toFixed(8):"", p.R!=null&&isFinite(p.R)?+p.R.toFixed(4):"", p.R!=null&&isFinite(p.R)?+(p.R*100).toFixed(2):"",
       E.CAT[x.cat].ar, ruleTxt(p), p.achieved?"نعم":"لا", gapTxt(x), x.el.level,
@@ -1435,13 +1608,14 @@ function exportResults(){
 }
 
 /* ================= excel: export template ================= */
-const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],
+const IND_COLS = [["code","الرمز"],["set","المجموعة"],["axis","المحور"],["priority","الأولوية"],["name","اسم المؤشر"],["type","نوع المؤشر"],["unit","الوحدة"],["dir","اتجاه الأفضلية"],["base","خط الأساس"],["t30","مستهدف 2030"],["t30hi","مستهدف 2030 - الحد الأعلى"],["t30rank","مستهدف 2030 (ترتيب)"],["t40","مستهدف 2040"],["t30text","نص المستهدف في البطاقة"],["owner","مالك المؤشر"],["issuer","جهة الإصدار"],["src","مصدر البيانات"],["freq","الدورية"],["method","طريقة الاحتساب"],["active","فعّال"],["dup","مقابله في مؤشرات الرؤية"],["parent","المؤشر الرئيسي"],["rel_last","آخر إصدار من الجهة"],["rel_date","تاريخ آخر إصدار (سنة-شهر-يوم)"],["rel_next","الإصدار القادم"],["rel_due","موعد الإصدار القادم (سنة-شهر)"],["rel_note","ملاحظة الإصدار"],["rel_src","رابط الجهة المصدرة"],["grade","المكوّن"],["subject","البند"],["stage","مرحلة المؤشر (قيد التطوير / قيد التحقق)"],["stage_note","سبب المرحلة"],
   ["calc","طريقة حساب التقدم"],["agg","نوع التجميع"],["cap","سقف أهلية التحليل"],["approval","حالة الاعتماد المنهجي"],["challenges","التحديات"],["explain","ملاحظات تفسيرية"],["initiatives","المبادرات المرتبطة"],["factors","العوامل المؤثرة (البطاقة)"],["supporting","المؤشرات المساندة (البطاقة)"],["risk","تقدير عدم التحقق (البطاقة)"]];
 const NUM_KEYS = new Set(["base","t30","t30hi","t30rank","t40"]);
 const RD_COLS = ["الرمز","اسم المؤشر (للعرض فقط)","السنة","القيمة","الترتيب","المصدر","نوع القراءة","انقطاع السلسلة (تغيير التعريف)","موثوقية المصدر","ملاحظة"];
 const LISTS = { calc:["Linear","CAGR"], agg:Object.values(E.AGG), cap:Object.values(E.CAPS), approval:["قيد المراجعة","معتمد","مرفوض"], kind:["فعلية","تقديرية","أولية"], rel:["عالية","متوسطة","منخفضة","غير مقيّمة"] };
 let DL = null;
 function exportTemplate(){
+  if (!isAdmin()){ toast("تصدير البيانات متاح للمسؤول فقط"); return; }
   if (typeof XLSX === "undefined"){ toast("تعذر تحميل مكتبة Excel. تأكد من الاتصال."); return; }
   const ds = ST.ds, wb = XLSX.utils.book_new();
   const ins = [["نموذج بيانات مؤشرات الرؤية"],["عدّل الأوراق ثم ارفع الملف من «إدارة البيانات»."],["النسب المئوية تُكتب كرقم: 3.1 تعني 3.1%."],["الترتيب الدولي في عمود «الترتيب» لا «القيمة»."],["طريقة حساب التقدم: Linear أو CAGR (CAGR للمستويات الموجبة فقط)."],["نوع التجميع: " + LISTS.agg.join(" | ")],["سقف أهلية التحليل يقيّد ولا يرفع: " + LISTS.cap.join(" | ")],["نوع القراءة: فعلية | تقديرية | أولية. انقطاع السلسلة: اكتب «نعم» في سنة تغيّر التعريف."],["لا تغيّر أسماء الأوراق أو الأعمدة، ولا رمز مؤشر قائم. لإيقاف مؤشر اكتب «لا» في «فعّال»."],[`تاريخ التصدير: ${new Date().toISOString().slice(0,10)}`]];
@@ -1476,7 +1650,7 @@ function parseWorkbook(buf){
     if (!o.code && !o.name) return;
     o.code = String(o.code || "").trim().toUpperCase().replace(/\s/g,"");
     const at = `المؤشرات سطر ${ln} (${o.code})`;
-    if (!/^[A-Z]{1,3}-\d{1,4}$/.test(o.code)){ Er.push(`المؤشرات سطر ${ln}: الرمز «${o.code}» غير صالح (مثال صحيح U-31).`); return; }
+    if (!/^[A-Z]{1,3}-\d{1,4}(-\d{1,2})?$/.test(o.code)){ Er.push(`المؤشرات سطر ${ln}: الرمز «${o.code}» غير صالح (مثال صحيح U-31).`); return; }
     if (seen.has(o.code)){ Er.push(`المؤشرات سطر ${ln}: الرمز ${o.code} مكرر.`); return; } seen.add(o.code);
     if (!["محدث","أصلي"].includes(o.set)) Er.push(`${at}: «المجموعة» يجب أن تكون محدث أو أصلي.`);
     if (!AXES.includes(o.axis)) Er.push(`${at}: المحور «${o.axis||""}» غير معروف.`);
@@ -1487,6 +1661,7 @@ function parseWorkbook(buf){
     if (o.type && !["وطني","دولي"].includes(o.type)) Er.push(`${at}: نوع المؤشر يجب أن يكون وطني أو دولي.`);
     NUM_KEYS.forEach(k => { const n = num(o[k]); if (Number.isNaN(n)) Er.push(`${at}: «${IND_COLS.find(c=>c[0]===k)[1]}» ليس رقماً.`); else o[k] = n; });
     o.active = o.active === "لا" ? "لا" : "نعم";
+    o.dup = o.dup ? String(o.dup).trim().toUpperCase().replace(/\s/g,"") : null;
     o.calc = o.calc ? String(o.calc).trim() : "Linear"; if (!LISTS.calc.includes(o.calc)) Er.push(`${at}: طريقة حساب التقدم يجب أن تكون Linear أو CAGR.`);
     if (o.calc === "CAGR" && (o.unit === "%" || o.unit === "ترتيب")) Er.push(`${at}: لا يُستخدم CAGR مع ${o.unit === "%" ? "النسب" : "الترتيب"}.`);
     if (o.agg != null && !LISTS.agg.includes(o.agg)) Er.push(`${at}: نوع التجميع «${o.agg}» غير معروف.`);
@@ -1498,6 +1673,7 @@ function parseWorkbook(buf){
     inds.push(o);
   });
   const codes = new Set(inds.map(i => i.code)), unit = Object.fromEntries(inds.map(i => [i.code, i.unit])), calc = Object.fromEntries(inds.map(i => [i.code, i.calc]));
+  inds.forEach(o => { if (!o.dup) return; const t = inds.find(z => z.code === o.dup); if (!t) Er.push(`${o.code}: «مقابله في مؤشرات الرؤية» يشير إلى رمز غير موجود (${o.dup}).`); else if (t.set !== "محدث") Er.push(`${o.code}: «مقابله في مؤشرات الرؤية» يجب أن يكون مؤشراً من مؤشرات الرؤية.`); });
   const reads = [], key = new Map();
   R.forEach((row, i) => {
     const ln = i + 2, c = String(get(row,"الرمز") || "").trim().toUpperCase().replace(/\s/g,"");
@@ -1598,7 +1774,11 @@ async function publish(newDs, touched, removed, fileName, summary){
 
 /* ================= admin panels ================= */
 function renderAdmin(){
-  const m = ST.ds.meta || {};
+  const m = ST.ds.meta || {}, ok = isAdmin();
+  $("#admin-lock").hidden = ok; $("#admin-out").hidden = !(ok && !IN_CLAUDE);
+  document.querySelectorAll("[data-adm]").forEach(el => { if (!ok) el.hidden = true; });
+  if (!ok){ $("#local-note").hidden = true; $("#ds-state").textContent = ""; $("#admin-title").textContent = "إدارة البيانات"; return; }
+  $("#asub").hidden = false;
   $("#admin-title").textContent = IN_CLAUDE && ST.admin ? "إدارة البيانات" : "أدوات البيانات";
   $("#local-note").hidden = IN_CLAUDE && ST.admin;
   $("#ds-state").textContent = ST.dsSource === "db" ? `المنشور: ${m.file ? "«" + m.file + "» · " : ""}${m.at ? new Date(m.at).toLocaleString("ar-OM") : ""}${m.by && ST.names[m.by] ? " · " + ST.names[m.by] : ""}` : ST.dsSource === "preview" ? "معاينة محلية لملف لم يُنشر" : ST.dsSource === "file" ? "البيانات من data/dataset.json" : "البيانات الأولية من بطاقات المؤشرات";
@@ -1652,73 +1832,11 @@ const medTxt = s => s.med == null ? "—" : s.med === Infinity ? "حقق الم�
 const shareTxt = s => s.onShare == null ? "—" : fmtN(s.onShare * 100, 0) + "%";
 function stackBar(list){
   const parts = CATS.map(k => [k, list.filter(x => x.cat === k && x.p.status !== "review").length]).concat([["review", list.filter(x => x.p.status === "review").length]]).filter(p => p[1]);
-  return `<span class="stackbar" role="img" aria-label="${parts.map(([k,n]) => (k==="review"?"يحتاج مراجعة":E.CAT[k].ar) + " " + n).join("، ")}">${parts.map(([k,n]) => `<i style="flex:${n};background:${k==="review"?"repeating-linear-gradient(45deg,var(--k-back) 0 3px,transparent 3px 6px)":CAT_C[k]}" title="${k==="review"?"يحتاج مراجعة البيانات":E.CAT[k].ar}: ${n}"></i>`).join("")}</span>`;
+  return `<span class="stackbar" role="img" aria-label="${parts.map(([k,n]) => (k==="review"?"قيد التحقق":E.CAT[k].ar) + " " + n).join("، ")}">${parts.map(([k,n]) => `<i style="flex:${n};background:${k==="review"?"repeating-linear-gradient(45deg,var(--k-back) 0 3px,transparent 3px 6px)":CAT_C[k]}" title="${k==="review"?"قيد التحقق":E.CAT[k].ar}: ${n}"></i>`).join("")}</span>`;
 }
 const axisShort = a => ({"الإنسان والمجتمع":["الإنسان","والمجتمع"],"الاقتصاد والتنمية":["الاقتصاد","والتنمية"],"الحوكمة والأداء المؤسسي":["الحوكمة","والأداء المؤسسي"],"البيئة المستدامة":["البيئة","المستدامة"]}[a] || [a, ""]);
 function allPriorities(){ return AXES.flatMap(a => prioritiesOf(a).map(p => [a, p[0], p[1]])); }
 
-/* ================= overview: the diamond ================= */
-function arc(cx, cy, r, a0, a1){ const p = d => [cx + r*Math.cos(d*Math.PI/180), cy + r*Math.sin(d*Math.PI/180)]; const [x0,y0] = p(a0), [x1,y1] = p(a1); return `M${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`; }
-function donut(cx, cy, r, w, list){
-  const parts = CATS.map(k => [CAT_C[k], list.filter(x => x.cat === k && x.p.status !== "review").length]).concat([["var(--k-back)", list.filter(x => x.p.status === "review").length]]).filter(p => p[1]);
-  const tot = parts.reduce((s,p) => s + p[1], 0); if (!tot) return "";
-  if (parts.length === 1) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${parts[0][0]}" stroke-width="${w}"/>`;
-  let a = -90, s = "";
-  parts.forEach(([c,n]) => { const b = a + 360 * n / tot; s += `<path d="${arc(cx, cy, r, a, b - 0.6)}" fill="none" stroke="${c}" stroke-width="${w}"/>`; a = b; });
-  return s;
-}
-function diamondSVG(list){
-  const W = 820, H = 820, c = 410, r1 = 178, r2 = 272, r3 = 350, rc = 46, hr = 49;
-  const mat = s => rc + (r1 - hr - rc) * s;   // مقياس النضج: من حافة المركز (0%) إلى حافة المحور (100%)
-  const ANG = [-90, 0, 90, 180];   // أعلى، يمين، أسفل، يسار
-  const P = (r, d) => [c + r*Math.cos(d*Math.PI/180), c + r*Math.sin(d*Math.PI/180)];
-  const poly = rr => ANG.map(d => P(rr, d).map(v => v.toFixed(1)).join(",")).join(" ");
-  const tot = stats(list);
-  let g = `<svg class="diamond" viewBox="0 0 ${W} ${H}" role="img" aria-label="ماسة الرؤية: ${list.length} مؤشراً موزعة على المحاور والأولويات">`;
-  g += `<polygon points="${poly(r1)}" fill="var(--bg)" stroke="var(--line)" stroke-width="1.5"/><polygon points="${poly(mat(1))}" fill="none" stroke="var(--k-on)" stroke-opacity=".55" stroke-dasharray="6 5"/><polygon points="${poly(mat(0.5))}" fill="none" stroke="var(--muted)" stroke-opacity=".5" stroke-dasharray="2 4"/>`;
-  const st = AXES.map(a => stats(list.filter(x => x.axis === a)));
-  // شكل النضج: رأس كل محور بلونه الرسمي، وبُعده عن المركز = نسبة مؤشراته «على المسار»
-  const V = AXES.map((a,i) => P(mat(st[i].onShare ?? 0), ANG[i])), mid2 = (u, v) => [(u[0] + v[0]) / 2, (u[1] + v[1]) / 2], f1 = q => q.map(v => v.toFixed(1)).join(",");
-  AXES.forEach((a, i) => { const pv = V[(i + 3) % 4], nx = V[(i + 1) % 4];
-    g += `<polygon points="${[[c, c], mid2(pv, V[i]), V[i], mid2(V[i], nx)].map(f1).join(" ")}" fill="${AXC[i]}" fill-opacity=".38" stroke="none"/>`; });
-  g += `<polygon points="${V.map(f1).join(" ")}" fill="none" stroke="var(--ink)" stroke-opacity=".55" stroke-width="1.6" stroke-linejoin="round"/>`;
-  let links = "", nodes = "", dots = "", hubs = "";
-  AXES.forEach((a, i) => {
-    const items = list.filter(x => x.axis === a); if (!items.length) return;
-    const [hx, hy] = P(r1, ANG[i]);
-    const AC = AXC[i];
-    links += `<line class="dmg k-a${i} k-x${i}" x1="${c}" y1="${c}" x2="${hx}" y2="${hy}" stroke="${AC}" stroke-opacity=".5" stroke-width="2.5"/>`;
-    const pris = prioritiesOf(a), span = 84; let cur = ANG[i] - span / 2;
-    const allP = allPriorities();
-    pris.forEach(([p, n]) => {
-      const w = span * n / items.length, mid = cur + w / 2, [px, py] = P(r2, mid);
-      const pItems = items.filter(x => x.priority === p).sort((u, v) => CATS.indexOf(u.cat) - CATS.indexOf(v.cat));
-      const ps = stats(pItems), pr = 13 + Math.sqrt(n) * 3.2, pidx = allP.findIndex(q => q[1] === p);
-      links += `<path class="dmg k-p${pidx} k-x${i}" d="M${hx} ${hy} Q${P((r1 + r2) / 2, mid).join(" ")} ${px} ${py}" fill="none" stroke="${AC}" stroke-opacity=".55" stroke-width="2"/>`;
-      pItems.forEach((x, j) => {
-        const d = cur + w * (j + 0.5) / pItems.length, rr = pItems.length > 8 && j % 2 ? r3 + 24 : r3, [ix, iy] = P(rr, d);
-        const kc = `dmg k-i${x.id} k-s${pidx} k-x${i}`;
-        links += `<line class="${kc}" x1="${px}" y1="${py}" x2="${ix}" y2="${iy}" stroke="${AC}" stroke-opacity=".35" stroke-width="1"/>`;
-        const rv = x.p.status === "review";
-        dots += `<circle class="hit" data-dmi="${x.id}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="15"/><circle class="dm-ind ${kc}" data-dmi="${x.id}" data-tip="${esc(x.id + " · " + x.name + " — " + (rv ? "يحتاج مراجعة البيانات" : E.CAT[x.cat].ar) + (x.p.R != null && isFinite(x.p.R) ? " · R% " + fmtN(x.p.R*100,0) + "%" : x.p.achieved ? " · حقق المستهدف" : ""))}" cx="${ix.toFixed(1)}" cy="${iy.toFixed(1)}" r="7" fill="${rv ? "var(--surface)" : CAT_C[x.cat]}" stroke="${rv ? "var(--k-back)" : "var(--surface)"}" stroke-width="${rv ? 2 : 1.5}" ${rv ? 'stroke-dasharray="2 2"' : ""}/>`;
-      });
-      const words = p.split(" "), lab = words.slice(0, 2).join(" ") + (words.length > 2 ? "…" : "");
-      const cs = Math.cos(mid * Math.PI / 180), side = Math.abs(cs) > 0.6;   // المحوران الأفقيان: الاسم بجانب العقدة نحو الخارج
-      const outward = side ? [px + (cs > 0 ? 1 : -1) * (pr + 8), py - 1] : P(r2 - pr - 13, mid), anc = side ? (cs > 0 ? "start" : "end") : "middle";
-      nodes += `<g class="dm-pri dmg k-p${pidx} k-x${i}" data-dmp="${pidx}" data-tip="${esc(p + " — " + n + " مؤشر · على المسار " + shareTxt(ps) + " · الوسيط R% " + medTxt(ps))}">${donut(px, py, pr + 4, 3.5, pItems)}<circle class="bg" cx="${px}" cy="${py}" r="${pr}" fill="${AC}" stroke="var(--surface)" stroke-width="1.5"/><text x="${px}" y="${py + 4.5}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:#fff">${n}</text></g>
-        <text class="dmg k-p${pidx} k-x${i}" x="${outward[0]}" y="${outward[1] + 4}" text-anchor="${anc}" style="direction:ltr;unicode-bidi:plaintext;font-size:10.5px;font-weight:600;fill:${AC};pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round">${esc(lab)}</text>`;
-      cur += w;
-    });
-    const [l1, l2] = axisShort(a);
-    hubs += `<g class="dm-hub dmg k-a${i} k-x${i}" data-dma="${i}" data-tip="${esc(a + " — " + items.length + " مؤشر · على المسار " + shareTxt(st[i]) + " من القابل للتصنيف · الوسيط R% " + medTxt(st[i]))}">${donut(hx, hy, hr + 5, 4, items)}<circle class="bg" cx="${hx}" cy="${hy}" r="${hr}" fill="${AXB[i]}" stroke="${AC}" stroke-width="3.5"/>
-      <text x="${hx}" y="${hy - 12}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:${AC}">${esc(l1)}</text><text x="${hx}" y="${hy + 4}" text-anchor="middle" style="font-size:9.5px;fill:var(--muted)">${esc(l2)}</text>
-      <text x="${hx}" y="${hy + 25}" text-anchor="middle" style="font-size:15px;font-weight:700;fill:var(--ink)">${shareTxt(st[i])}</text></g>`;
-  });
-  g += links + dots + nodes + hubs;
-  g += `<g class="dm-center" data-dmclear="1" data-tip="${esc("كل المؤشرات — " + list.length + " مؤشر · على المسار " + shareTxt(tot) + " من القابل للتصنيف · الوسيط R% " + medTxt(tot))}"><circle cx="${c}" cy="${c}" r="${rc}" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>${donut(c, c, rc - 6, 8, list)}
-    <text x="${c}" y="${c + 2}" text-anchor="middle" style="font-size:24px;font-weight:700;font-family:var(--f-display)">${list.length}</text><text x="${c}" y="${c + 18}" text-anchor="middle" style="font-size:10px;fill:var(--muted)">مؤشراً</text></g>`;
-  return g + `</svg>`;
-}
 function renderInd(){
   const x = BY[ST.ind]; if (!x){ $("#ind-body").innerHTML = `<div class="empty">المؤشر غير موجود.</div>`; return; }
   $("#ind-crumb").innerHTML = `<span style="color:${axC(x.axis)};font-weight:600">${esc(x.axis)}</span> ‹ ${esc(x.priority)}`;
@@ -1730,12 +1848,13 @@ document.addEventListener("click", e => { if (e.target.closest && e.target.close
 // كل الأولويات المعروفة (من كل المجموعات) حتى تظهر الأولوية التي لا مؤشرات لها في المجموعة المختارة
 function knownPriorities(){ const m = new Map(); RAW.forEach(x => { if (!m.has(x.priority)) m.set(x.priority, x.axis); }); return AXES.flatMap(a => [...m].filter(([, ax]) => ax === a).map(([p]) => [a, p])); }
 function renderOverview(){
+  renderRelStrip();
   const list = RAW.filter(inSet), tot = stats(list), c = tot.counts;
-  $("#ov-meta").textContent = `${ST.set === "updated" ? "المؤشرات المحدثة" : ST.set === "original" ? "المؤشرات الأصلية" : "كل المؤشرات"} · مستهدف ${ST.ty}`;
+  $("#ov-meta").textContent = `${ST.set === "updated" ? "مؤشرات الرؤية" : "المؤشرات المساندة"} · مستهدف ${ST.ty}`;
   $("#ov-tot").innerHTML = `<div class="k"><b class="num">${list.length}</b><span>مؤشراً</span></div>
     <div class="k"><b class="num" style="color:var(--k-on)">↑ ${c.on_track}</b><span>على المسار</span></div>
     <div class="k"><b class="num" style="color:var(--k-back)">↓ ${c.backwards}</b><span>يتراجع</span></div>
-    <div class="full">${stackBar(list)}<div class="rest"><span><i class="dot" style="background:var(--k-needs)"></i><b>${c.needs}</b> ${E.CAT.needs.ar}</span><span><i class="dot" style="background:var(--k-break)"></i><b>${c.breakthrough}</b> ${E.CAT.breakthrough.ar}</span><span><i class="dot" style="background:var(--k-na)"></i><b>${c.stalled + c.na + c.review}</b> ثابت أو لا يُصنَّف أو يحتاج مراجعة</span></div></div>`;
+    <div class="full">${stackBar(list)}<div class="rest"><span><i class="dot" style="background:var(--k-needs)"></i><b>${c.needs}</b> ${E.CAT.needs.ar}</span><span><i class="dot" style="background:var(--k-break)"></i><b>${c.breakthrough}</b> ${E.CAT.breakthrough.ar}</span><span><i class="dot" style="background:var(--k-na)"></i><b>${c.stalled + c.na}</b> ثابت أو لا يُصنَّف</span><span><i class="dot" style="background:var(--k-back)"></i><b>${c.review}</b> قيد التحقق</span><span><i class="dot" style="background:var(--k-dev)"></i><b>${c.dev}</b> قيد التطوير</span></div></div>`;
   const allP = allPriorities();
   $("#ov-cards").innerHTML = knownPriorities().map(([a, p]) => {
     const ai = AXES.indexOf(a), items = list.filter(x => x.priority === p), s = stats(items), k = allP.findIndex(q => q[1] === p);
@@ -1745,52 +1864,6 @@ function renderOverview(){
       ${stackBar(items)}<a class="go" href="#focus-p-${k}">افتح في التركيز ←</a></article>`;
   }).join("");
 }
-
-/* ================= diamond: select → highlight path + compact card ================= */
-function dmClear(){ const svg = $("#diamond svg"); if (svg){ svg.classList.remove("sel"); svg.querySelectorAll(".hl,.sib,.cur").forEach(e => e.classList.remove("hl","sib","cur")); } const pp = $("#dm-pop"); if (pp) pp.hidden = true; }
-function dmSelect(kind, key, ev){
-  const svg = $("#diamond svg"); if (!svg) return;
-  dmClear(); svg.classList.add("sel"); $("#tip").style.display = "none";
-  const allP = allPriorities(), list = RAW.filter(inSet);
-  const mark = (sel, cls) => svg.querySelectorAll(sel).forEach(e => e.classList.add(cls));
-  let html = "", col = "var(--accent)";
-  if (kind === "i"){
-    const x = BY[key]; if (!x) return; const ai = AXES.indexOf(x.axis), k = allP.findIndex(q => q[1] === x.priority);
-    mark(`.k-s${k}`, "sib"); mark(`.k-a${ai}, .k-p${k}, .k-i${x.id}`, "hl"); mark(`circle.dm-ind.k-i${x.id}`, "cur");
-    col = x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
-    html = `<div class="hd">${catChip(x)}<span><span class="code">${x.id}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></span></div>
-      <h3>${esc(x.name)}</h3><div class="path" style="color:${axC(x.axis)};font-weight:600">${esc(x.axis)} ‹ ${esc(x.priority)}</div>
-      <div class="two"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
-      <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
-      <p class="why">${esc(whyTxt(x))}</p>
-      <div class="acts"><a class="btn primary" href="#focus-i-${x.id}">افتح في التركيز</a><a class="btn" href="#i-${x.id}">كل التفاصيل</a></div>`;
-  } else {
-    const isA = kind === "a", ai = isA ? +key : AXES.indexOf(allP[+key][0]), p = isA ? null : allP[+key][1];
-    if (isA) mark(`.k-x${ai}`, "hl"); else { mark(`.k-a${ai}, .k-p${key}`, "hl"); mark(`.k-s${key}`, "hl"); }
-    const items = list.filter(x => isA ? x.axis === AXES[ai] : x.priority === p), s = stats(items);
-    const near = items.filter(x => rKey(x) != null).sort((u, v) => rKey(v) - rKey(u))[0];
-    html = `<div class="hd"><span class="small muted">${isA ? "محور" : "أولوية"}</span><button class="x" data-dmclear="1" aria-label="إغلاق">✕</button></div>
-      <h3 style="color:${AXC[ai]}">${esc(isA ? AXES[ai] : p)}</h3>${isA ? "" : `<div class="path" style="color:${AXC[ai]};font-weight:600">${esc(AXES[ai])}</div>`}
-      <div class="two"><div><small>المؤشرات</small><b class="num">${items.length}</b></div><div><small>على المسار (من ${s.cls})</small><b class="num" style="color:var(--k-on)">${N(shareTxt(s))}</b></div></div>
-      ${stackBar(items)}
-      <p class="why">الوسيط R%: ${N(medTxt(s))}${near ? ` · الأقرب لمستهدفه: ${esc(near.name)}` : ""}</p>
-      <div class="acts"><a class="btn primary" href="${isA ? "#focus-a-" + ai : "#focus-p-" + key}">افتح في التركيز</a></div>`;
-  }
-  if (kind !== "i") col = AXC[kind === "a" ? +key : AXES.indexOf(allP[+key][0])];
-  const pop = $("#dm-pop"); pop.innerHTML = html; pop.style.setProperty("--c", col); pop.hidden = false;
-  if (!isMobile() && ev){ const wr = $(".dmwrap").getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
-    let lx = ev.clientX - wr.left + 16, ty = ev.clientY - wr.top - ph / 2;
-    if (lx + pw > wr.width - 8) lx = ev.clientX - wr.left - pw - 16;
-    pop.style.left = Math.max(8, lx) + "px"; pop.style.top = Math.max(8, Math.min(ty, wr.height - ph - 8)) + "px"; }
-}
-document.addEventListener("click", e => {
-  const t = e.target; if (!t.closest) return;
-  const n = t.closest("[data-dmi],[data-dmp],[data-dma]");
-  if (n && t.closest("#diamond")){ e.stopImmediatePropagation(); const d = n.dataset; d.dmi ? dmSelect("i", d.dmi, e) : d.dmp ? dmSelect("p", d.dmp, e) : dmSelect("a", d.dma, e); return; }
-  if (t.closest("[data-dmclear]")){ e.stopImmediatePropagation(); dmClear(); return; }
-  if (t.closest("#diamond")){ dmClear(); }
-  if (t.closest("#dm-pop a")) dmClear();
-}, true);
 
 /* ================= focus: one priority at a time ================= */
 function renderFocus(){
@@ -1805,11 +1878,11 @@ function renderFocus(){
   const s = stats(items);
   $("#f-title").textContent = ST.fPri === "all" ? ax : ST.fPri; $("#f-title").style.color = AXC[ST.fAxis];
   document.querySelector("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]); document.querySelector("#v-focus").style.setProperty("--axb", AXB[ST.fAxis]);
-  $("#f-meta").textContent = `${items.length} مؤشر · على المسار ${shareTxt(s)} · الوسيط R% ${medTxt(s)} · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
+  $("#f-meta").textContent = `${items.length} مؤشر · على المسار ${shareTxt(s)} · وسيط نسبة التقدّم ${medTxt(s)} · مستهدف ${ST.ty}`; $("#f-bar").innerHTML = stackBar(items);
   if (!items.some(x => x.id === ST.fInd)) ST.fInd = items.length ? items[0].id : null;
   $("#f-list").innerHTML = items.map(x => `<button class="frow" data-fsel="${x.id}" aria-pressed="${x.id === ST.fInd}" style="--c:${x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat]}">
       <span class="t">${esc(x.name)}</span>
-      <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>R% <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
+      <span class="r"><span>${N(curTxt(x))}${x.cur ? " · " + x.cur.y : ""} ← ${N(targetTxt(x))}</span><span>التقدّم <b style="color:var(--ink)">${N(rTxt(x))}</b></span></span>
       <span class="r">${catChip(x)}<span class="code">${x.id}</span></span></button>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   $("#v-focus").style.setProperty("--axc", AXC[ST.fAxis]);
   $("#fd-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
@@ -1828,13 +1901,13 @@ function focusCardHTML(x){
     <div class="meta">${catChip(x)}<span class="code">${x.id}</span><span class="age ${(x.relOk ? "" : ageCls(x.age))}">آخر بيانات ${ageTxt(x.age)}</span>${x._pos ? `<span class="fpos" style="margin-inline-start:auto">${x._pos}</span>` : ""}</div>
     <div class="chart">${isMobile() ? (sparkSVG(x) || `<p class="small muted" style="margin:0;padding:18px;text-align:center">لا توجد قراءات كافية للرسم</p>`) : chartSVG(x, {fc: x.showFc ? x.el.forecast : null, fcYear: x.showFc ? x.el.forecast.y : 0})}</div>
     <div class="q4">
-      <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + esc(x.cur.src) : "") : ""}</div></div>
+      <div><small>آخر قراءة</small><b class="num">${N(curTxt(x))}</b><div class="sub">${x.cur ? x.cur.y + (x.cur.src ? " · " + escB(x.cur.src, 1) : "") : ""}</div></div>
       <div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div>
-      <div><small>Progress Ratio</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>
+      <div><small title="نسبة التقدّم نحو المستهدف">نسبة التقدّم</small><b class="num" style="color:${col}">${N(rTxt(x))}</b></div>
       <div><small>${pace ? "المتحقق سنوياً" : "الفجوة المتبقية"}</small><b class="num">${pace ? N(rateTxt(x, p.actual).split(" ")[0]) : N(gapTxt(x))}</b>${pace ? `<div class="sub">المطلوب ${N(rateTxt(x, p.required).split(" ")[0])}</div>` : ""}</div>
     </div>
     <p class="why">${esc(whyTxt(x))}</p>
-    <div class="acts"><a class="btn primary" href="#i-${x.id}">التفاصيل والمنهجية ←</a><button class="btn" data-copylink="${x.id}">نسخ الرابط</button></div>
+    <div class="acts"><a class="btn primary" href="#i-${x.id}">التفاصيل والمنهجية ←</a>${shareBtns(x.id)}</div>
   </div>`;
 }
 // R للترتيب: المحقق = الأعلى، وغير القابل للتصنيف في الآخر دائماً
@@ -1869,7 +1942,8 @@ function sparkSVG(x){
 }
 function whyTxt(x){
   const p = x.p || {};
-  if (p.status === "review") return "بيانات المؤشر متعارضة مع المستهدف، ويحتاج مراجعة قبل التصنيف.";
+  if (p.status === "dev") return p.reason + "، فلا يدخل في نسب الأداء.";
+  if (p.status === "review") return p.reason || "بيانات المؤشر قيد التحقق قبل التصنيف.";
   if (p.achieved) return "حقق المستهدف بآخر قراءة.";
   if (!CLASSIFIED.has(x.cat)) return "لا يكفي ما لديه من قراءات أو مستهدف لحساب التقدم.";
   if (p.actual != null && isFinite(p.actual) && p.required != null && isFinite(p.required)) return `المطلوب ${rateTxt(x, p.required)}، والمتحقق ${rateTxt(x, p.actual)}.`;
@@ -1878,7 +1952,7 @@ function whyTxt(x){
 function renderFocusMobile(ax, pris, items, s){
   $("#fm-axis").innerHTML = AXES.map((a, i) => RAW.some(x => inSet(x) && x.axis === a) ? `<option value="${i}" ${i === ST.fAxis ? "selected" : ""}>${esc(a)}</option>` : "").join("");
   $("#fm-pri").innerHTML = `<option value="all" ${ST.fPri === "all" ? "selected" : ""}>كل الأولويات</option>` + pris.map(([, p, n]) => `<option value="${esc(p)}" ${ST.fPri === p ? "selected" : ""}>${esc(p)} (${n})</option>`).join("");
-  $("#fm-sum").innerHTML = `<div class="row"><span><b>${items.length}</b> مؤشر · على المسار <b>${N(shareTxt(s))}</b> · الوسيط R% <b>${N(medTxt(s))}</b></span>
+  $("#fm-sum").innerHTML = `<div class="row"><span><b>${items.length}</b> مؤشر · على المسار <b>${N(shareTxt(s))}</b> · وسيط نسبة التقدّم <b>${N(medTxt(s))}</b></span>
     <select class="fsort" id="fm-sort" aria-label="الترتيب"><option value="cat">حسب التصنيف</option><option value="near">الأقرب أولاً</option><option value="far">الأبعد أولاً</option></select></div>${stackBar(items)}`;
   $("#fm-sort").value = ST.fSort;
   const col = x => x.p.status === "review" ? "var(--k-back)" : CAT_C[x.cat];
@@ -1887,9 +1961,9 @@ function renderFocusMobile(ax, pris, items, s){
       <h3>${esc(x.name)}</h3>
       ${sparkSVG(x)}
       <div class="big"><div><small>آخر قراءة${x.cur ? " · " + x.cur.y : ""}</small><b class="num">${N(curTxt(x))}</b></div><div><small>مستهدف ${ST.ty}</small><b class="num">${N(targetTxt(x))}</b></div></div>
-      <div class="rr"><span class="small muted">Progress Ratio</span><b class="num">${N(rTxt(x))}</b></div>
+      <div class="rr"><span class="small muted" title="نسبة التقدّم نحو المستهدف">نسبة التقدّم</span><b class="num">${N(rTxt(x))}</b></div>
       <p class="why">${esc(whyTxt(x))}</p>
-      <a class="more" href="#i-${x.id}" style="text-align:center;text-decoration:none">كل التفاصيل والمنهجية ←</a></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
+      <div style="display:flex;gap:8px;align-items:center"><a class="more" href="#i-${x.id}" style="flex:1;text-align:center;text-decoration:none">كل التفاصيل والمنهجية ←</a>${shareBtns(x.id)}</div></article>`).join("") || `<div class="empty">لا توجد مؤشرات.</div>`;
   const cnt = id => { const k = items.findIndex(x => x.id === id); $("#fm-count").textContent = k >= 0 ? `المؤشر ${k + 1} من ${items.length}` : ""; };
   cnt(ST.fInd);
   $("#fm-dots").innerHTML = items.map((x, i) => `<button data-fdot="${x.id}" style="--c:${col(x)}" aria-label="${esc(x.name)}" aria-current="${x.id === ST.fInd}"></button>`).join("");
@@ -1917,16 +1991,17 @@ function go(){ const h = stateHash(); if (location.hash !== h) history.replaceSt
 function readHash(){
   const h = location.hash.slice(1);
   if (h === "" || h === "overview"){ ST.page = "overview"; closeDrawer(); render(); return; }
+  if (h === "calendar"){ ST.page = "cal"; closeDrawer(); render(); window.scrollTo(0, 0); return; }
   if (h.startsWith("focus")){
     ST.page = "focus"; closeDrawer();
     const m = h.match(/^focus-(a|p|i)-(.+)$/);
     if (m && m[1] === "a"){ ST.fAxis = +m[2]; ST.fPri = "all"; ST.fInd = null; }
     if (m && m[1] === "p"){ const e = allPriorities()[+m[2]]; if (e){ ST.fAxis = AXES.indexOf(e[0]); ST.fPri = e[1]; ST.fInd = null; } }
-    if (m && m[1] === "i" && BY[m[2]]){ const x = BY[m[2]]; if (!inSet(x)) ST.set = "all"; ST.fAxis = AXES.indexOf(x.axis); ST.fPri = x.priority; ST.fInd = x.id; }
+    if (m && m[1] === "i" && BY[m[2]]){ const x = BY[m[2]]; if (!inSet(x)) ST.set = x.set; ST.fAxis = AXES.indexOf(x.axis); ST.fPri = x.priority; ST.fInd = x.id; }
     render(); return;
   }
   ST.page = h === "admin" ? "admin" : "dash";
-  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = "all"; closeDrawer(); if (ST.ind !== id) ST.indTab = 0; ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
+  if (h.startsWith("i-")){ const id = h.slice(2); if (BY[id]){ if (!inSet(BY[id])) ST.set = BY[id].set; closeDrawer(); if (ST.ind !== id) ST.indTab = 0; ST.page = "ind"; ST.ind = id; render(); window.scrollTo(0, 0); return; } }
   closeDrawer(); $("#drawer").dataset.id = "";
   if (h.startsWith("a-")){ ST.axis = AXES[+h.slice(2)] || null; ST.pri = null; }
   else if (h.startsWith("p-")){ const all = AXES.flatMap(a => prioritiesOf(a).map(p => [a, p[0]])); const e = all[+h.slice(2)]; if (e){ ST.axis = e[0]; ST.pri = e[1]; } }
@@ -1937,28 +2012,32 @@ function readHash(){
 /* ================= render ================= */
 function setSeg(){
   const nU = RAW.filter(x=>x.set==="updated").length, nO = RAW.filter(x=>x.set==="original").length;
-  $("#setseg").innerHTML = [["updated",`المحدثة (${nU})`],["original",`الأصلية (${nO})`],["all","الكل"]].map(([k,l]) => `<button data-set="${k}" aria-pressed="${ST.set===k}">${l}</button>`).join("");
+  $("#setseg").innerHTML = [["updated",`مؤشرات الرؤية (${nU})`],["original",`المؤشرات المساندة (${nO})`]].map(([k,l]) => `<button data-set="${k}" aria-pressed="${ST.set===k}">${l}</button>`).join("");
 }
 function render(){
   compute(); setSeg(); renderTree(); renderControls();
   const pg = ST.page;
-  ["overview","dash","focus","admin","ind"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
+  ["overview","dash","focus","admin","ind","cal"].forEach(v => { $("#v-" + v).hidden = pg !== v; });
   document.body.classList.toggle("noside", pg !== "dash");
   document.body.dataset.pg = pg;
   document.querySelectorAll(".navtabs a").forEach(a => a.setAttribute("aria-current", a.dataset.nav === pg ? "page" : "false"));
   document.querySelectorAll(".bnav button").forEach(b => b.setAttribute("aria-current", b.dataset.bnav === (pg === "ind" ? "focus" : pg) ? "page" : "false"));
   document.querySelectorAll(".navtabs a").forEach(a => { if (pg === "ind" && a.dataset.nav === "focus") a.setAttribute("aria-current", "page"); });
   $("#ctl-sum").textContent = `مستهدف ${ST.ty} · ${ST.from}–${ST.to}${ST.calcLinked ? "" : " · الحساب: كل السنوات"}`;
-  if (pg === "admin" && SITE) try { localStorage.setItem("ovd-admin", "1"); } catch(_){}
-  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else renderDash();
+  applyRole();
+  if (pg === "admin") renderAdmin(); else if (pg === "overview") renderOverview(); else if (pg === "focus") renderFocus(); else if (pg === "ind") renderInd(); else if (pg === "cal") renderCal(); else renderDash();
   const d = $("#drawer");
   if (!d.hidden){ if (d.dataset.mode === "cmp") openCompare(); else if (d.dataset.id) openDrawer(d.dataset.id); }
 }
 
 /* ================= events ================= */
 function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove("show"), 2200); }
-async function copy(t){ try { await navigator.clipboard.writeText(t); toast("نُسخ الرابط"); } catch(e){ toast("انسخ الرابط من شريط العنوان"); } }
+async function copyText(t){
+  try { await navigator.clipboard.writeText(t); return true; } catch(_){}
+  try { const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); const ok = document.execCommand("copy"); ta.remove(); return ok; } catch(_){ return false; }
+}
 let deb;
+$("#cal-q").addEventListener("input", e => { ST.cal.q = e.target.value; renderCal(); });
 $("#q").addEventListener("input", () => { clearTimeout(deb); deb = setTimeout(() => { ST.q = $("#q").value; if (ST.page !== "dash") location.hash = "#all"; else renderDash(); }, 50); });
 $("#q").addEventListener("keydown", e => { if (e.key === "Enter"){ const f = document.querySelector("#v-dash [data-open]"); if (f) f.click(); } });
 document.addEventListener("keydown", e => {
@@ -1974,10 +2053,9 @@ $("#y-calc").addEventListener("input", e => { ST.calcLinked = e.target.checked; 
 $("#m-axis").addEventListener("input", e => { ST.axis = e.target.value || null; ST.pri = null; render(); go(); });
 $("#m-pri").addEventListener("input", e => { ST.pri = e.target.value || null; if (ST.pri){ const x = RAW.find(z => z.priority === ST.pri); if (x) ST.axis = x.axis; } render(); go(); });
 $("#scrim").addEventListener("click", () => { closeDrawer(); $("#drawer").dataset.id = ""; go(); });
-$("#share").addEventListener("click", () => { go(); copy(location.href); });
 $("#export").addEventListener("click", exportResults);
 $("#dl-tpl").addEventListener("click", exportTemplate); $("#dl-tpl2").addEventListener("click", exportTemplate);
-$("#dl-json").addEventListener("click", () => saveFile("dataset.json", new Blob([JSON.stringify({...ST.ds, meta:{...(ST.ds.meta||{}), exported:new Date().toISOString()}})], {type:"application/json"})));
+$("#dl-json").addEventListener("click", () => isAdmin() && saveFile("dataset.json", new Blob([JSON.stringify({...ST.ds, meta:{...(ST.ds.meta||{}), exported:new Date().toISOString()}})], {type:"application/json"})));
 $("#cmpgo").addEventListener("click", openCompare);
 $("#cmpclr").addEventListener("click", () => { ST.cmp.clear(); renderDash(); if ($("#drawer").dataset.mode === "cmp") closeDrawer(); });
 const fileIn = $("#file"), drop = $("#drop");
@@ -1995,7 +2073,7 @@ fileIn.addEventListener("change", () => handleFile(fileIn.files[0]));
 drop.addEventListener("drop", e => handleFile(e.dataTransfer.files[0]));
 document.addEventListener("mousemove", e => {
   const tp = e.target.closest && e.target.closest("[data-tip]"), tip0 = $("#tip");
-  if (isMobile() || (e.target.closest && e.target.closest("#dm-pop"))){ tip0.style.display = "none"; return; }
+  if (isMobile()){ tip0.style.display = "none"; return; }
   if (tp){ tip0.textContent = tp.dataset.tip; tip0.style.display = "block"; const x = Math.min(e.clientX + 12, window.innerWidth - tip0.offsetWidth - 8); tip0.style.left = Math.max(8, x) + "px"; tip0.style.top = (e.clientY + 14) + "px"; return; }
   const r = e.target.closest && e.target.closest("rect[data-hy]"), tip = $("#tip");
   if (!r){ tip.style.display = "none"; return; }
@@ -2035,7 +2113,18 @@ document.addEventListener("click", async e => {
     if (d.gocenter){ location.hash = "#all"; return; }
     if (d.ovcat){ ST.cat = ["all","rest"].includes(d.ovcat) ? null : d.ovcat; ST.axis = ST.pri = null; location.hash = "#all"; setTimeout(() => renderDash(), 0); return; }
   }
-  const el = e.target.closest("[data-open],[data-set],[data-axis],[data-pri],[data-ev],[data-cat],[data-close],[data-copylink],[data-setev],[data-view],[data-ty],[data-asub],[data-cmpmode],#reset,#publish,#cancel,#preview-apply,#export-pending");
+  const cg = e.target.closest("[data-calgo],[data-calst],[data-caltype],[data-calset],[data-calreset]");
+  if (cg){ e.preventDefault(); const d = cg.dataset;
+    if (d.calreset){ ST.cal = {set:"", type:"", st:"", q:""}; }
+    if (d.calset !== undefined) ST.cal.set = d.calset;
+    if (d.caltype !== undefined) ST.cal.type = d.caltype;
+    if (d.calst !== undefined) ST.cal.st = d.calst;
+    if (d.calgo !== undefined){
+      if (ST.page !== "cal"){ ST.cal = {set:"", type:"", st:d.calgo, q:""}; location.hash = "#calendar"; return; }
+      ST.cal.st = ST.cal.st === d.calgo ? "" : d.calgo;
+    }
+    renderCal(); return; }
+  const el = e.target.closest("[data-open],[data-set],[data-axis],[data-pri],[data-ev],[data-cat],[data-close],[data-sharecopy],[data-sharepdf],[data-shareimg],[data-setev],[data-view],[data-ty],[data-asub],[data-cmpmode],#reset,#publish,#cancel,#preview-apply,#export-pending");
   if (!el) return; const d = el.dataset;
   if (d.open){ closeDrawer(); location.hash = "#i-" + d.open; return; }
   if (d.view){ ST.view = d.view; try { localStorage.setItem("ovd-view", ST.view); } catch(_){} renderDash(); return; }
@@ -2048,11 +2137,13 @@ document.addEventListener("click", async e => {
   if (d.ev !== undefined){ ST.ev = d.ev || null; renderDash(); return; }
   if (d.cat){ ST.cat = ST.cat === d.cat ? null : d.cat; renderDash(); return; }
   if (d.close !== undefined){ closeDrawer(); $("#drawer").dataset.id = ""; go(); return; }
-  if (d.copylink){ copy(location.href.split("#")[0] + "#i-" + d.copylink); return; }
+  if (d.sharecopy){ shareCopy(d.sharecopy); return; }
+  if (d.sharepdf){ exportCard(d.sharepdf, "pdf"); return; }
+  if (d.shareimg){ exportCard(d.shareimg, "png"); return; }
   if (el.id === "reset"){ ST.axis = ST.pri = ST.ev = ST.cat = null; ST.q = ""; $("#q").value = ""; ["#f-type","#f-fresh","#f-elig"].forEach(s => $(s).value = ""); render(); go(); return; }
   if (el.id === "cancel"){ ST.pending = null; $("#check").innerHTML = ""; return; }
   if (el.id === "preview-apply"){ if (!ST.pending) return; ST.ds = {...ST.pending.ds, meta:{file:ST.pending.fileName}}; ST.dsSource = "preview"; buildModel(ST.ds); render(); toast("تعرض اللوحة الآن بيانات الملف (معاينة غير منشورة)"); return; }
-  if (el.id === "export-pending"){ if (!ST.pending) return; saveFile("dataset.json", new Blob([JSON.stringify({...ST.pending.ds, meta:{file:ST.pending.fileName, exported:new Date().toISOString()}})], {type:"application/json"})); return; }
+  if (el.id === "export-pending"){ if (!ST.pending || !isAdmin()) return; saveFile("dataset.json", new Blob([JSON.stringify({...ST.pending.ds, meta:{file:ST.pending.fileName, exported:new Date().toISOString()}})], {type:"application/json"})); return; }
   if (el.id === "publish"){
     if (!ST.pending || !ST.db || !ST.admin){ toast("النشر متاح للمدير داخل Claude فقط"); return; }
     el.disabled = true; const p = ST.pending;
@@ -2100,12 +2191,224 @@ if (MQ.addEventListener) MQ.addEventListener("change", () => render());
   d.addEventListener("touchend", () => { if (y0 == null) return; d.classList.remove("dragging"); y0 = null; d.style.setProperty("--dy", "0px"); if (dy > 110){ closeDrawer(); go(); } });
 })();
 
+/* ================= وضع الإدارة (الموقع) ================= */
+$("#admin-unlock").addEventListener("submit", async e => {
+  e.preventDefault();
+  const v = $("#admin-pass").value.trim(); if (!v) return;
+  let h = ""; try { h = await sha256("ovd|" + v); } catch(_){ toast("المتصفح لا يدعم التحقق. افتح الرابط عبر https."); return; }
+  if (h !== ADMIN_HASH){ $("#admin-pass").value = ""; toast("رمز غير صحيح"); return; }
+  ST.siteAdmin = true; try { localStorage.setItem("ovd-admin-key", h); } catch(_){}
+  $("#admin-pass").value = ""; applyRole(); renderAdmin(); toast("تم الدخول إلى وضع الإدارة");
+});
+$("#admin-out").addEventListener("click", () => {
+  ST.siteAdmin = false; try { localStorage.removeItem("ovd-admin-key"); } catch(_){}
+  applyRole(); location.hash = "#overview"; toast("تم الخروج من وضع الإدارة");
+});
+
+/* ================= مشاركة المؤشر: نسخ نص أو صورة أو PDF — بلا روابط ================= */
+const shareBtns = id => `<span class="shr"><button class="btn" data-sharecopy="${id}" title="نسخ بيانات المؤشر نصاً">نسخ</button><button class="btn" data-shareimg="${id}" title="حفظ بطاقة المؤشر صورة (PNG)">صورة</button><button class="btn" data-sharepdf="${id}" title="حفظ بطاقة المؤشر ملف PDF">PDF</button></span>`;
+const today = () => new Date().toLocaleDateString("ar-OM-u-nu-latn", {year:"numeric", month:"long", day:"numeric"});
+const LRM = "‎", lt = v => /^[-−+]?\d/.test(String(v)) ? LRM + v + LRM : v;   // حتى تظهر الأرقام والنسب صحيحة داخل النص العربي
+const catTxt = x => x.p.status === "review" ? "قيد التحقق" : E.CAT[x.cat].ar + (x.p.achieved ? " · حقق المستهدف" : "");
+const srcOf = (x, r) => (r && r.src) || x.src || x.issuer || "";
+function shareText(x){
+  const L = [`${x.name} (${x.id})`, `${x.axis} ‹ ${x.priority}`, ""];
+  if (x.kids){
+    x.kids.forEach(k => { const c = k.curAll;
+      L.push(`• ${[k.grade, k.subject || k.name].filter(Boolean).join(" · ")}: ${c ? lt(curTxt({...k, cur:c})) + " (" + c.y + ")" : "لا توجد قراءة"} · مستهدف 2030: ${lt(targetTxt(k, 2030))}`); });
+    L.push(`التصنيف العام: ${catTxt(x)}`);
+  } else {
+    const c = x.curAll;
+    L.push(`آخر قراءة: ${c ? lt(curTxt({...x, cur:c})) + " (" + c.y + (c.kind && c.kind !== "فعلية" ? "، " + c.kind : "") + ")" : "لا توجد قراءة"}`);
+    if (x.base != null) L.push(`خط الأساس: ${lt(fv(x, x.base))}`);
+    L.push(`مستهدف 2030: ${lt(targetTxt(x, 2030))} · مستهدف 2040: ${lt(targetTxt(x, 2040))}`);
+    L.push(`التصنيف: ${catTxt(x)}` + (x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدّم: ${lt(rTxt(x))}` : ""));
+    const s = srcOf(x, c); if (s) L.push(`المصدر: ${s}`);
+  }
+  L.push("", `لوحة مؤشرات رؤية عُمان 2040 · ${today()}`);
+  return L.join("\n");
+}
+async function shareCopy(id){
+  const x = BY[id]; if (!x) return;
+  toast(await copyText(shareText(x)) ? "نُسخت بيانات المؤشر، الصقها حيث تريد" : "تعذر النسخ على هذا الجهاز");
+}
+function sharePDF(id){
+  const x = BY[id]; if (!x) return;
+  const ps = $("#printsheet"), logo = document.querySelector(".vlogo");
+  const tiles = (k, ty) => `<div class="ptiles"><div><small>خط الأساس</small><b>${N(k.base != null ? fv(k, k.base) : "—")}</b></div><div><small>آخر قراءة${k.curAll ? " (" + k.curAll.y + ")" : ""}</small><b>${N(k.curAll ? curTxt({...k, cur:k.curAll}) : "—")}</b></div><div><small>مستهدف 2030</small><b>${N(targetTxt(k, 2030))}</b></div><div><small>مستهدف 2040</small><b>${N(targetTxt(k, 2040))}</b></div></div>`;
+  const rows = k => k.series.filter(r => r.y <= NOW && (r.v != null || r.r != null)).slice(-8).map(r => `<tr><td>${r.y}</td><td>${N(r.v != null ? fv(k, r.v) : "—")}</td><td>${r.r != null ? fmtN(r.r, 0) : "—"}</td><td>${esc(r.kind || "فعلية")}</td><td>${esc(r.src || "—")}</td></tr>`).join("");
+  const table = k => { const r = rows(k); return r ? `<table><thead><tr><th>السنة</th><th>القيمة</th><th>الترتيب</th><th>النوع</th><th>المصدر</th></tr></thead><tbody>${r}</tbody></table>` : ""; };
+  const body = x.kids
+    ? x.kids.map(k => `<div class="kid"><b>${esc([k.grade, k.subject || k.name].filter(Boolean).join(" · "))}</b> — ${esc(catTxt(k))}${tiles(k)}${chartSVG(k)}${table(k)}</div>`).join("")
+    : `${tiles(x)}${chartSVG(x)}${table(x)}`;
+  ps.innerHTML = `<div class="ph"><div><b>لوحة مؤشرات رؤية عُمان 2040</b><div class="path">${esc(today())}</div></div>${logo ? `<img src="${logo.src}" alt="">` : ""}</div>
+    <div class="path">${esc(x.axis)} ‹ ${esc(x.priority)}</div><h1>${esc(x.name)}</h1>
+    <div class="path">${x.id} · التصنيف: <b>${esc(catTxt(x))}</b>${!x.kids && x.p.R != null && isFinite(x.p.R) ? " · نسبة التقدّم نحو مستهدف " + ST.ty + ": " + N(rTxt(x)) : ""}</div>
+    ${body}
+    <div class="path" style="margin-top:8px">مصدر البيانات: ${escB(x.src || x.issuer || "—")}${x.freq ? " · الدورية: " + esc(x.freq) : ""}</div>
+    <div class="pf"><span>لوحة مؤشرات رؤية عُمان 2040</span><span>${esc(today())}</span></div>`;
+  const t0 = document.title; document.title = "مؤشر " + x.id + " - " + x.name;
+  document.body.classList.add("printing");
+  const done = () => { document.body.classList.remove("printing"); document.title = t0; ps.innerHTML = ""; window.removeEventListener("afterprint", done); };
+  window.addEventListener("afterprint", done);
+  toast("اختر «حفظ بصيغة PDF» من نافذة الطباعة");
+  setTimeout(() => { try { window.print(); } catch(_){ done(); toast("تعذر فتح الطباعة على هذا الجهاز"); } }, 250);
+}
+
+/* ================= تصدير بطاقة المؤشر مباشرة: صورة PNG أو ملف PDF (بلا نافذة طباعة) ================= */
+const EXP = {bg:"#ffffff", ink:"#15211e", muted:"#5d6b67", line:"#dde3e1", soft:"#f2f4f3", accent:"#0d6b5a", good:"#1f7a3f", sand:"#b8862f", bad:"#b23a32"};
+const expFont = (w, s, disp) => `${w} ${s}px ${getComputedStyle(document.documentElement).getPropertyValue(disp ? "--f-display" : "--f-body").trim() || "Tahoma,sans-serif"}`;
+const clean = s => String(s == null ? "" : s).replace(/[‎‏]/g, "");
+function wrapLines(c, text, maxW){
+  const out = []; clean(text).split("\n").forEach(par => {
+    let line = ""; par.split(/\s+/).forEach(w => { const t = line ? line + " " + w : w; if (c.measureText(t).width > maxW && line){ out.push(line); line = w; } else line = t; });
+    out.push(line);
+  }); return out;
+}
+/* chart drawn natively on canvas (mirrors chartSVG) */
+function drawChart(c, x, X0, Y0, W, H){
+  const pts = x.series.filter(r => r.v != null && r.y <= NOW && r.y >= ST.from && r.y <= ST.to);
+  const path = x.series.filter(r => r.p != null && r.y >= ST.from);
+  c.save(); c.strokeStyle = EXP.line; c.lineWidth = 1; c.strokeRect(X0 + .5, Y0 + .5, W - 1, H - 1);
+  if (!pts.length && !path.length){ c.fillStyle = EXP.muted; c.font = expFont(400, 13); c.textAlign = "center"; c.fillText("لا توجد قراءات رقمية في فترة العرض", X0 + W / 2, Y0 + H / 2); c.restore(); return; }
+  const sc = v => x.pct ? v * 100 : v, tgt = ST.ty === 2040 ? x.t40 : x.t30n;
+  const ys = [...pts.map(r => sc(r.v)), ...path.map(r => sc(r.p))]; if (tgt != null) ys.push(sc(tgt)); if (ST.ty === 2030 && x.range) ys.push(sc(x.range[0]), sc(x.range[1]));
+  const yrs = [...pts.map(r => r.y), ...path.map(r => r.y), ST.ty === 2040 && tgt != null ? 2040 : 2030], x0 = Math.min(...yrs), x1 = Math.max(...yrs);
+  let lo = Math.min(...ys), hi = Math.max(...ys); if (lo === hi){ lo -= 1; hi += 1; } const pad = (hi - lo) * .1; lo -= pad; hi += pad;
+  const L = X0 + 58, R = X0 + W - 16, T = Y0 + 14, B = Y0 + H - 30;
+  const PX = y => L + (R - L) * (y - x0) / Math.max(1, x1 - x0), PY = v => T + (B - T) * (1 - (v - lo) / (hi - lo));
+  c.font = expFont(400, 12); c.direction = "ltr";
+  for (let i = 0; i <= 4; i++){ const t = lo + (hi - lo) * i / 4, yy = PY(t); c.strokeStyle = EXP.line; c.beginPath(); c.moveTo(L, yy); c.lineTo(R, yy); c.stroke();
+    c.fillStyle = EXP.muted; c.textAlign = "right"; c.fillText(fmtN(t, Math.abs(hi - lo) < 5 ? 2 : Math.abs(hi - lo) < 50 ? 1 : 0), L - 8, yy + 4); }
+  const step = Math.max(1, Math.ceil((x1 - x0) / 8)); c.textAlign = "center"; for (let y = x0; y <= x1; y += step) c.fillText(String(y), PX(y), B + 20);
+  if (ST.ty === 2030 && x.range){ c.globalAlpha = .12; c.fillStyle = EXP.good; const a = PY(sc(x.range[1])), b = PY(sc(x.range[0])); c.fillRect(L, a, R - L, Math.max(1, b - a)); c.globalAlpha = 1; }
+  else if (tgt != null){ c.strokeStyle = EXP.good; c.lineWidth = 1.5; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(L, PY(sc(tgt))); c.lineTo(R, PY(sc(tgt))); c.stroke(); c.setLineDash([]); }
+  const poly = (arr, f) => { c.beginPath(); arr.forEach((r, i) => { const px = PX(r.y), py = PY(sc(f(r))); i ? c.lineTo(px, py) : c.moveTo(px, py); }); };
+  if (path.length > 1){ c.strokeStyle = EXP.sand; c.lineWidth = 2; c.setLineDash([5, 4]); poly(path, r => r.p); c.stroke(); c.setLineDash([]); }
+  const act = pts.filter(r => (r.kind || "فعلية") === "فعلية");
+  if (act.length){
+    poly(act, r => r.v); c.lineTo(PX(act[act.length - 1].y), B); c.lineTo(PX(act[0].y), B); c.closePath(); c.globalAlpha = .08; c.fillStyle = EXP.accent; c.fill(); c.globalAlpha = 1;
+    c.strokeStyle = EXP.accent; c.lineWidth = 2.5; poly(act, r => r.v); c.stroke();
+  }
+  pts.forEach(r => { const est = (r.kind || "فعلية") !== "فعلية"; c.beginPath(); c.arc(PX(r.y), PY(sc(r.v)), est ? 4.5 : 3.5, 0, Math.PI * 2);
+    c.fillStyle = est ? "#fff" : EXP.accent; c.fill(); c.lineWidth = 2; c.strokeStyle = est ? EXP.sand : EXP.accent; c.stroke(); });
+  c.restore();
+  /* legend under the chart */
+  c.save(); c.font = expFont(400, 12); c.direction = "rtl"; c.textAlign = "right"; let lx = X0 + W;
+  [[EXP.accent, "قراءة فعلية"], ...(path.length > 1 ? [[EXP.sand, "المسار المستهدف"]] : []), ...(tgt != null || x.range ? [[EXP.good, "المستهدف " + ST.ty]] : [])].forEach(([col, t]) => {
+    c.fillStyle = col; c.fillRect(lx - 12, Y0 + H + 9, 12, 4); c.fillStyle = EXP.muted; c.fillText(t, lx - 18, Y0 + H + 16); lx -= 30 + c.measureText(t).width; });
+  c.restore();
+}
+/* full card layout; returns used height. Drawing on a 1×1 scratch canvas = measuring pass */
+function drawCard(c, x){
+  const W = 900, M = 40, CW = W - 2 * M, RX = W - M;
+  let y = M; const brk = c.__brk = [];
+  c.fillStyle = EXP.bg; c.fillRect(0, 0, W, 20000);
+  c.direction = "rtl"; c.textAlign = "right"; c.textBaseline = "alphabetic";
+  const txt = (t, size, opt) => { opt = opt || {}; c.font = expFont(opt.w || 400, size, opt.disp); c.fillStyle = opt.color || EXP.ink;
+    const lines = wrapLines(c, t, opt.maxW || CW), lh = Math.round(size * (opt.lh || 1.55));
+    lines.forEach(l => { y += lh; c.fillText(l, opt.x || RX, y - Math.round(size * .35)); }); return lines.length * lh; };
+  /* header */
+  const logo = document.querySelector(".vlogo");
+  if (logo && logo.complete && logo.naturalWidth){ const h = 56, w = h * logo.naturalWidth / logo.naturalHeight; c.drawImage(logo, M, y, w, h); }
+  const y0 = y; txt("لوحة مؤشرات رؤية عُمان 2040", 18, {w:700, disp:1, color:EXP.accent}); txt(today(), 13, {color:EXP.muted}); y = Math.max(y, y0 + 58) + 8;
+  c.fillStyle = EXP.accent; c.fillRect(M, y, CW, 2.5); y += 14;
+  txt(`${x.axis} ‹ ${x.priority}`, 13, {color:EXP.muted});
+  txt(x.name, 24, {w:700, disp:1, lh:1.45});
+  const R = !x.kids && x.p.R != null && isFinite(x.p.R) ? ` · نسبة التقدّم نحو مستهدف ${ST.ty}: ${clean(rTxt(x))}` : "";
+  txt(`${x.id} · التصنيف: ${catTxt(x)}${R}`, 14, {color:EXP.muted}); y += 10;
+  const block = k => {
+    /* tiles */
+    const tiles = [["خط الأساس", k.base != null ? fv(k, k.base) : "—"], ["آخر قراءة" + (k.curAll ? " (" + k.curAll.y + ")" : ""), k.curAll ? curTxt({...k, cur:k.curAll}) : "—"], ["مستهدف 2030", targetTxt(k, 2030)], ["مستهدف 2040", targetTxt(k, 2040)]];
+    const g = 10, tw = (CW - 3 * g) / 4, th = 70;
+    tiles.forEach(([l, v], i) => { const tx = RX - i * (tw + g);
+      c.fillStyle = EXP.soft; c.fillRect(tx - tw, y, tw, th); c.strokeStyle = EXP.line; c.lineWidth = 1; c.strokeRect(tx - tw + .5, y + .5, tw - 1, th - 1);
+      c.textAlign = "right"; c.direction = "rtl"; c.font = expFont(400, 12); c.fillStyle = EXP.muted; c.fillText(clean(l), tx - 10, y + 22);
+      c.font = expFont(700, 20, 1); c.fillStyle = EXP.ink; let s = clean(v); while (c.measureText(s).width > tw - 20 && s.length > 4) s = s.slice(0, -2) + "…"; c.fillText(s, tx - 10, y + 54); });
+    y += th + 16;
+    drawChart(c, k, M, y, CW, 270); y += 270 + 30; brk.push(y);
+    /* readings table */
+    const rows = k.series.filter(r => r.y <= NOW && (r.v != null || r.r != null)).slice(-8);
+    if (!rows.length) return;
+    const cols = [["السنة", 70], ["القيمة", 110], ["الترتيب", 80], ["النوع", 70], ["المصدر", CW - 330]];
+    const row = (cells, head) => { c.font = expFont(head ? 600 : 400, 12.5); const srcL = wrapLines(c, cells[4], cols[4][1] - 12), h = Math.max(1, srcL.length) * 19 + 12;
+      if (head){ c.fillStyle = EXP.soft; c.fillRect(M, y, CW, h); }
+      let cx = RX; c.fillStyle = head ? EXP.muted : EXP.ink; c.textAlign = "right"; c.direction = "rtl";
+      cells.forEach((v, i) => { if (i < 4) c.fillText(clean(v), cx - 6, y + 21); else srcL.forEach((l, j) => c.fillText(l, cx - 6, y + 21 + j * 19)); cx -= cols[i][1]; });
+      y += h; c.fillStyle = EXP.line; c.fillRect(M, y - 1, CW, 1); brk.push(y); };
+    row(cols.map(cc => cc[0]).concat([]).slice(0, 5), true);
+    rows.forEach(r => row([String(r.y), r.v != null ? fv(k, r.v) : "—", r.r != null ? fmtN(r.r, 0) : "—", r.kind || "فعلية", r.src || "—"]));
+    y += 10;
+  };
+  if (x.kids) x.kids.forEach(k => { brk.push(y); y += 6; txt([k.grade, k.subject || k.name].filter(Boolean).join(" · ") + " — " + catTxt(k), 16, {w:700}); y += 6; block(k); });
+  else block(x);
+  brk.push(y);
+  txt(`مصدر البيانات: ${x.src || x.issuer || "—"}${x.freq ? " · الدورية: " + x.freq : ""}`, 12.5, {color:EXP.muted});
+  y += 10; c.fillStyle = EXP.line; c.fillRect(M, y, CW, 1); y += 4;
+  txt("لوحة مؤشرات رؤية عُمان 2040 · " + today(), 11.5, {color:EXP.muted});
+  return y + M;
+}
+function cardCanvas(x){
+  const S = 2, probe = document.createElement("canvas").getContext("2d"), H = Math.ceil(drawCard(probe, x));
+  const cv = document.createElement("canvas"); cv.width = 900 * S; cv.height = H * S;
+  const c = cv.getContext("2d"); c.scale(S, S); drawCard(c, x); cv.__brk = (c.__brk || []).map(v => Math.round(v * S)); return cv;
+}
+const b64bytes = d => { const s = atob(d.split(",")[1]), a = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; };
+/* minimal PDF: one JPEG per A4 page (card split into page-height slices) */
+function canvasPDF(cv){
+  const PW = 595.28, PH = 841.89, MG = 24, IW = PW - 2 * MG, sc = IW / cv.width, sliceH = Math.floor((PH - 2 * MG) / sc);
+  const pages = [], B = (cv.__brk || []).slice().sort((a, b) => a - b);
+  for (let top = 0, h; top < cv.height; top += h){
+    h = Math.min(sliceH, cv.height - top);
+    if (top + h < cv.height){ const cut = B.filter(b => b > top + sliceH * .35 && b <= top + sliceH).pop(); if (cut) h = cut - top; }
+    const s = document.createElement("canvas"); s.width = cv.width; s.height = h;
+    const sc2 = s.getContext("2d"); sc2.fillStyle = "#fff"; sc2.fillRect(0, 0, s.width, h); sc2.drawImage(cv, 0, top, cv.width, h, 0, 0, cv.width, h);
+    pages.push({jpg: b64bytes(s.toDataURL("image/jpeg", .9)), w: s.width, h});
+  }
+  const enc = new TextEncoder(), parts = [], offs = []; let len = 0;
+  const push = p => { const b = typeof p === "string" ? enc.encode(p) : p; parts.push(b); len += b.length; };
+  const obj = (n, body) => { offs[n] = len; push(`${n} 0 obj\n`); body.forEach(push); push("\nendobj\n"); };
+  push("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
+  const N = pages.length, kids = pages.map((_, i) => `${3 + i * 3} 0 R`).join(" ");
+  obj(1, ["<< /Type /Catalog /Pages 2 0 R >>"]); obj(2, [`<< /Type /Pages /Kids [${kids}] /Count ${N} >>`]);
+  pages.forEach((p, i) => { const pn = 3 + i * 3, im = pn + 1, ct = pn + 2, dw = IW, dh = p.h * sc;
+    obj(pn, [`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im${i} ${im} 0 R >> >> /Contents ${ct} 0 R >>`]);
+    obj(im, [`<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`, p.jpg, "\nendstream"]);
+    const cs = `q ${dw.toFixed(2)} 0 0 ${dh.toFixed(2)} ${MG} ${(PH - MG - dh).toFixed(2)} cm /Im${i} Do Q`;
+    obj(ct, [`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`]); });
+  const total = 3 + N * 3, xref = len;
+  push(`xref\n0 ${total}\n0000000000 65535 f \n` + offs.slice(1, total).map(o => String(o).padStart(10, "0") + " 00000 n \n").join(""));
+  push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(parts, {type: "application/pdf"});
+}
+async function deliverFile(blob, name){
+  const f = typeof File === "function" ? new File([blob], name, {type: blob.type}) : null;
+  const touch = window.matchMedia && matchMedia("(pointer:coarse)").matches;
+  if (f && touch && navigator.canShare && navigator.canShare({files: [f]})){
+    try { await navigator.share({files: [f], title: name}); return "shared"; } catch(e){ if (e && e.name === "AbortError") return "cancel"; }
+  }
+  const a = document.createElement("a"), u = URL.createObjectURL(blob); a.href = u; a.download = name; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(u); a.remove(); }, 4000); return "saved";
+}
+async function exportCard(id, kind){
+  const x = BY[id]; if (!x) return;
+  const base = `مؤشر ${x.id}`;
+  try {
+    const cv = cardCanvas(x);
+    const blob = kind === "pdf" ? canvasPDF(cv) : new Blob([b64bytes(cv.toDataURL("image/png"))], {type: "image/png"});
+    const r = await deliverFile(blob, `${base}.${kind === "pdf" ? "pdf" : "png"}`);
+    if (r === "saved") toast(kind === "pdf" ? "حُفظ ملف PDF في التنزيلات" : "حُفظت الصورة في التنزيلات");
+  } catch(err){
+    if (kind === "pdf"){ sharePDF(id); return; }   // احتياط: نافذة الطباعة عند تعذر الإنشاء المباشر
+    toast("تعذر إنشاء الصورة على هذا الجهاز");
+  }
+}
+
 /* ================= boot ================= */
 buildModel(ST.ds);
 const stamp = () => { $("#sub").textContent = ""; };   // لا تاريخ في الترويسة؛ الهوية في شعار الرؤية
 stamp(); readHash(); if (!location.hash) render();
-$("#nav-admin").hidden = IN_CLAUDE;   // outside Claude: local data tools are visible; inside: only for admins (set below)
-if (SITE){ let a = false; try { a = localStorage.getItem("ovd-admin") === "1"; } catch(_){} $("#nav-admin").hidden = !a && location.hash !== "#admin"; }
+applyRole();   // أدوات الإدارة والتصدير لا تظهر إلا للمسؤول
 
 if (!IN_CLAUDE && /^https?:$/.test(location.protocol) && typeof fetch === "function"){
   if (SITE) $("#sub").textContent = "جارٍ تحميل البيانات…";
@@ -2149,8 +2452,7 @@ if (IN_CLAUDE){
     ST.user = u || null; if (!u) return;
     try { ST.me = await u.id(); } catch(_){}
     try { ST.admin = !!(await u.canEdit()); } catch(_){ ST.admin = false; }
-    $("#role").textContent = ST.admin ? "مدير" : "اطلاع"; $("#role").classList.toggle("admin", ST.admin);
-    $("#nav-admin").hidden = !ST.admin; render();
+    applyRole(); render();
   }).catch(()=>{});
   claude.use("db").then(db => {
     ST.db = db || null; if (!db) return;
