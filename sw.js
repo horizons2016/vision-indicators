@@ -1,7 +1,7 @@
 // مؤشرات الرؤية: يعمل بدون إنترنت ويتحدث تلقائياً.
 // الصفحة والبيانات: من الشبكة أولاً متجاوزاً كل ذاكرة مؤقتة، ومن النسخة المحفوظة عند انقطاع الاتصال فقط.
-const VERSION = "ov-ar-11211019";
-const SHELL = ["./", "index.html", "data/dataset.json", "version.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
+const VERSION = "ov-835cae40fd";
+const SHELL = ["./", "index.html", "reports.html", "reports/builder.js", "lib/pptxgen.bundle.js", "data/dataset.json", "version.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const fresh = url => fetch(new Request(url, {cache: "no-store", credentials: "same-origin"}));
 
 self.addEventListener("install", e => {
@@ -16,12 +16,13 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   const same = url.origin === location.origin;
-  const isPage = req.mode === "navigate" || (same && /\/(index\.html)?$/.test(url.pathname));
-  const isData = same && /\/(data\/dataset|version)\.json$/.test(url.pathname);
-  if (isPage || isData) {
-    const key = isPage ? "index.html" : url.pathname.endsWith("version.json") ? "version.json" : "data/dataset.json";
+  const isReports = same && /\/reports\.html$/.test(url.pathname);
+  const isPage = !isReports && (req.mode === "navigate" || (same && /\/(index\.html)?$/.test(url.pathname)));
+  const isData = same && (/\/(data\/dataset|version)\.json$/.test(url.pathname) || /\/reports\/builder\.js$/.test(url.pathname));
+  if (isPage || isData || isReports) {
+    const key = isReports ? "reports.html" : isPage ? "index.html" : url.pathname.endsWith("version.json") ? "version.json" : url.pathname.endsWith("builder.js") ? "reports/builder.js" : "data/dataset.json";
     // ملاحظة: لا يجوز تمرير خيارات مع طلب من نوع navigate، لذلك نبني طلباً جديداً من العنوان
-    e.respondWith(fresh(isPage ? new URL("index.html", self.registration.scope).href : req.url).then(res => {
+    e.respondWith(fresh(isPage || isReports ? new URL(key, self.registration.scope).href : req.url).then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(key, copy)); }
       return res;
     }).catch(() => caches.match(key)));
