@@ -247,7 +247,7 @@
     /* التذييل */
     T("نسبة التقدم = المعدل السنوي الفعلي ÷ المطلوب لبلوغ مستهدف 2030 · على المسار فوق 90% · يحتاج تحسيناً 50–90% · متأخر دون 50% · يتراجع: عكس الاتجاه",
       { x: X0 + 3.2, y: 7.1, w: CW - 3.2, h: 0.3, fontSize: 9, color: PAL.muted, valign: "middle" });
-    T("horizons2016.github.io/vision-indicators", { x: X0, y: 7.1, w: 3.1, h: 0.3, fontSize: 9, color: PAL.teal, align: "left", rtlMode: false, valign: "middle", hyperlink: { url: "https://horizons2016.github.io/vision-indicators/" } });
+    T("ov2040.github.io/vision-indicators", { x: X0, y: 7.1, w: 3.1, h: 0.3, fontSize: 9, color: PAL.teal, align: "left", rtlMode: false, valign: "middle", hyperlink: { url: "https://ov2040.github.io/vision-indicators/" } });
     s.addNotes(list.map(x => `${x.name} | ${x.axis} | ${curTxt(x)} | ${targetTxt(x)} | ${rTxt(x)} | ${CAT_AR[x.cat]}`).join("\n"));
     return pres;
   }
