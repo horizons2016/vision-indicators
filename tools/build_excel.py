@@ -351,7 +351,14 @@ for row in G.iter_rows():
 import datetime
 from openpyxl.styles import Protection
 from openpyxl.workbook.protection import WorkbookProtection
-PW = os.environ.get('EXCEL_PASSWORD') or 'Vision2040'
+# كلمة مرور حماية الأوراق من سر المستودع EXCEL_PASSWORD. لا توجد كلمة افتراضية ثابتة في الكود:
+# إن غاب السر تُولَّد كلمة عشوائية لهذا البناء فقط (يبقى الملف محمياً ولا يعرف أحد كلمته).
+# تنبيه: حماية الأوراق تمنع التعديل العرضي ولا تشفّر البيانات.
+import secrets
+PW = os.environ.get('EXCEL_PASSWORD') or ''
+if not PW:
+    PW = secrets.token_urlsafe(18)
+    print('تنبيه: السر EXCEL_PASSWORD غير مضبوط؛ استُخدمت كلمة عشوائية لهذا البناء.', file=sys.stderr)
 LG = wb.create_sheet('سجل التحديثات', index=4)
 LG.sheet_view.rightToLeft = True
 LG['A1'] = 'سجل تحديثات البيانات'; LG['A1'].font = Font(name='Arial', bold=True, size=14, color='1F3A5F')

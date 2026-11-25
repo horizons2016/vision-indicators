@@ -1,7 +1,7 @@
 // مؤشرات الرؤية: يعمل بدون إنترنت ويتحدث تلقائياً.
 // الصفحة والبيانات: من الشبكة أولاً متجاوزاً كل ذاكرة مؤقتة، ومن النسخة المحفوظة عند انقطاع الاتصال فقط.
-const VERSION = "ov-ar-11221155";
-const SHELL = ["./", "index.html", "reports.html", "reports/builder.js", "lib/pptxgen.bundle.js", "data/dataset.json", "version.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
+const VERSION = "ov-ar-11251700";
+const SHELL = ["./", "index.html", "reports.html", "reports/builder.js", "lib/pptxgen.bundle.js", "lib/xlsx.full.min.js", "js/engine.js", "js/app.js", "js/reports.js", "js/xlsx-worker.js", "fonts/fonts.css", "fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2", "fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2", "fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2", "fonts/ibm-plex-sans-arabic-latin-400-normal.woff2", "fonts/ibm-plex-sans-arabic-latin-500-normal.woff2", "fonts/ibm-plex-sans-arabic-latin-600-normal.woff2", "fonts/readex-pro-arabic-500-normal.woff2", "fonts/readex-pro-arabic-600-normal.woff2", "fonts/readex-pro-arabic-700-normal.woff2", "fonts/readex-pro-latin-500-normal.woff2", "fonts/readex-pro-latin-600-normal.woff2", "fonts/readex-pro-latin-700-normal.woff2", "data/dataset.json", "version.json", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 const fresh = url => fetch(new Request(url, {cache: "no-store", credentials: "same-origin"}));
 
 self.addEventListener("install", e => {
@@ -19,6 +19,12 @@ self.addEventListener("fetch", e => {
   const isReports = same && /\/reports\.html$/.test(url.pathname);
   const isPage = !isReports && (req.mode === "navigate" || (same && /\/(index\.html)?$/.test(url.pathname)));
   const isData = same && (/\/(data\/dataset|version)\.json$/.test(url.pathname) || /\/reports\/builder\.js$/.test(url.pathname));
+  // ملفات الكود (js/): من الشبكة أولاً حتى يصل أي إصلاح فوراً، ومن النسخة المحفوظة عند انقطاع الاتصال
+  const jsm = same && url.pathname.match(/\/(js\/[a-z-]+\.js)$/);
+  if (jsm) {
+    e.respondWith(fresh(req.url).then(res => { if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(jsm[1], copy)); } return res; }).catch(() => caches.match(jsm[1])));
+    return;
+  }
   if (isPage || isData || isReports) {
     const key = isReports ? "reports.html" : isPage ? "index.html" : url.pathname.endsWith("version.json") ? "version.json" : url.pathname.endsWith("builder.js") ? "reports/builder.js" : "data/dataset.json";
     // ملاحظة: لا يجوز تمرير خيارات مع طلب من نوع navigate، لذلك نبني طلباً جديداً من العنوان

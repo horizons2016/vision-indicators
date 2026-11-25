@@ -18,10 +18,10 @@ jobs:
       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
       - run: pip install openpyxl==3.1.5
@@ -35,25 +35,30 @@ jobs:
         if: steps.apply.outputs.ok == 'true'
         env:
           EXCEL_PASSWORD: ${{ secrets.EXCEL_PASSWORD }}
+          BY_USER: ${{ github.event.comment.user.login }}
+          ISSUE: ${{ github.event.issue.number }}
         run: |
           python tools/build_excel.py --dataset data/dataset.json --template excel/template.xlsx \
             --changelog excel/changelog.json --prev /tmp/prev.json \
-            --date "$(date -u +%F)" --by "${{ github.event.comment.user.login }} (طلب #${{ github.event.issue.number }})" \
+            --date "$(date -u +%F)" --by "$BY_USER (طلب #$ISSUE)" \
             --out excel/vision2040-indicators.xlsx
           python -c "import json,datetime;json.dump({'build':'ov-req-'+datetime.datetime.utcnow().strftime('%m%d%H%M')},open('version.json','w'))"
       - name: حفظ ونشر
         if: steps.apply.outputs.ok == 'true'
+        env:
+          ISSUE: ${{ github.event.issue.number }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/dataset.json excel/ version.json
-          git commit -m "اعتماد طلب التحديث #${{ github.event.issue.number }}"
+          git commit -m "اعتماد طلب التحديث #$ISSUE"
           git pull --rebase --autostash && git push
       - name: الرد على الطلب
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.number }}
+          APPLY_OK: ${{ steps.apply.outputs.ok }}
         run: |
           python - <<'PY' > /tmp/reply.md
           import json
@@ -69,7 +74,7 @@ jobs:
               print('\nيظهر التحديث في التطبيق والدوريات خلال دقائق، وأُعيد بناء ملف الإكسل المحمي وسُجّل التغيير في «سجل التحديثات».')
           PY
           gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file /tmp/reply.md
-          if [ "${{ steps.apply.outputs.ok }}" = "true" ]; then
+          if [ "$APPLY_OK" = "true" ]; then
             gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --add-label "معتمد" || true
             gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY"
           fi

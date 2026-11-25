@@ -1,0 +1,7 @@
+# تحديثات أمنية تلقائية لإصدارات GitHub Actions المثبّتة (تصل كطلبات دمج للمراجعة)
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"

@@ -13,11 +13,29 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CMD = re.compile(r'^\s*/(?:اعتماد|approve)\b(.*)$', re.M)
 ARGS = re.compile(r'^\s*([UuOo]-\d+(?:-\d+)?)\s+(\d{4})\s+([-+]?[\d.,٠-٩٫]+)\s*%?(?:\s+([\d٠-٩]+))?\s*$')
 AR = str.maketrans('٠١٢٣٤٥٦٧٨٩٫', '0123456789.')
+# الطلبات الآلية يفتحها سير العمل بحساب github-actions[bot] فقط. أي Issue آخر (قد يفتحه أي زائر في مستودع عام)
+# لا تُقرأ منه قيم مقترحة ولا مصدر، ويجب أن يكتب صاحب الصلاحية القيم صراحة في تعليق الاعتماد.
+TRUSTED_AUTHORS = {'github-actions[bot]'}
+CTRL = re.compile(r'[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2066-\u2069]')
+
+
+def clean_src(v):
+    """نص المصدر: بلا محارف تحكم، وبطول معقول."""
+    return CTRL.sub(' ', str(v or '')).strip()[:300]
 
 
 def parse_marker(body):
     m = re.search(r'<!-- ov2040-request (\{.*?\}) -->', body or '', re.S)
-    return json.loads(m.group(1)) if m else None
+    if not m: return None
+    try: d = json.loads(m.group(1))
+    except ValueError: return None
+    return d if isinstance(d, dict) else None
+
+
+def trusted_marker(issue):
+    """يُقبل وسم الطلب فقط إن كان الـIssue من إنشاء سير العمل نفسه."""
+    if ((issue.get('user') or {}).get('login')) not in TRUSTED_AUTHORS: return None
+    return parse_marker(issue.get('body'))
 
 
 def parse_commands(comment, req):
@@ -29,7 +47,10 @@ def parse_commands(comment, req):
         if not ln:
             props = (req or {}).get('proposals') or []
             if not props: raise ValueError('هذا الطلب لا يحتوي قيمة مقترحة؛ اكتب: /اعتماد الرمز السنة القيمة')
-            out += [dict(p, r=None) for p in props]; continue
+            for p in props:
+                try: out.append({'code': str(p['code']).upper(), 'year': int(p['year']), 'v': float(p['v']), 'r': None})
+                except (KeyError, TypeError, ValueError): raise ValueError('القيمة المقترحة في الطلب غير صالحة؛ اكتب القيمة صراحة: /اعتماد الرمز السنة القيمة')
+            continue
         m = ARGS.match(ln.translate(AR))
         if not m: raise ValueError(f'لم أفهم السطر: «/اعتماد {ln}». الصيغة: /اعتماد الرمز السنة القيمة [الترتيب]')
         code, y, v, r = m.group(1).upper(), int(m.group(2)), float(m.group(3).replace(',', '')), m.group(4)
@@ -40,7 +61,7 @@ def parse_commands(comment, req):
 def apply(ds, items, req, issue_no, who):
     ind = {i['code']: i for i in ds['indicators']}
     allowed = set((req or {}).get('codes') or [])
-    src = ((req or {}).get('src') or 'اعتماد يدوي').strip()
+    src = clean_src((req or {}).get('src')) or 'اعتماد يدوي'
     done = []
     for it in items:
         if it['code'] not in ind: raise ValueError(f"الرمز {it['code']} غير موجود في بيانات التطبيق.")
@@ -64,7 +85,7 @@ def apply(ds, items, req, issue_no, who):
 def main():
     ev = json.load(open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8'))
     issue, comment = ev['issue'], ev['comment']
-    req = parse_marker(issue.get('body'))
+    req = trusted_marker(issue)
     out_path = os.environ.get('RESULT_PATH', '/tmp/apply_result.json')
     try:
         items = parse_commands(comment['body'], req)
