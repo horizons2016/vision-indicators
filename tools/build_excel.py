@@ -88,7 +88,9 @@ for v in vision:
     rows.append(v); rows += kids.get(v['code'], [])
 rows += [i for i in inds if group(i) == 'المؤشرات المساندة']
 rows += [i for i in inds if group(i) == 'مؤشرات ملغاة']
-assert len(rows) == 101, len(rows)
+# كل مؤشر غير مكرر يظهر مرة واحدة بالضبط (العدد يُشتق من البيانات بدل رقم ثابت يتعطل عند تعليم مؤشر كمكرر)
+_expect = [i for i in inds if group(i) != 'مكرر (له مقابل في مؤشرات الرؤية)']
+assert len(rows) == len(_expect) and len({i['code'] for i in rows}) == len(rows), (len(rows), len(_expect))
 
 RD = collections.defaultdict(list)
 for r in DS['readings']: RD[r[0]].append(r)
